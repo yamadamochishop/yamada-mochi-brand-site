@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #f8f6f2;
+  color: #1a1a1a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f8f6f2;
+  color: #1a1a1a;
+  font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+::selection {
+  background: #273323;
+  color: #f8f6f2;
+}
+
+.ym-page {
+  @apply bg-base text-sumi;
+}
+
+.ym-container {
+  @apply mx-auto max-w-7xl px-5 md:px-8;
+}
+
+.ym-serif {
+  @apply font-serifjp;
+}

@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { JsonLd } from "@/components/JsonLd";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { organizationJsonLd } from "@/lib/seo";
+import { site } from "@/data/site";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(site.siteUrl),
+  title: {
+    default: "山田もち店｜飛騨高山の思い出を贈る餅ブランド",
+    template: "%s｜山田もち店"
+  },
+  description: site.description,
+  openGraph: {
+    title: "山田もち店｜思い出に残るお餅を。",
+    description: site.description,
+    url: site.siteUrl,
+    siteName: site.name,
+    images: [
+      {
+        url: "/images/gift-box-sixset-lifestyle.jpg",
+        width: 1600,
+        height: 1200,
+        alt: "山田もち店の高山もちギフトボックス"
+      }
+    ],
+    locale: "ja_JP",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "山田もち店｜思い出に残るお餅を。",
+    description: site.description,
+    images: ["/images/gift-box-sixset-lifestyle.jpg"]
+  }
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ja">
+      <body>
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID} />
+        <JsonLd data={organizationJsonLd()} />
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+      </body>
+    </html>
+  );
+}
