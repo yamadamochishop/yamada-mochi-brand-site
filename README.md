@@ -31,6 +31,13 @@ cd yamada-mochi-next
 pnpm install
 ```
 
+もし `pnpm` が見つからない場合は、Node.jsを入れたあとに以下を実行してください。
+
+```bash
+corepack enable
+corepack prepare pnpm@11.7.0 --activate
+```
+
 ローカル確認を起動します。
 
 ```bash
@@ -84,12 +91,11 @@ GitHubで新しいリポジトリを作ります。おすすめ名:
 yamada-mochi-brand-site
 ```
 
-初回だけ、ターミナルで以下を実行します。
+このプロジェクトはすでにGit初期化と初回コミットまで完了しています。
+
+GitHubで空のリポジトリを作成したら、初回だけ以下を実行します。
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit"
 git branch -M main
 git remote add origin https://github.com/yamadamochishop/yamada-mochi-brand-site.git
 git push -u origin main
