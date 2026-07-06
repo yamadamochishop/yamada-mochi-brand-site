@@ -18,12 +18,13 @@ export default function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-45"
+            className="object-cover opacity-75"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-green via-green/75 to-green/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5" />
+          <div className="absolute inset-0 bg-gradient-to-t from-green/25 via-transparent to-transparent" />
         </div>
         <div className="relative mx-auto flex min-h-[88vh] max-w-7xl items-center px-5 py-28 md:px-8">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl drop-shadow-[0_2px_18px_rgba(0,0,0,0.35)]">
             <p className="mb-8 text-xs font-semibold tracking-brand text-base/70">FROM HIDA TAKAYAMA</p>
             <h1 className="font-serifjp text-5xl leading-[1.45] tracking-[0.18em] md:text-7xl">
               思い出に残る
