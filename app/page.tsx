@@ -18,20 +18,20 @@ export default function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-95"
+            className="object-cover opacity-100"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-green/62 via-green/24 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-green/12 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-green/46 via-green/16 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-green/6 via-transparent to-transparent" />
         </div>
         <div className="relative mx-auto flex min-h-[88vh] max-w-7xl items-center px-5 py-28 md:px-8">
-          <div className="max-w-3xl drop-shadow-[0_2px_18px_rgba(0,0,0,0.35)]">
-            <p className="mb-8 text-xs font-semibold tracking-brand text-base/70">FROM HIDA TAKAYAMA</p>
+          <div className="max-w-3xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.42)]">
+            <p className="mb-8 text-xs font-semibold tracking-brand text-base/78">FROM HIDA TAKAYAMA</p>
             <h1 className="font-serifjp text-5xl leading-[1.45] tracking-[0.18em] md:text-7xl">
               思い出に残る
               <br />
               お餅を。
             </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-10 text-base/85">
+            <p className="mt-8 max-w-2xl text-lg leading-10 text-base/90">
               100％自家栽培のもち米「たかやまもち」でつくる、
               <br className="hidden md:block" />
               飛騨高山・陣屋前朝市の切り餅。
