@@ -32,9 +32,9 @@ export default function HomePage() {
               お餅を。
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-10 text-base/90">
-              100％自家栽培のもち米「たかやまもち」でつくる、
+              飛騨高山の田んぼで育てたもち米を使い、
               <br className="hidden md:block" />
-              飛騨高山・陣屋前朝市の切り餅。
+              陣屋前朝市から届ける切り餅です。
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
@@ -43,7 +43,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex min-w-64 justify-center border border-base px-8 py-4 tracking-[0.14em] transition hover:bg-base hover:text-green"
               >
-                オンラインショップを見る
+                オンラインショップで見る
               </a>
               <Link
                 href="/third-generation"
@@ -75,8 +75,8 @@ export default function HomePage() {
               食卓へ。
             </h2>
             <p className="mt-8 leading-9 text-sumi/70">
-              山田もち店は、1975年創業。飛騨高山の陣屋前朝市で、家族で育てたもち米を使い、昔ながらの製法で餅づくりを続けてきました。
-              旅先で出会った味が、家に帰ってからも食卓で思い出になるように。焼いた時の香り、ひと口目のやわらかさ、誰かに贈りたくなる佇まいまで大切にしています。
+              山田もち店は、1975年創業。飛騨高山の陣屋前朝市で、家族で育てたもち米を使い、お餅を届けてきました。
+              朝市で出会った味が、ご自宅の食卓や贈り物につながるように。田んぼから始まるものづくりを大切にしています。
             </p>
             <Link href="/brand-story" className="mt-8 inline-block underline underline-offset-8">
               ブランドストーリーを読む
@@ -95,7 +95,7 @@ export default function HomePage() {
             {[
               ["01", "もち米", "千島町・越後町の田んぼで育てた「たかやまもち」を100％使用しています。"],
               ["02", "水と土地", "飛騨高山の澄んだ空気と水。土地の恵みを、そのままお餅へ。"],
-              ["03", "手仕事", "余計なものを加えず、素材の味を活かして一つひとつ丁寧につくります。"]
+              ["03", "家族のものづくり", "栽培から製造・販売までを家族で一貫して行い、もち米本来の風味と粘りを大切にしています。"]
             ].map(([num, title, text]) => (
               <article key={num} className="border border-sumi/10 bg-base p-8">
                 <span className="text-xs tracking-brand text-brown/50">{num}</span>
@@ -110,8 +110,8 @@ export default function HomePage() {
       <section id="products" className="ym-container py-24 md:py-32">
         <SectionHeading
           eyebrow="PRODUCTS"
-          title="餅のラインナップ"
-          lead="飛騨高山で長く親しまれてきた定番の6種類。素材の個性を生かし、一つひとつ丁寧につくっています。"
+          title="飛騨高山の切り餅 6種類"
+          lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
         />
         <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
           {products.map((product) => (
@@ -125,15 +125,15 @@ export default function HomePage() {
           <div>
             <p className="mb-5 text-xs tracking-brand text-brown/60">GIFT</p>
             <h2 className="font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
-              旅の記憶を、
+              飛騨高山で出会った味わいを、
               <br />
-              贈りものに。
+              大切な人にも。
             </h2>
             <p className="mt-7 leading-9 text-sumi/70">
-              定番6種類を詰め合わせたギフトセットをご用意しています。お中元、お歳暮、内祝い、遠方のご家族への贈り物に。
+              六種類の切り餅を各1袋ずつ、贈り物として一箱に詰めました。2,980円（税込・送料別）で、BASEからご購入いただけます。
             </p>
             <Link href="/gift" className="mt-8 inline-block underline underline-offset-8">
-              ギフトを見る
+              六種詰め合わせを見る
             </Link>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">

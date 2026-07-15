@@ -24,6 +24,11 @@ body {
   color: #f8f6f2;
 }
 
+:focus-visible {
+  outline: 3px solid #8b6b3f;
+  outline-offset: 4px;
+}
+
 .ym-page {
   @apply bg-base text-sumi;
 }

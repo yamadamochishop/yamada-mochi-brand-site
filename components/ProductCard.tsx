@@ -15,7 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
         />
       </div>
       <div className="mt-7 text-center">
-        <p className="font-serifjp text-2xl tracking-[0.14em]">{product.name}</p>
+        <p className="font-serifjp text-2xl tracking-[0.14em]">{product.cardName}</p>
         <p className="mt-3 text-xs tracking-brand text-sumi/45">{product.english} / 4枚入り</p>
         <p className="mt-4 text-sm leading-7 text-sumi/65">{product.short}</p>
       </div>

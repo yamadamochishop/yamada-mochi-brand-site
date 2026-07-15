@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/"
+      ...(site.isIndexable ? { allow: "/" } : { disallow: "/" })
     },
-    sitemap: `${site.siteUrl}/sitemap.xml`
+    ...(site.isIndexable ? { sitemap: `${site.siteUrl}/sitemap.xml` } : {})
   };
 }

@@ -21,7 +21,7 @@ export function Cta({
           rel="noopener noreferrer"
           className="mt-10 inline-flex min-w-72 items-center justify-center border border-base px-8 py-4 tracking-[0.12em] transition hover:bg-base hover:text-green"
         >
-          オンラインショップを見る
+          オンラインショップで見る
         </a>
       </div>
     </section>

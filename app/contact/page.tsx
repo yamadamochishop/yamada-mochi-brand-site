@@ -18,8 +18,8 @@ export default function ContactPage() {
         <SectionHeading eyebrow="CONTACT" title="お問い合わせ" />
         <div className="mx-auto mt-14 max-w-3xl border border-sumi/10 bg-white/35 p-8 md:p-12">
           <p className="leading-9 text-sumi/65">
-            商品、ギフト、朝市での販売、取材などのお問い合わせは、下記よりお願いいたします。
-            お急ぎの場合はお電話でも承ります。
+            商品やご注文に関するご質問は、お問い合わせ窓口またはオンラインショップをご利用ください。
+            配送・返品・お支払いなどのご注文に関する詳細は、オンラインショップの商品ページおよび特定商取引法に基づく表記をご確認ください。
           </p>
           <dl className="mt-10 divide-y divide-sumi/10 border-y border-sumi/10">
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">

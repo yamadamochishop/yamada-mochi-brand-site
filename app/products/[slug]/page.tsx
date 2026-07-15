@@ -49,12 +49,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       "@type": "Brand",
       name: site.name
     },
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "JPY",
-      availability: "https://schema.org/InStock",
-      url: site.baseUrl
-    }
   };
 
   return (
@@ -85,6 +79,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p className="text-xs tracking-brand text-brown/60">ABOUT THIS MOCHI</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">このお餅について</h2>
             <p className="mt-8 leading-9 text-sumi/70">{product.story}</p>
+            <p className="mt-6 leading-9 text-sumi/70">家族で育てたもち米を使い、状態を見ながら一つひとつ丁寧に仕上げています。素材ごとの味わいを生かし、日々の食卓でも楽しんでいただける切り餅です。</p>
             <div className="mt-10 border-y border-sumi/10 py-8">
               <p className="text-sm tracking-brand text-sumi/45">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
@@ -161,17 +156,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">STORAGE</p>
-            <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">保存方法・商品情報</h2>
+            <p className="text-xs tracking-brand text-brown/60">PRODUCT INFORMATION</p>
+            <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">商品情報</h2>
             <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
               {[
                 ["価格", product.price],
-                ["内容量", product.content],
-                ["原材料", product.ingredients],
-                ["賞味期限", product.shelfLife],
-                ["保存方法", product.storage],
-                ["アレルギー", product.allergy],
-                ["配送温度", product.shipping]
+                ["内容量", product.content]
               ].map(([label, value]) => (
                 <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[9rem_1fr]">
                   <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>

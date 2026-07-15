@@ -1,3 +1,7 @@
+const previewSiteUrl = "https://yamada-mochi-brand-site.vercel.app";
+const isIndexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || previewSiteUrl;
+
 export const site = {
   name: "山田もち店",
   enName: "YAMADA MOCHI TEN",
@@ -11,7 +15,18 @@ export const site = {
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://yamadamochi.thebase.in",
   pokeMarcheUrl: "https://poke-m.com/producers/297308",
   tabechokuUrl: "https://www.tabechoku.com/producers/23313",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://www.yamadamochi.com",
+  // Preview-safe defaults. Set these production variables only after the
+  // www domain is connected and verified in Vercel.
+  // Keep preview deployments self-referential even if a production URL is
+  // already stored in Vercel. The configured production URL is used only
+  // once indexing has been explicitly enabled.
+  siteUrl: isIndexable ? configuredSiteUrl : previewSiteUrl,
+  isIndexable,
+  /**
+   * Set this after the BASE product pages are created. Until then, calls to
+   * action send visitors to the shop top rather than to guessed product URLs.
+   */
+  giftBaseUrl: process.env.NEXT_PUBLIC_BASE_GIFT_URL || "",
   googleFormUrl: process.env.NEXT_PUBLIC_GOOGLE_FORM_URL || "",
   market: {
     name: "陣屋前朝市",
@@ -23,3 +38,12 @@ export const site = {
     mapQuery: "高山陣屋前朝市"
   }
 };
+
+export const gift = {
+  name: "飛騨高山 朝市の切り餅 六種詰め合わせ",
+  price: "2,980円（税込）",
+  shipping: "送料別",
+  contents: "プレーン、草、三色豆、昆布、たまり、黒ごま海老を各1袋",
+  quantity: "200g×6袋",
+  shelfLife: "製造日から8日"
+} as const;

@@ -15,8 +15,9 @@ export default function ProductsPage() {
       <section className="ym-container py-24 md:py-32">
         <SectionHeading
           eyebrow="PRODUCTS"
-          title="餅のラインナップ"
-          lead="飛騨高山で長く親しまれてきた定番の6種類。素材の個性を生かし、一つひとつ丁寧につくっています。"
+          title="飛騨高山の切り餅 6種類"
+          lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
+          as="h1"
         />
         <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
           {products.map((product) => (

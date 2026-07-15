@@ -41,6 +41,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
+      <head>
+        {!site.isIndexable ? <meta name="robots" content="noindex, nofollow" /> : null}
+      </head>
       <body>
         <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID} />
         <JsonLd data={organizationJsonLd()} />
