@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Cta } from "@/components/Cta";
+import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { ProductCard } from "@/components/ProductCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { products } from "@/data/products";
@@ -12,14 +13,7 @@ export default function HomePage() {
     <main className="ym-page">
       <section className="relative min-h-[88vh] overflow-hidden bg-green text-base">
         <div className="absolute inset-0">
-          <Image
-            src="/images/web-top-sixset.webp"
-            alt="飛騨高山産もち米で作った山田もち店の切り餅6種詰め合わせ"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[60%_center] opacity-100 md:object-center"
-          />
+          <HeroSlideshow />
           <div className="absolute inset-0 bg-gradient-to-r from-green/46 via-green/16 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-green/6 via-transparent to-transparent" />
         </div>
