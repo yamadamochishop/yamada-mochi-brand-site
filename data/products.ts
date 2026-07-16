@@ -8,6 +8,8 @@ export type Product = {
   story: string;
   image: string;
   imageAlt?: string;
+  cardImage?: string;
+  cardImageAlt?: string;
   accent: string;
   price: string;
   content: string;
@@ -39,6 +41,8 @@ export const products: Product[] = [
       "山田もち店のすべての味の土台になる、いちばん基本の白もちです。飛騨高山の千島町・越後町で家族が育てたもち米「たかやまもち」を100％使用し、米の甘み、粘り、香りをまっすぐに味わえるよう仕上げました。焼くと表面は香ばしく、中はやわらかく伸び、朝市で出会う素朴なおいしさがご自宅の食卓にも広がります。初めての方にも、贈り物にも選びやすい定番です。",
     image: "/images/web-plain-front.webp",
     imageAlt: "山田もち店 白切り餅 200gの正面パッケージ",
+    cardImage: "/images/lineup-plain.jpg",
+    cardImageAlt: "プレーン餅の商品写真",
     accent: "#efe9dc",
     price: "440円（税込）",
     content: "4枚入り / 200g",
