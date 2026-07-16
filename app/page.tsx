@@ -54,11 +54,11 @@ export default function HomePage() {
         <div className="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr]">
           <div className="relative aspect-[4/5] overflow-hidden">
             <Image
-              src="/images/story-morning-market-ai.jpg"
-              alt="朝の陣屋前朝市"
+              src="/images/morning-market-real.webp"
+              alt="飛騨高山の陣屋前朝市に並ぶ店々"
               fill
               sizes="(min-width: 768px) 45vw, 90vw"
-              className="object-cover"
+              className="object-cover object-top"
             />
           </div>
           <div>

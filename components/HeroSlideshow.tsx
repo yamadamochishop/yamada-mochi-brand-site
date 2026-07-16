@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 const slides = [
   {
-    src: "/images/hero-seiro-ai-landscape.jpg",
-    position: "object-center",
+    src: "/images/craft-seiro-steam-close-01.jpg",
+    position: "object-[38%_center] md:object-center",
   },
   {
     src: "/images/web-top-sixset.webp",

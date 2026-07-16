@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     siteName: site.name,
     images: [
       {
-        url: "/images/gift-box-sixset-lifestyle.jpg",
+        url: "/images/web-sixset-gifting.webp",
         width: 1600,
         height: 1200,
         alt: "山田もち店の高山もちギフトボックス"
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "山田もち店｜思い出に残るお餅を。",
     description: site.description,
-    images: ["/images/gift-box-sixset-lifestyle.jpg"]
+    images: ["/images/web-sixset-gifting.webp"]
   }
 };
 

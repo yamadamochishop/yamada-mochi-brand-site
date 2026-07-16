@@ -12,7 +12,7 @@ export default function BrandStoryPage() {
     <main className="ym-page">
       <section className="ym-container grid gap-12 py-24 md:grid-cols-[0.9fr_1.1fr] md:py-32">
         <div className="relative aspect-[4/5] overflow-hidden">
-          <Image src="/images/story-morning-market-ai.jpg" alt="陣屋前朝市の朝の風景" fill className="object-cover" />
+          <Image src="/images/morning-market-real.webp" alt="飛騨高山の陣屋前朝市に並ぶ店々" fill className="object-cover object-top" />
         </div>
         <article className="self-center">
           <p className="mb-6 text-xs tracking-brand text-brown/60">BRAND STORY</p>

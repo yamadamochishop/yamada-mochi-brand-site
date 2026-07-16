@@ -15,7 +15,7 @@ export default function MarketPage() {
       <section className="ym-container py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <Image src="/images/story-morning-market-ai.jpg" alt="飛騨高山の陣屋前朝市" fill className="object-cover" />
+            <Image src="/images/morning-market-real.webp" alt="飛騨高山の陣屋前朝市に並ぶ店々" fill className="object-cover object-top" />
           </div>
           <div>
             <p className="mb-6 text-xs tracking-brand text-brown/60">MORNING MARKET</p>

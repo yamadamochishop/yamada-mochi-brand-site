@@ -1,21 +1,21 @@
 export const gallery = [
   {
-    src: "/images/hero-seiro-ai-landscape.jpg",
+    src: "/images/craft-seiro-steam-close-01.jpg",
     alt: "蒸気が立つせいろと餅づくりの風景",
     category: "craft"
   },
   {
-    src: "/images/gift-box-sixset-lifestyle.jpg",
+    src: "/images/web-sixset-gifting.webp",
     alt: "高山もちの6種類ギフトボックス",
     category: "gift"
   },
   {
-    src: "/images/story-morning-market-ai.jpg",
+    src: "/images/morning-market-real.webp",
     alt: "朝の陣屋前朝市の風景",
     category: "market"
   },
   {
-    src: "/images/rice-field-wide-ai.jpg",
+    src: "/images/rice-field-farmer-wide.jpg",
     alt: "飛騨高山の田んぼと山並み",
     category: "rice"
   },
