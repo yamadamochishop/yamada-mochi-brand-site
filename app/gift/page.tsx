@@ -26,8 +26,8 @@ export default function GiftPage() {
             BASEで購入する
           </a>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden">
-          <Image src="/images/gift-box-sixset-clean.jpg" alt="高山もちギフトボックス" fill className="object-cover" />
+        <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
+          <Image src="/images/web-sixset-gift.webp" alt="山田もち店の切り餅6種ギフト" fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />
         </div>
       </section>
       <section className="bg-[#f1ece3] py-20">
@@ -41,6 +41,20 @@ export default function GiftPage() {
               <h2 className="font-serifjp text-2xl tracking-[0.12em]">{title}</h2>
               <p className="mt-5 leading-8 text-sumi/65">{text}</p>
             </article>
+          ))}
+        </div>
+      </section>
+      <section className="ym-container py-20 md:py-24">
+        <div className="grid gap-6 md:grid-cols-2">
+          {[
+            ["/images/web-sixset-open.webp", "6種類の切り餅を収めた開封状態のギフト箱", "md:aspect-[4/3]"],
+            ["/images/web-sixset-packages.webp", "6種類の切り餅パッケージ一覧", "md:aspect-[3/2]"],
+            ["/images/web-sixset-basket.webp", "竹籠に並べた6種類の切り餅", "md:aspect-[4/3]"],
+            ["/images/web-sixset-gifting.webp", "飛騨高山から贈る切り餅6種詰め合わせ", "md:aspect-[4/3]"]
+          ].map(([src, alt, desktopAspect]) => (
+            <div key={src} className={`relative aspect-square overflow-hidden bg-[#efe9dc] ${desktopAspect}`}>
+              <Image src={src} alt={alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />
+            </div>
           ))}
         </div>
       </section>

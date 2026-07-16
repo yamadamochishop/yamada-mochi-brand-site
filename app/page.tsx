@@ -13,12 +13,12 @@ export default function HomePage() {
       <section className="relative min-h-[88vh] overflow-hidden bg-green text-base">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-seiro-ai-landscape.jpg"
-            alt="蒸気が立つせいろと餅づくりの風景"
+            src="/images/web-top-sixset.webp"
+            alt="飛騨高山産もち米で作った山田もち店の切り餅6種詰め合わせ"
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-100"
+            className="object-cover object-[60%_center] opacity-100 md:object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-green/46 via-green/16 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-green/6 via-transparent to-transparent" />
@@ -137,7 +137,13 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
-            <Image src="/images/gift-box-sixset-lifestyle.jpg" alt="高山もちギフトボックス" fill className="object-cover" />
+            <Image
+              src="/images/web-sixset-gifting.webp"
+              alt="飛騨高山から贈る切り餅6種詰め合わせ"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover object-center"
+            />
           </div>
         </div>
       </section>

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: product.seo.title,
       description: product.seo.description,
-      images: [{ url: product.image, alt: `${product.name}の商品写真` }]
+      images: [{ url: product.image, alt: product.imageAlt || `${product.name}の商品写真` }]
     },
     alternates: {
       canonical: `/products/${product.slug}`
@@ -63,8 +63,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       />
       <section className="ym-container py-20 md:py-28">
         <article className="mx-auto max-w-5xl">
-          <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc] md:aspect-[16/10]">
-            <Image src={product.image} alt={`${product.name}の商品写真`} fill priority className="object-contain p-8 md:p-16" />
+          <div className={`relative overflow-hidden bg-[#efe9dc] ${product.slug === "plain" ? "aspect-square md:mx-auto md:aspect-[4/5] md:max-w-2xl" : "aspect-[4/3] md:aspect-[16/10]"}`}>
+            <Image src={product.image} alt={product.imageAlt || `${product.name}の商品写真`} fill priority sizes="(min-width: 768px) 672px, 100vw" className="object-contain p-8 md:p-16" />
           </div>
 
           <div className="mx-auto mt-14 max-w-3xl text-center md:mt-20">
@@ -95,14 +95,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mt-16 grid gap-5 md:mt-24 md:grid-cols-3">
-            <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/product-lineup-six-flavors-wide.jpg" alt="高山もち6種類の写真" fill className="object-cover" />
+            <div className={`relative overflow-hidden bg-[#efe9dc] ${product.slug === "plain" ? "aspect-square md:aspect-[4/5]" : "aspect-[4/5]"}`}>
+              <Image src={product.slug === "plain" ? "/images/web-plain-front.webp" : "/images/product-lineup-six-flavors-wide.jpg"} alt={product.slug === "plain" ? "山田もち店 白切り餅 200gの正面パッケージ" : "高山もち6種類の写真"} fill sizes="(min-width: 768px) 33vw, 100vw" className={product.slug === "plain" ? "object-contain p-4" : "object-cover"} />
             </div>
-            <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/hero-seiro-ai-landscape.jpg" alt="餅づくりのせいろ" fill className="object-cover" />
+            <div className={`relative overflow-hidden bg-[#efe9dc] ${product.slug === "plain" ? "aspect-square md:aspect-[4/5]" : "aspect-[4/5]"}`}>
+              <Image src="/images/hero-seiro-ai-landscape.jpg" alt="餅づくりのせいろ" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
             </div>
-            <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/gift-box-sixset-clean.jpg" alt="ギフトボックス" fill className="object-cover" />
+            <div className={`relative overflow-hidden bg-[#efe9dc] ${product.slug === "plain" ? "aspect-square md:aspect-[4/5]" : "aspect-[4/5]"}`}>
+              <Image src={product.slug === "plain" ? "/images/web-plain-yakimochi.webp" : "/images/web-sixset-gift.webp"} alt={product.slug === "plain" ? "香ばしく焼いた山田もち店の白切り餅" : "山田もち店 切り餅6種詰め合わせの帯付きギフト箱"} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
             </div>
           </section>
 
@@ -126,8 +126,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mt-16 overflow-hidden bg-[#efe9dc] md:mt-24">
-            <div className="relative aspect-[16/9]">
-              <Image src="/images/hero-yakimochi-ai.jpg" alt="焼いたお餅のイメージ" fill className="object-cover" />
+            <div className={`relative ${product.slug === "plain" ? "aspect-square md:aspect-[3/2]" : "aspect-[16/9]"}`}>
+              <Image src={product.slug === "plain" ? "/images/web-plain-yakimochi.webp" : "/images/hero-yakimochi-ai.jpg"} alt={product.slug === "plain" ? "香ばしく焼いた山田もち店の白切り餅" : "焼いたお餅のイメージ"} fill sizes="(min-width: 768px) 1024px, 100vw" className="object-cover object-center" />
             </div>
           </section>
 
