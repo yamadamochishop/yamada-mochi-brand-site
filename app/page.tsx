@@ -14,8 +14,8 @@ export default function HomePage() {
       <section className="relative min-h-[88vh] overflow-hidden bg-green text-base">
         <div className="absolute inset-0">
           <HeroSlideshow />
-          <div className="absolute inset-0 bg-gradient-to-r from-green/46 via-green/16 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-green/6 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5 md:from-green/72 md:via-green/28" />
+          <div className="absolute inset-0 bg-gradient-to-t from-green/30 via-transparent to-green/10" />
         </div>
         <div className="relative mx-auto flex min-h-[88vh] max-w-7xl items-center px-5 py-28 md:px-8">
           <div className="max-w-3xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.42)]">
@@ -98,6 +98,15 @@ export default function HomePage() {
               </article>
             ))}
           </div>
+          <div className="relative mt-10 aspect-[4/3] overflow-hidden md:mt-14 md:aspect-[16/7]">
+            <Image
+              src="/images/latest-craft-rolling.webp"
+              alt="家族の手で餅を均一に伸ばして整える製造風景"
+              fill
+              sizes="(min-width: 768px) 1200px, 100vw"
+              className="object-cover object-[58%_center] md:object-center"
+            />
+          </div>
         </div>
       </section>
 
@@ -132,11 +141,11 @@ export default function HomePage() {
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src="/images/web-sixset-gifting.webp"
+              src="/images/latest-sixset-hands.webp"
               alt="飛騨高山から贈る切り餅6種詰め合わせ"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover object-center"
+              className="object-cover object-[50%_45%]"
             />
           </div>
         </div>

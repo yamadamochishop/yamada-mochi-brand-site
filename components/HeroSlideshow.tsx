@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 
 const slides = [
   {
-    src: "/images/craft-seiro-steam-close-01.jpg",
-    position: "object-[38%_center] md:object-center",
+    src: "/images/latest-sixset-hero.webp",
+    position: "object-[68%_center] md:object-center",
   },
   {
-    src: "/images/web-top-sixset.webp",
-    position: "object-[60%_center] md:object-center",
+    src: "/images/latest-sixset-field.webp",
+    position: "object-[72%_center] md:object-center",
   },
 ] as const;
 
@@ -36,7 +36,7 @@ export function HeroSlideshow() {
           src={slide.src}
           alt=""
           fill
-          priority
+          priority={index === 0}
           sizes="100vw"
           className={`object-cover transition-opacity duration-[1400ms] ease-in-out ${slide.position} ${active === index ? "opacity-100" : "opacity-0"}`}
         />

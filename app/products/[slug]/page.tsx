@@ -96,13 +96,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <section className="mt-16 grid gap-5 md:mt-24 md:grid-cols-3">
             <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/product-lineup-six-flavors-wide.jpg" alt="山田もち店の切り餅6種類" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
+              <Image src="/images/latest-six-flavors-dark.webp" alt="山田もち店の切り餅6種類の形と色" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
             </div>
             <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/craft-seiro-steam-close-01.jpg" alt="蒸気が立つ餅づくりのせいろ" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
+              <Image src="/images/latest-craft-rolling.webp" alt="餅を均一に伸ばして整える製造風景" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-[58%_center]" />
             </div>
             <div className="relative aspect-[4/5] overflow-hidden bg-[#efe9dc]">
-              <Image src="/images/web-sixset-gift.webp" alt="山田もち店の切り餅6種詰め合わせ" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
+              <Image src="/images/latest-sixset-hands.webp" alt="家族の手から渡す切り餅6種詰め合わせ" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
             </div>
           </section>
 

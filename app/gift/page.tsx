@@ -27,7 +27,7 @@ export default function GiftPage() {
           </a>
         </div>
         <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
-          <Image src="/images/web-sixset-gift.webp" alt="山田もち店の切り餅6種ギフト" fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />
+          <Image src="/images/latest-sixset-field.webp" alt="飛騨高山の田んぼから贈る切り餅6種ギフト" fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[55%_center]" />
         </div>
       </section>
       <section className="bg-[#f1ece3] py-20">
@@ -47,10 +47,10 @@ export default function GiftPage() {
       <section className="ym-container py-20 md:py-24">
         <div className="grid gap-6 md:grid-cols-2">
           {[
-            ["/images/web-sixset-open.webp", "6種類の切り餅を収めた開封状態のギフト箱", "md:aspect-[4/3]"],
-            ["/images/web-sixset-packages.webp", "6種類の切り餅パッケージ一覧", "md:aspect-[3/2]"],
-            ["/images/web-sixset-basket.webp", "竹籠に並べた6種類の切り餅", "md:aspect-[4/3]"],
-            ["/images/web-sixset-gifting.webp", "飛騨高山から贈る切り餅6種詰め合わせ", "md:aspect-[4/3]"]
+            ["/images/latest-sixset-hero.webp", "箱を開いた6種類の切り餅とギフト包装", "md:aspect-[4/3]"],
+            ["/images/latest-six-flavors-light.webp", "6種類の切り餅の色と素材が分かる一覧", "md:aspect-[3/2]"],
+            ["/images/latest-sixset-table.webp", "飛騨高山の稲穂と6種類の切り餅ギフト", "md:aspect-[4/3]"],
+            ["/images/latest-sixset-hands.webp", "家族の手から渡す切り餅6種詰め合わせ", "md:aspect-[4/3]"]
           ].map(([src, alt, desktopAspect]) => (
             <div key={src} className={`relative aspect-square overflow-hidden bg-[#efe9dc] ${desktopAspect}`}>
               <Image src={src} alt={alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />

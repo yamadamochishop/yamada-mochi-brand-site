@@ -15,7 +15,7 @@ export default function MarketPage() {
       <section className="ym-container py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <Image src="/images/morning-market-real.webp" alt="飛騨高山の陣屋前朝市に並ぶ店々" fill className="object-cover object-top" />
+            <Image src="/images/latest-morning-market.webp" alt="人々が行き交う飛騨高山の陣屋前朝市" fill priority sizes="(min-width: 768px) 55vw, 100vw" className="object-cover object-center" />
           </div>
           <div>
             <p className="mb-6 text-xs tracking-brand text-brown/60">MORNING MARKET</p>
@@ -45,6 +45,9 @@ export default function MarketPage() {
         <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block underline underline-offset-8">
           Google Mapで見る
         </a>
+        <div className="relative mt-16 aspect-[4/3] overflow-hidden md:aspect-[16/7]">
+          <Image src="/images/latest-hida-street.webp" alt="夕暮れの飛騨高山の古い町並み" fill sizes="(min-width: 768px) 1200px, 100vw" className="object-cover object-center" />
+        </div>
       </section>
       <Cta title="朝市で出会った味を、ご自宅へ。" />
     </main>

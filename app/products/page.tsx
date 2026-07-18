@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Cta } from "@/components/Cta";
@@ -19,6 +20,9 @@ export default function ProductsPage() {
           lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
           as="h1"
         />
+        <div className="relative mb-16 aspect-[4/3] overflow-hidden bg-[#efe9dc] md:mb-20 md:aspect-[16/7]">
+          <Image src="/images/latest-six-flavors-light.webp" alt="山田もち店の切り餅6種類を一列に並べた商品一覧" fill priority sizes="(min-width: 768px) 1200px, 100vw" className="object-cover object-center" />
+        </div>
         <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
           {products.map((product) => (
             <ProductCard key={product.slug} product={product} />

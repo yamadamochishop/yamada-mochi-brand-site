@@ -18,8 +18,16 @@ export default function CraftPage() {
           lead="料理人として学んだ、素材を生かすという考え方を、家族で続ける餅づくりに生かしています。"
           as="h1"
         />
-        <div className="relative aspect-[16/8] overflow-hidden">
-          <Image src="/images/craft-seiro-steam-close-01.jpg" alt="蒸気が立つせいろ" fill className="object-cover" />
+        <div className="relative aspect-[4/3] overflow-hidden md:aspect-[16/8]">
+          <Image src="/images/latest-craft-rolling.webp" alt="家族の手で餅を均一に伸ばして整える製造風景" fill priority sizes="(min-width: 768px) 1200px, 100vw" className="object-cover object-[58%_center] md:object-center" />
+        </div>
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image src="/images/latest-craft-seiro.webp" alt="朝の光が差し込む製造場のせいろ" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image src="/images/rice-field-farmer-wide.jpg" alt="飛騨高山で家族がもち米を育てる田んぼ" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-center" />
+          </div>
         </div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {[

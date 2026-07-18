@@ -1,17 +1,17 @@
 export const gallery = [
   {
-    src: "/images/craft-seiro-steam-close-01.jpg",
-    alt: "蒸気が立つせいろと餅づくりの風景",
+    src: "/images/latest-craft-rolling.webp",
+    alt: "餅を均一に伸ばして整える家族の手仕事",
     category: "craft"
   },
   {
-    src: "/images/web-sixset-gifting.webp",
-    alt: "高山もちの6種類ギフトボックス",
+    src: "/images/latest-sixset-hero.webp",
+    alt: "高山もちの6種類ギフトボックスと贈答包装",
     category: "gift"
   },
   {
-    src: "/images/morning-market-real.webp",
-    alt: "朝の陣屋前朝市の風景",
+    src: "/images/latest-morning-market.webp",
+    alt: "人々が行き交う朝の陣屋前朝市",
     category: "market"
   },
   {
@@ -20,7 +20,7 @@ export const gallery = [
     category: "rice"
   },
   {
-    src: "/images/product-lineup-six-flavors-wide.jpg",
+    src: "/images/latest-six-flavors-light.webp",
     alt: "高山もち6種類のラインナップ",
     category: "products"
   },

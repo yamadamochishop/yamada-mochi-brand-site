@@ -77,7 +77,7 @@ export default function ThirdGenerationPage() {
             <Image src="/images/chef-era-yamada-yuki.jpg" alt="料理人時代の山田裕紀" fill className="object-cover" />
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
-            <Image src="/images/rice-field-farmer-wide.jpg" alt="飛騨高山の田んぼ" fill className="object-cover" />
+            <Image src="/images/latest-craft-rolling.webp" alt="山田もち店で餅を均一に伸ばして整える手仕事" fill className="object-cover object-[58%_center]" />
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image src="/images/yamada-yuki-working-applepie.jpg" alt="アップルパイを作る山田裕紀" fill className="object-cover" />

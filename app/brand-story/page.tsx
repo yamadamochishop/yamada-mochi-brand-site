@@ -34,6 +34,16 @@ export default function BrandStoryPage() {
           </div>
         </article>
       </section>
+      <section className="ym-container pb-24 md:pb-32">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="relative aspect-[4/3] overflow-hidden md:col-span-2">
+            <Image src="/images/latest-craft-rolling.webp" alt="餅を均一に伸ばして整える家族の手仕事" fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover object-[58%_center] md:object-center" />
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image src="/images/latest-hida-street.webp" alt="夕暮れの飛騨高山の古い町並み" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
+          </div>
+        </div>
+      </section>
       <Cta />
     </main>
   );
