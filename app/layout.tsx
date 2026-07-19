@@ -14,6 +14,13 @@ export const metadata: Metadata = {
     template: "%s｜山田もち店"
   },
   description: site.description,
+  alternates: {
+    canonical: "/"
+  },
+  robots: {
+    index: site.isIndexable,
+    follow: site.isIndexable
+  },
   openGraph: {
     title: "山田もち店｜思い出に残るお餅を。",
     description: site.description,

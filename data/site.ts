@@ -1,6 +1,8 @@
-const previewSiteUrl = "https://yamada-mochi-brand-site.vercel.app";
-const isIndexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE === "true";
-const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || previewSiteUrl;
+const productionSiteUrl = "https://www.yamadamochi.com";
+// The production domain is connected and live. An explicit `false` remains
+// available when a private staging deployment must be kept out of search.
+const isIndexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE !== "false";
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || productionSiteUrl;
 
 export const site = {
   name: "山田もち店",
@@ -26,12 +28,7 @@ export const site = {
   },
   pokeMarcheUrl: "https://poke-m.com/producers/297308",
   tabechokuUrl: "https://www.tabechoku.com/producers/23313",
-  // Preview-safe defaults. Set these production variables only after the
-  // www domain is connected and verified in Vercel.
-  // Keep preview deployments self-referential even if a production URL is
-  // already stored in Vercel. The configured production URL is used only
-  // once indexing has been explicitly enabled.
-  siteUrl: isIndexable ? configuredSiteUrl : previewSiteUrl,
+  siteUrl: configuredSiteUrl,
   isIndexable,
   googleFormUrl: process.env.NEXT_PUBLIC_GOOGLE_FORM_URL || "",
   market: {
