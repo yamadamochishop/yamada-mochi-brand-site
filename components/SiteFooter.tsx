@@ -43,9 +43,9 @@ export function SiteFooter() {
           <Link href="/contact" className="block hover:text-sumi">
             お問い合わせ
           </Link>
-          <a href={site.baseUrl} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block underline underline-offset-4">
-            BASEで購入する
-          </a>
+          <Link href="/products" className="mt-5 inline-block underline underline-offset-4">
+            商品を選んで購入する
+          </Link>
         </div>
       </div>
       <div className="border-t border-sumi/10 px-5 py-5 text-center text-xs tracking-[0.12em] text-sumi/50">

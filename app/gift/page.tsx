@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Cta } from "@/components/Cta";
+import { JsonLd } from "@/components/JsonLd";
+import { PurchaseGuide } from "@/components/PurchaseGuide";
 import { gift, site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -9,8 +11,33 @@ export const metadata: Metadata = {
 };
 
 export default function GiftPage() {
+  const giftLineupJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "山田もち店 ギフトセット",
+    itemListElement: [
+      ["6種類食べ比べセット", "2,980", site.baseItems.sixSet],
+      ["選べる6袋セット", "2,980", site.baseItems.choiceSixSet],
+      ["12袋セット", "5,960", site.baseItems.twelveSet]
+    ].map(([name, price, url], position) => ({
+      "@type": "ListItem",
+      position: position + 1,
+      item: {
+        "@type": "Product",
+        name,
+        url,
+        offers: {
+          "@type": "Offer",
+          price,
+          priceCurrency: "JPY"
+        }
+      }
+    }))
+  };
+
   return (
     <main className="ym-page">
+      <JsonLd data={giftLineupJsonLd} />
       <section className="ym-container grid gap-12 py-24 md:grid-cols-2 md:py-32">
         <div className="self-center">
           <p className="mb-6 text-xs tracking-brand text-brown/60">GIFT</p>
@@ -22,7 +49,7 @@ export default function GiftPage() {
           <p className="mt-8 leading-9 text-sumi/70">
             飛騨高山・陣屋前朝市で長く親しまれてきた、山田もち店の切り餅を六種類詰め合わせました。
           </p>
-          <a href={site.giftBaseUrl || site.baseUrl} target="_blank" rel="noopener noreferrer" className="mt-9 inline-flex bg-green px-8 py-4 text-base tracking-[0.12em]">
+          <a href={site.baseItems.sixSet} target="_blank" rel="noopener noreferrer" className="mt-9 inline-flex bg-green px-8 py-4 text-base tracking-[0.12em]">
             BASEで購入する
           </a>
         </div>
@@ -33,13 +60,32 @@ export default function GiftPage() {
       <section className="bg-[#f1ece3] py-20">
         <div className="ym-container grid gap-6 md:grid-cols-3">
           {[
-            ["六種類の詰め合わせ", "プレーン、草、三色豆、昆布、たまり、黒ごま海老を各1袋ずつ詰め合わせています。"],
+            ["6種類の食べ比べ", "プレーン、草もち、三色豆もち、昆布もち、たまりもち、黒ごま海老もちを各1袋ずつ詰め合わせています。"],
             ["贈り物として", "ギフト箱に入れ、贈り物として丁寧に梱包してお届けします。"],
             ["飛騨高山から", "朝市で親しまれてきた切り餅を、大切な方へお届けします。"]
           ].map(([title, text]) => (
             <article key={title} className="bg-base p-8">
               <h2 className="font-serifjp text-2xl tracking-[0.12em]">{title}</h2>
               <p className="mt-5 leading-8 text-sumi/65">{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="ym-container py-20 md:py-24">
+        <p className="text-xs tracking-brand text-brown/60">GIFT LINEUP</p>
+        <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">用途に合わせて選ぶ</h2>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {[
+            ["6種類食べ比べセット", "4枚入り（200g）×6袋 / 2,980円（税込）", site.baseItems.sixSet],
+            ["選べる6袋セット", "お好きな味を合計6袋 / 2,980円（税込）", site.baseItems.choiceSixSet],
+            ["12袋セット", "4枚入り（200g）×12袋 / 5,960円（税込）", site.baseItems.twelveSet]
+          ].map(([title, detail, href]) => (
+            <article key={title} className="border border-sumi/10 bg-white/35 p-7">
+              <h3 className="font-serifjp text-xl tracking-[0.1em]">{title}</h3>
+              <p className="mt-4 text-sm leading-7 text-sumi/65">{detail}</p>
+              <a href={href} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex bg-green px-5 py-3 text-sm tracking-[0.1em] text-white transition hover:bg-sumi">
+                BASEの商品ページへ
+              </a>
             </article>
           ))}
         </div>
@@ -75,7 +121,8 @@ export default function GiftPage() {
               </div>
             ))}
           </dl>
-          <a href={site.giftBaseUrl || site.baseUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] md:w-auto">
+          <PurchaseGuide shelfLife={gift.shelfLife} shipping={gift.shippingMethod} isGift />
+          <a href={site.baseItems.sixSet} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] md:w-auto">
             BASEで購入する
           </a>
         </div>

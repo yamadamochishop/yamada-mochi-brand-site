@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Cta } from "@/components/Cta";
+import { PurchaseGuide } from "@/components/PurchaseGuide";
 import { JsonLd } from "@/components/JsonLd";
 import { ProductCard } from "@/components/ProductCard";
 import { breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
@@ -83,8 +84,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="mt-10 border-y border-sumi/10 py-8">
               <p className="text-sm tracking-brand text-sumi/45">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
+              <PurchaseGuide shelfLife={product.shelfLife} shipping={product.shipping} />
               <a
-                href={site.baseUrl}
+                href={product.baseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] transition hover:bg-sumi md:w-auto"
@@ -161,7 +163,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
               {[
                 ["価格", product.price],
-                ["内容量", product.content]
+                ["内容量", product.content],
+                ["賞味期限", product.shelfLife],
+                ["保存方法", product.storage],
+                ["配送方法", product.shipping],
+                ["アレルギー", product.allergy]
               ].map(([label, value]) => (
                 <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[9rem_1fr]">
                   <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>

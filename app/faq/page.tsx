@@ -5,7 +5,7 @@ import { faqs } from "@/data/faqs";
 
 export const metadata: Metadata = {
   title: "よくある質問",
-  description: "山田もち店の飛騨高山 朝市の切り餅 六種詰め合わせについて、内容・価格・賞味期限をご案内します。",
+  description: "山田もち店の飛騨高山 朝市の切り餅 6種類食べ比べセットについて、内容・価格・賞味期限をご案内します。",
   alternates: {
     canonical: "/faq"
   }

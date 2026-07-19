@@ -30,14 +30,12 @@ export function SiteHeader() {
               {label}
             </Link>
           ))}
-          <a
-            href={site.baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/products"
             className="border border-sumi px-5 py-3 text-sumi transition hover:bg-sumi hover:text-base"
           >
-            オンラインショップ
-          </a>
+            商品を選ぶ
+          </Link>
         </nav>
       </div>
     </header>

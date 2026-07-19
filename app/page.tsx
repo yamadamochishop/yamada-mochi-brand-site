@@ -6,7 +6,6 @@ import { ProductCard } from "@/components/ProductCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { products } from "@/data/products";
 import { news } from "@/data/news";
-import { site } from "@/data/site";
 
 export default function HomePage() {
   return (
@@ -32,12 +31,10 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
-                href={site.baseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#products"
                 className="inline-flex min-w-64 justify-center border border-base px-8 py-4 tracking-[0.14em] transition hover:bg-base hover:text-green"
               >
-                オンラインショップで見る
+                商品を選ぶ
               </a>
               <Link
                 href="/third-generation"
@@ -133,7 +130,7 @@ export default function HomePage() {
               大切な人にも。
             </h2>
             <p className="mt-7 leading-9 text-sumi/70">
-              六種類の切り餅を各1袋ずつ、贈り物として一箱に詰めました。2,980円（税込・送料別）で、BASEからご購入いただけます。
+              6種類の切り餅を各1袋ずつ、贈り物として一箱に詰めました。4枚入り（200g）×6袋、2,980円（税込・送料別）です。
             </p>
             <Link href="/gift" className="mt-8 inline-block underline underline-offset-8">
               六種詰め合わせを見る

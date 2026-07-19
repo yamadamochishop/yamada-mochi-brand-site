@@ -1,4 +1,4 @@
-import { site } from "@/data/site";
+import Link from "next/link";
 
 export function Cta({
   title = "飛騨高山の思い出を、大切な人へ。",
@@ -15,14 +15,12 @@ export function Cta({
           {title}
         </h2>
         <p className="mx-auto mt-6 max-w-2xl leading-8 text-base/75">{text}</p>
-        <a
-          href={site.baseUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/products"
           className="mt-10 inline-flex min-w-72 items-center justify-center border border-base px-8 py-4 tracking-[0.12em] transition hover:bg-base hover:text-green"
         >
-          オンラインショップで見る
-        </a>
+          商品を選んで購入する
+        </Link>
       </div>
     </section>
   );
