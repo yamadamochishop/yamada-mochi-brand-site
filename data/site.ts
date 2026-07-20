@@ -1,7 +1,7 @@
+import { isIndexable } from "@/lib/indexing";
+
 const productionSiteUrl = "https://www.yamadamochi.com";
-// The production domain is connected and live. An explicit `false` remains
-// available when a private staging deployment must be kept out of search.
-const isIndexable = process.env.NEXT_PUBLIC_SITE_INDEXABLE !== "false";
+// Indexing is opt-in: only an explicit `true` enables it.
 const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || productionSiteUrl;
 
 export const site = {
