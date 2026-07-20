@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import { Cta } from "@/components/Cta";
 import { SectionHeading } from "@/components/SectionHeading";
+import { JsonLd } from "@/components/JsonLd";
 import { faqs } from "@/data/faqs";
+import { faqPageJsonLd, pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "よくある質問",
   description: "山田もち店の飛騨高山 朝市の切り餅 6種類食べ比べセットについて、内容・価格・賞味期限をご案内します。",
+  openGraph: pageOpenGraph({
+    title: "よくある質問｜山田もち店",
+    description: "山田もち店の飛騨高山 朝市の切り餅 6種類食べ比べセットについて、内容・価格・賞味期限をご案内します。",
+    path: "/faq"
+  }),
   alternates: {
     canonical: "/faq"
   }
@@ -14,6 +21,7 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <main className="ym-page">
+      <JsonLd data={faqPageJsonLd(faqs)} />
       <section className="ym-container py-20 md:py-28">
         <SectionHeading eyebrow="FAQ" title="よくあるご質問" as="h1" />
         <div className="mx-auto mt-16 max-w-3xl space-y-4">

@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Cta } from "@/components/Cta";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "ブランドストーリー",
   description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。",
+  openGraph: pageOpenGraph({
+    title: "ブランドストーリー｜山田もち店",
+    description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。",
+    path: "/brand-story",
+    image: "/images/morning-market-real.webp",
+    imageAlt: "飛騨高山の陣屋前朝市に並ぶ店々"
+  }),
   alternates: {
     canonical: "/brand-story"
   }

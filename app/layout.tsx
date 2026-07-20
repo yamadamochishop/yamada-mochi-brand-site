@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { organizationJsonLd } from "@/lib/seo";
+import { siteJsonLd } from "@/lib/seo";
 import { site } from "@/data/site";
 
 // GA4 measurement IDs are public identifiers. Keep this production value as a
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_MEASUREMENT_ID} />
-        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={siteJsonLd()} />
         <SiteHeader />
         {children}
         <SiteFooter />

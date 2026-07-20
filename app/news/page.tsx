@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { SectionHeading } from "@/components/SectionHeading";
 import { news } from "@/data/news";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "お知らせ",
   description: "山田もち店からのお知らせを掲載します。",
+  openGraph: pageOpenGraph({
+    title: "お知らせ｜山田もち店",
+    description: "山田もち店からのお知らせを掲載します。",
+    path: "/news"
+  }),
   alternates: {
     canonical: "/news"
   }
