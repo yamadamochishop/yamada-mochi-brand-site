@@ -15,7 +15,7 @@ export default function ContactPage() {
   return (
     <main className="ym-page">
       <section className="ym-container py-20 md:py-28">
-        <SectionHeading eyebrow="CONTACT" title="お問い合わせ" />
+        <SectionHeading eyebrow="CONTACT" title="お問い合わせ" as="h1" />
         <div className="mx-auto mt-14 max-w-3xl border border-sumi/10 bg-white/35 p-8 md:p-12">
           <p className="leading-9 text-sumi/65">
             商品やご注文に関するご質問は、お問い合わせ窓口またはオンラインショップをご利用ください。

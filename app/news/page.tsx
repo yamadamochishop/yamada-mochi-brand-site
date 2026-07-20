@@ -14,7 +14,7 @@ export default function NewsPage() {
   return (
     <main className="ym-page">
       <section className="ym-container py-20 md:py-28">
-        <SectionHeading eyebrow="NEWS" title="お知らせ" />
+        <SectionHeading eyebrow="NEWS" title="お知らせ" as="h1" />
         <div className="mx-auto mt-16 max-w-3xl divide-y divide-sumi/10 border-y border-sumi/10">
           {news.map((item) => (
             <article key={item.title} className="grid gap-3 py-7 md:grid-cols-[8rem_1fr]">

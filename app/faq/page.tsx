@@ -15,7 +15,7 @@ export default function FaqPage() {
   return (
     <main className="ym-page">
       <section className="ym-container py-20 md:py-28">
-        <SectionHeading eyebrow="FAQ" title="よくある質問" />
+        <SectionHeading eyebrow="FAQ" title="よくあるご質問" as="h1" />
         <div className="mx-auto mt-16 max-w-3xl space-y-4">
           {faqs.map((faq) => (
             <details key={faq.q} className="border border-sumi/10 bg-white/30 p-6">
