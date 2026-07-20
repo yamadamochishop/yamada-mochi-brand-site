@@ -4,7 +4,10 @@ import { Cta } from "@/components/Cta";
 
 export const metadata: Metadata = {
   title: "ブランドストーリー",
-  description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。"
+  description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。",
+  alternates: {
+    canonical: "/brand-story"
+  }
 };
 
 export default function BrandStoryPage() {

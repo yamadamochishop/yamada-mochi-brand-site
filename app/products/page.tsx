@@ -7,7 +7,10 @@ import { products } from "@/data/products";
 
 export const metadata: Metadata = {
   title: "商品一覧",
-  description: "山田もち店の定番切り餅6種類。プレーン、草もち、三色豆もち、昆布もち、たまりもち、黒ごま海老もち。"
+  description: "山田もち店の定番切り餅6種類。プレーン、草もち、三色豆もち、昆布もち、たまりもち、黒ごま海老もち。",
+  alternates: {
+    canonical: "/products"
+  }
 };
 
 export default function ProductsPage() {

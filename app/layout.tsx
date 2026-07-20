@@ -19,9 +19,6 @@ export const metadata: Metadata = {
     template: "%s｜山田もち店"
   },
   description: site.description,
-  alternates: {
-    canonical: "/"
-  },
   robots: {
     index: site.isIndexable,
     follow: site.isIndexable

@@ -7,7 +7,10 @@ import { gift, site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "ギフト",
-  description: "飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。"
+  description: "飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。",
+  alternates: {
+    canonical: "/gift"
+  }
 };
 
 export default function GiftPage() {

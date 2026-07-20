@@ -5,7 +5,10 @@ import { Cta } from "@/components/Cta";
 
 export const metadata: Metadata = {
   title: "ものづくり",
-  description: "自家栽培もち米、飛騨高山の水、家族の手仕事。山田もち店の餅づくり。"
+  description: "自家栽培もち米、飛騨高山の水、家族の手仕事。山田もち店の餅づくり。",
+  alternates: {
+    canonical: "/craft"
+  }
 };
 
 export default function CraftPage() {

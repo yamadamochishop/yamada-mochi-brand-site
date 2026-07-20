@@ -5,7 +5,10 @@ import { site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "陣屋前朝市",
-  description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。"
+  description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。",
+  alternates: {
+    canonical: "/market"
+  }
 };
 
 export default function MarketPage() {

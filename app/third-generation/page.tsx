@@ -5,7 +5,10 @@ import { Cta } from "@/components/Cta";
 export const metadata: Metadata = {
   title: "三代目の想い",
   description:
-    "料理人として学んだ経験を、家族が守ってきた餅づくりへ。山田もち店三代目・山田裕紀の想い。"
+    "料理人として学んだ経験を、家族が守ってきた餅づくりへ。山田もち店三代目・山田裕紀の想い。",
+  alternates: {
+    canonical: "/third-generation"
+  }
 };
 
 const chapters = [
