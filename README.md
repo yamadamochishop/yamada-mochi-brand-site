@@ -135,15 +135,14 @@ NEXT_PUBLIC_SITE_URL=https://www.yamadamochi.com
 NEXT_PUBLIC_BASE_URL=https://yamadamochi.thebase.in
 NEXT_PUBLIC_CONTACT_EMAIL=info@yamadamochi.com
 NEXT_PUBLIC_GOOGLE_FORM_URL=
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_ID=G-G4QWYR6EH4
 ```
 
 補足:
 
 - `NEXT_PUBLIC_CONTACT_EMAIL` は将来 `info@yamadamochi.com` を使う前提です。
 - Googleフォームを使う場合は `NEXT_PUBLIC_GOOGLE_FORM_URL` にURLを入れます。
-- Google Analyticsを使う場合は `NEXT_PUBLIC_GA_ID` にGA4の測定IDを入れます。
-- GAをまだ使わない場合は `G-XXXXXXXXXX` のままでもサイトは動きます。
+- Google Analyticsは全ページで有効です。Vercelにも `NEXT_PUBLIC_GA_ID=G-G4QWYR6EH4` を設定しておくと、環境ごとの設定を明示できます。
 
 ローカルで確認する場合は、`.env.example` をコピーして `.env.local` を作ります。
 

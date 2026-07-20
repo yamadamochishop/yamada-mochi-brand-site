@@ -7,6 +7,11 @@ import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { organizationJsonLd } from "@/lib/seo";
 import { site } from "@/data/site";
 
+// GA4 measurement IDs are public identifiers. Keep this production value as a
+// safe default so every deployment sends data even when the hosting variable
+// has not yet been configured. It can still be overridden per environment.
+const DEFAULT_GA_MEASUREMENT_ID = "G-G4QWYR6EH4";
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
   title: {
@@ -52,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {!site.isIndexable ? <meta name="robots" content="noindex, nofollow" /> : null}
       </head>
       <body>
-        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID} />
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_MEASUREMENT_ID} />
         <JsonLd data={organizationJsonLd()} />
         <SiteHeader />
         {children}

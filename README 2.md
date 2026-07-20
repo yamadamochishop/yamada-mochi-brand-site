@@ -146,7 +146,7 @@ cp .env.example .env.local
 NEXT_PUBLIC_SITE_URL=https://www.yamadamochi.com
 NEXT_PUBLIC_BASE_URL=https://yamadamochi.thebase.in
 NEXT_PUBLIC_GOOGLE_FORM_URL=
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_ID=G-G4QWYR6EH4
 ```
 
 Googleフォームを使う場合は `NEXT_PUBLIC_GOOGLE_FORM_URL` にURLを入れます。
