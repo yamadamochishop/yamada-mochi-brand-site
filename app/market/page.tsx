@@ -2,10 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Cta } from "@/components/Cta";
 import { site } from "@/data/site";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "陣屋前朝市",
   description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。",
+  openGraph: pageOpenGraph({
+    title: "陣屋前朝市｜山田もち店",
+    description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。",
+    path: "/market",
+    image: "/images/latest-morning-market.webp",
+    imageAlt: "人々が行き交う飛騨高山の陣屋前朝市"
+  }),
   alternates: {
     canonical: "/market"
   }

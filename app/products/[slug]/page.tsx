@@ -7,10 +7,9 @@ import { Cta } from "@/components/Cta";
 import { PurchaseGuide } from "@/components/PurchaseGuide";
 import { JsonLd } from "@/components/JsonLd";
 import { ProductCard } from "@/components/ProductCard";
-import { breadcrumbJsonLd, absoluteUrl } from "@/lib/seo";
+import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from "@/lib/seo";
 import { getProduct, getRelatedProducts, products } from "@/data/products";
 import { faqs } from "@/data/faqs";
-import { site } from "@/data/site";
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -23,11 +22,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: product.seo.title,
     description: product.seo.description,
-    openGraph: {
+    openGraph: pageOpenGraph({
       title: product.seo.title,
       description: product.seo.description,
-      images: [{ url: product.image, alt: product.imageAlt || `${product.name}の商品写真` }]
-    },
+      path: `/products/${product.slug}`,
+      image: product.image,
+      imageAlt: product.imageAlt || `${product.name}の商品写真`
+    }),
     alternates: {
       canonical: `/products/${product.slug}`
     }
@@ -40,21 +41,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   if (!product) notFound();
   const related = getRelatedProducts(product.related);
 
-  const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: `${product.name} 高山もち`,
-    image: absoluteUrl(product.image),
-    description: product.seo.description,
-    brand: {
-      "@type": "Brand",
-      name: site.name
-    },
-  };
-
   return (
     <main className="ym-page">
-      <JsonLd data={productJsonLd} />
+      <JsonLd data={productJsonLd(product)} />
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "ホーム", path: "/" },

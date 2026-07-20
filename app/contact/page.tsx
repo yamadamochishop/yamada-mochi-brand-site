@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeading } from "@/components/SectionHeading";
 import { site } from "@/data/site";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "お問い合わせ",
   description: "山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。",
+  openGraph: pageOpenGraph({
+    title: "お問い合わせ｜山田もち店",
+    description: "山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。",
+    path: "/contact"
+  }),
   alternates: {
     canonical: "/contact"
   }

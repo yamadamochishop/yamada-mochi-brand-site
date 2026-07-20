@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Cta } from "@/components/Cta";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "三代目の想い",
   description:
     "料理人として学んだ経験を、家族が守ってきた餅づくりへ。山田もち店三代目・山田裕紀の想い。",
+  openGraph: pageOpenGraph({
+    title: "三代目の想い｜山田もち店",
+    description: "料理人として学んだ経験を、家族が守ってきた餅づくりへ。山田もち店三代目・山田裕紀の想い。",
+    path: "/third-generation",
+    image: "/images/yamada-yuki-portrait.jpg",
+    imageAlt: "山田もち店三代目 山田裕紀"
+  }),
   alternates: {
     canonical: "/third-generation"
   }

@@ -2,10 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Cta } from "@/components/Cta";
+import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "ものづくり",
   description: "自家栽培もち米、飛騨高山の水、家族の手仕事。山田もち店の餅づくり。",
+  openGraph: pageOpenGraph({
+    title: "ものづくり｜山田もち店",
+    description: "自家栽培もち米、飛騨高山の水、家族の手仕事。山田もち店の餅づくり。",
+    path: "/craft",
+    image: "/images/latest-craft-rolling.webp",
+    imageAlt: "家族の手で餅を均一に伸ばして整える製造風景"
+  }),
   alternates: {
     canonical: "/craft"
   }

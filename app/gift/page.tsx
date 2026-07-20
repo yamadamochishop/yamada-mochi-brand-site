@@ -4,10 +4,18 @@ import { Cta } from "@/components/Cta";
 import { JsonLd } from "@/components/JsonLd";
 import { PurchaseGuide } from "@/components/PurchaseGuide";
 import { gift, site } from "@/data/site";
+import { absoluteUrl, breadcrumbJsonLd, pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "ギフト",
   description: "飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。",
+  openGraph: pageOpenGraph({
+    title: "ギフト｜山田もち店",
+    description: "飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。",
+    path: "/gift",
+    image: "/images/latest-sixset-field.webp",
+    imageAlt: "飛騨高山の田んぼから贈る切り餅6種ギフト"
+  }),
   alternates: {
     canonical: "/gift"
   }
@@ -19,20 +27,27 @@ export default function GiftPage() {
     "@type": "ItemList",
     name: "山田もち店 ギフトセット",
     itemListElement: [
-      ["6種類食べ比べセット", "2,980", site.baseItems.sixSet],
-      ["選べる6袋セット", "2,980", site.baseItems.choiceSixSet],
-      ["12袋セット", "5,960", site.baseItems.twelveSet]
-    ].map(([name, price, url], position) => ({
+      ["6種類食べ比べセット", "4枚入り（200g）×6袋", "2,980", site.baseItems.sixSet],
+      ["選べる6袋セット", "お好きな味を合計6袋", "2,980", site.baseItems.choiceSixSet],
+      ["12袋セット", "4枚入り（200g）×12袋", "5,960", site.baseItems.twelveSet]
+    ].map(([name, description, price, url], position) => ({
       "@type": "ListItem",
       position: position + 1,
       item: {
         "@type": "Product",
         name,
+        description,
+        image: absoluteUrl("/images/latest-sixset-field.webp"),
+        brand: {
+          "@type": "Brand",
+          name: site.name
+        },
         url,
         offers: {
           "@type": "Offer",
           price,
-          priceCurrency: "JPY"
+          priceCurrency: "JPY",
+          availability: "https://schema.org/InStock"
         }
       }
     }))
@@ -40,6 +55,12 @@ export default function GiftPage() {
 
   return (
     <main className="ym-page">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "ホーム", path: "/" },
+          { name: "ギフト", path: "/gift" }
+        ])}
+      />
       <JsonLd data={giftLineupJsonLd} />
       <section className="ym-container grid gap-12 py-24 md:grid-cols-2 md:py-32">
         <div className="self-center">
