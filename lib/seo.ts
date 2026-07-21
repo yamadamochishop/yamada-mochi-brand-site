@@ -83,8 +83,14 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
   };
 }
 
-function numericPrice(price: string) {
-  return price.replace(/[^0-9]/g, "");
+export function numericPrice(price: string) {
+  const value = Number(price.replace(/[^0-9.]/g, ""));
+
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`Invalid product price: ${price}`);
+  }
+
+  return value;
 }
 
 export function productSchema(product: Product) {

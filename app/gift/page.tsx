@@ -4,7 +4,7 @@ import { Cta } from "@/components/Cta";
 import { JsonLd } from "@/components/JsonLd";
 import { PurchaseGuide } from "@/components/PurchaseGuide";
 import { gift, site } from "@/data/site";
-import { absoluteUrl, breadcrumbJsonLd, pageOpenGraph } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, numericPrice, pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "ギフト",
@@ -27,9 +27,9 @@ export default function GiftPage() {
     "@type": "ItemList",
     name: "山田もち店 ギフトセット",
     itemListElement: [
-      ["6種類食べ比べセット", "4枚入り（200g）×6袋", "2,980", site.baseItems.sixSet],
-      ["選べる6袋セット", "お好きな味を合計6袋", "2,980", site.baseItems.choiceSixSet],
-      ["12袋セット", "4枚入り（200g）×12袋", "5,960", site.baseItems.twelveSet]
+      ["6種類食べ比べセット", "4枚入り（200g）×6袋", "2,980円（税込）", site.baseItems.sixSet],
+      ["選べる6袋セット", "お好きな味を合計6袋", "2,980円（税込）", site.baseItems.choiceSixSet],
+      ["12袋セット", "4枚入り（200g）×12袋", "5,960円（税込）", site.baseItems.twelveSet]
     ].map(([name, description, price, url], position) => ({
       "@type": "ListItem",
       position: position + 1,
@@ -45,7 +45,7 @@ export default function GiftPage() {
         url,
         offers: {
           "@type": "Offer",
-          price,
+          price: numericPrice(price),
           priceCurrency: "JPY",
           availability: "https://schema.org/InStock"
         }
