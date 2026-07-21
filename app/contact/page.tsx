@@ -46,14 +46,10 @@ export default function ContactPage() {
             </div>
           </dl>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            {site.googleFormUrl ? (
+            {site.googleFormUrl && (
               <a className="inline-flex justify-center bg-green px-8 py-4 text-sm tracking-[0.12em] text-white" href={site.googleFormUrl} target="_blank" rel="noopener noreferrer">
                 お問い合わせフォームへ
               </a>
-            ) : (
-              <p className="border border-dashed border-sumi/20 px-6 py-4 text-sm leading-7 text-sumi/60">
-                GoogleフォームURLを環境変数に設定すると、ここにお問い合わせフォームボタンが表示されます。
-              </p>
             )}
             <Link className="inline-flex justify-center border border-sumi/20 px-8 py-4 text-sm tracking-[0.12em]" href="/faq">
               よくある質問を見る
