@@ -15,7 +15,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-sumi/10 bg-base/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-        <Link href="/" className="group flex items-center gap-3" aria-label="山田もち店トップへ">
+        <Link href="/" className="group flex items-center gap-3">
           <span className="grid h-11 w-11 place-items-center rounded-full border border-sumi/35 font-serifjp text-xl">
             山
           </span>
