@@ -136,8 +136,7 @@ export default function GiftPage() {
             {[
               ["価格", `${gift.price}・${gift.shipping}`],
               ["内容", gift.contents],
-              ["内容量", gift.quantity],
-              ["賞味期限", gift.shelfLife]
+              ["内容量", gift.quantity]
             ].map(([label, value]) => (
               <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[8rem_1fr]">
                 <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>
