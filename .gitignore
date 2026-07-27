@@ -9,3 +9,7 @@ dist
 *.log
 .DS_Store
 tsconfig.tsbuildinfo
+
+# ローカル作業用（画像取り込み・検証スクリプトなど）
+/tmp
+/drive-latest
