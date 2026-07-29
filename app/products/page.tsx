@@ -1,25 +1,27 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import { ProductCard } from "@/components/ProductCard";
-import { SectionHeading } from "@/components/SectionHeading";
-import { Cta } from "@/components/Cta";
-import { JsonLd } from "@/components/JsonLd";
-import { products } from "@/data/products";
-import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd } from "@/lib/seo";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { ProductCard } from '@/components/ProductCard';
+import { SectionHeading } from '@/components/SectionHeading';
+import { Cta } from '@/components/Cta';
+import { JsonLd } from '@/components/JsonLd';
+import { products } from '@/data/products';
+import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: "商品一覧",
-  description: "山田もち店の定番切り餅6種類。プレーン、草もち、三色豆もち、昆布もち、たまりもち、黒ごま海老もち。",
+  title: '商品一覧',
+  description:
+    '山田もち店の定番切り餅6種類。プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅。',
   openGraph: pageOpenGraph({
-    title: "商品一覧｜山田もち店",
-    description: "山田もち店の定番切り餅6種類。プレーン、草もち、三色豆もち、昆布もち、たまりもち、黒ごま海老もち。",
-    path: "/products",
-    image: "/images/latest-six-flavors-light.webp",
-    imageAlt: "山田もち店の切り餅6種類を一列に並べた商品一覧"
+    title: '商品一覧｜山田もち店',
+    description:
+      '山田もち店の定番切り餅6種類。プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅。',
+    path: '/products',
+    image: '/images/latest-six-flavors-light.webp',
+    imageAlt: '山田もち店の切り餅6種類を一列に並べた商品一覧',
   }),
   alternates: {
-    canonical: "/products"
-  }
+    canonical: '/products',
+  },
 };
 
 export default function ProductsPage() {
@@ -27,8 +29,8 @@ export default function ProductsPage() {
     <main className="ym-page">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "ホーム", path: "/" },
-          { name: "商品一覧", path: "/products" }
+          { name: 'ホーム', path: '/' },
+          { name: '商品一覧', path: '/products' },
         ])}
       />
       <JsonLd data={productListJsonLd(products)} />
@@ -40,7 +42,14 @@ export default function ProductsPage() {
           as="h1"
         />
         <div className="relative mb-16 aspect-[4/3] overflow-hidden bg-[#efe9dc] md:mb-20 md:aspect-[16/7]">
-          <Image src="/images/latest-six-flavors-light.webp" alt="山田もち店の切り餅6種類を一列に並べた商品一覧" fill priority sizes="(min-width: 768px) 1200px, 100vw" className="object-cover object-center" />
+          <Image
+            src="/images/latest-six-flavors-light.webp"
+            alt="山田もち店の切り餅6種類を一列に並べた商品一覧"
+            fill
+            priority
+            sizes="(min-width: 768px) 1200px, 100vw"
+            className="object-cover object-center"
+          />
         </div>
         <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
           {products.map((product) => (
