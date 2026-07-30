@@ -10,7 +10,7 @@ export const site = {
   tagline: '思い出に残るお餅を。',
   description: '100％自家栽培のもち米「たかやまもち」でつくる、飛騨高山・陣屋前朝市の切り餅。',
   founded: '1975年創業',
-  address: '岐阜県高山市千島町1145番地',
+  address: '岐阜県高山市千島町1145',
   tel: '0577-33-7633',
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'info@yamadamochi.com',
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://yamadamochi.thebase.in',

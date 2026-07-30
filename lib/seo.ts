@@ -50,7 +50,7 @@ export function siteJsonLd() {
           "@type": "PostalAddress",
           addressRegion: "岐阜県",
           addressLocality: "高山市",
-          streetAddress: "千島町1145番地",
+          streetAddress: "千島町1145",
           addressCountry: "JP"
         },
         foundingDate: "1975",
