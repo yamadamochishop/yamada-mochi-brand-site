@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { Cta } from "@/components/Cta";
-import { HeroSlideshow } from "@/components/HeroSlideshow";
-import { ProductCard } from "@/components/ProductCard";
-import { SectionHeading } from "@/components/SectionHeading";
-import { products } from "@/data/products";
-import { news } from "@/data/news";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Cta } from '@/components/Cta';
+import { HeroSlideshow } from '@/components/HeroSlideshow';
+import { ProductCard } from '@/components/ProductCard';
+import { SectionHeading } from '@/components/SectionHeading';
+import { products, sixFlavorGift } from '@/data/catalog';
+import { news } from '@/data/news';
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "/"
-  }
+    canonical: '/',
+  },
 };
 
 export default function HomePage() {
@@ -25,7 +25,9 @@ export default function HomePage() {
         </div>
         <div className="relative mx-auto flex min-h-[88vh] max-w-7xl items-center px-5 py-28 md:px-8">
           <div className="max-w-3xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.42)]">
-            <p className="mb-8 text-xs font-semibold tracking-brand text-base/78">FROM HIDA TAKAYAMA</p>
+            <p className="mb-8 text-xs font-semibold tracking-brand text-base/78">
+              FROM HIDA TAKAYAMA
+            </p>
             <h1 className="font-serifjp text-5xl leading-[1.45] tracking-[0.18em] md:text-7xl">
               思い出に残る
               <br />
@@ -91,9 +93,17 @@ export default function HomePage() {
           />
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              ["01", "もち米", "千島町・越後町の田んぼで育てた「たかやまもち」を100％使用しています。"],
-              ["02", "水と土地", "飛騨高山の澄んだ空気と水。土地の恵みを、そのままお餅へ。"],
-              ["03", "家族のものづくり", "栽培から製造・販売までを家族で一貫して行い、もち米本来の風味と粘りを大切にしています。"]
+              [
+                '01',
+                'もち米',
+                '千島町・越後町の田んぼで育てた「たかやまもち」を100％使用しています。',
+              ],
+              ['02', '水と土地', '飛騨高山の澄んだ空気と水。土地の恵みを、そのままお餅へ。'],
+              [
+                '03',
+                '家族のものづくり',
+                '栽培から製造・販売までを家族で一貫して行い、もち米本来の風味と粘りを大切にしています。',
+              ],
             ].map(([num, title, text]) => (
               <article key={num} className="border border-sumi/10 bg-base p-8">
                 <span className="text-xs tracking-brand text-brown/50">{num}</span>
@@ -137,7 +147,8 @@ export default function HomePage() {
               大切な人にも。
             </h2>
             <p className="mt-7 leading-9 text-sumi/70">
-              6種類の切り餅を各1袋ずつ、贈り物として一箱に詰めました。4枚入り（200g）×6袋、2,980円（税込・送料別）です。
+              6種類の切り餅を各1袋ずつ、{sixFlavorGift.packaging}。{sixFlavorGift.content}、
+              {sixFlavorGift.price}・送料別です。
             </p>
             <Link href="/gift" className="mt-8 inline-block underline underline-offset-8">
               六種詰め合わせを見る

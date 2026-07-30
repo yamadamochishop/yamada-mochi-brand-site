@@ -1,19 +1,19 @@
-import type { MetadataRoute } from "next";
-import { products } from "@/data/products";
-import { site } from "@/data/site";
+import type { MetadataRoute } from 'next';
+import { products } from '@/data/catalog';
+import { site } from '@/data/site';
 
 const staticPaths = [
-  "",
-  "/brand-story",
-  "/third-generation",
-  "/craft",
-  "/products",
-  "/gift",
-  "/market",
-  "/news",
-  "/voices",
-  "/faq",
-  "/contact"
+  '',
+  '/brand-story',
+  '/third-generation',
+  '/craft',
+  '/products',
+  '/gift',
+  '/market',
+  '/news',
+  '/voices',
+  '/faq',
+  '/contact',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [...staticPaths, ...productPaths].map((path) => ({
     url: `${site.siteUrl}${path}`,
     lastModified: now,
-    changeFrequency: path.startsWith("/products") ? "monthly" : "weekly",
-    priority: path === "" ? 1 : path.startsWith("/products") ? 0.8 : 0.7
+    changeFrequency: path.startsWith('/products') ? 'monthly' : 'weekly',
+    priority: path === '' ? 1 : path.startsWith('/products') ? 0.8 : 0.7,
   }));
 }

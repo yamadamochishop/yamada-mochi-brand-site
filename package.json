@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run build",
+    "check:catalog": "node scripts/check-catalog.mjs",
+    "check": "pnpm run check:catalog && pnpm run lint && pnpm run typecheck && pnpm run build",
     "prepare": "husky"
   },
   "dependencies": {
