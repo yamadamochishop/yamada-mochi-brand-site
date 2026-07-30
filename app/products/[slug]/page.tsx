@@ -8,7 +8,7 @@ import { PurchaseGuide } from '@/components/PurchaseGuide';
 import { JsonLd } from '@/components/JsonLd';
 import { ProductCard } from '@/components/ProductCard';
 import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from '@/lib/seo';
-import { getProduct, getRelatedProducts, products } from '@/data/products';
+import { getProduct, getRelatedProducts, products } from '@/data/catalog';
 import { faqs } from '@/data/faqs';
 
 export function generateStaticParams() {

@@ -3,7 +3,8 @@ import Image from 'next/image';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
-import { gift, site } from '@/data/site';
+import { catalogSets, sixFlavorGift } from '@/data/catalog';
+import { site } from '@/data/site';
 import { absoluteUrl, breadcrumbJsonLd, numericPrice, pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -28,26 +29,22 @@ export default function GiftPage() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: '山田もち店 ギフトセット',
-    itemListElement: [
-      ['6種類食べ比べセット', '4枚入り（200g）×6袋', '2,980円（税込）', site.baseItems.sixSet],
-      ['選べる6袋セット', 'お好きな味を合計6袋', '2,980円（税込）', site.baseItems.choiceSixSet],
-      ['12袋セット', '4枚入り（200g）×12袋', '5,960円（税込）', site.baseItems.twelveSet],
-    ].map(([name, description, price, url], position) => ({
+    itemListElement: catalogSets.map((product, position) => ({
       '@type': 'ListItem',
       position: position + 1,
       item: {
         '@type': 'Product',
-        name,
-        description,
-        image: absoluteUrl('/images/latest-sixset-field.webp'),
+        name: product.name,
+        description: product.seo.description,
+        image: absoluteUrl(product.image),
         brand: {
           '@type': 'Brand',
           name: site.name,
         },
-        url,
+        url: product.baseUrl,
         offers: {
           '@type': 'Offer',
-          price: numericPrice(price),
+          price: numericPrice(product.price),
           priceCurrency: 'JPY',
           availability: 'https://schema.org/InStock',
         },
@@ -76,7 +73,7 @@ export default function GiftPage() {
             飛騨高山・陣屋前朝市で長く親しまれてきた、山田もち店の切り餅を六種類詰め合わせました。
           </p>
           <a
-            href={site.baseItems.sixSet}
+            href={sixFlavorGift.baseUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-9 inline-flex bg-green px-8 py-4 text-base tracking-[0.12em]"
@@ -102,7 +99,7 @@ export default function GiftPage() {
               '6種類の食べ比べ',
               'プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅を各1袋ずつ詰め合わせています。',
             ],
-            ['贈り物として', 'ギフト箱に入れ、贈り物として丁寧に梱包してお届けします。'],
+            ['贈り物として', `${sixFlavorGift.packaging}。丁寧に梱包してお届けします。`],
             ['飛騨高山から', '朝市で親しまれてきた切り餅を、大切な方へお届けします。'],
           ].map(([title, text]) => (
             <article key={title} className="bg-base p-8">
@@ -118,32 +115,15 @@ export default function GiftPage() {
           用途に合わせて選ぶ
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {[
-            [
-              '6種類食べ比べセット',
-              '4枚入り（200g）×6袋 / 2,980円（税込）',
-              site.baseItems.sixSet,
-              'アレルゲン：えび・ごま・大豆・小麦',
-            ],
-            [
-              '選べる6袋セット',
-              'お好きな味を合計6袋 / 2,980円（税込）',
-              site.baseItems.choiceSixSet,
-              '選択された商品のアレルゲンをご確認ください。各商品の詳細ページに原材料・アレルゲンを掲載しています。',
-            ],
-            [
-              '12袋セット',
-              '4枚入り（200g）×12袋 / 5,960円（税込）',
-              site.baseItems.twelveSet,
-              'アレルゲン：えび・ごま・大豆・小麦',
-            ],
-          ].map(([title, detail, href, allergy]) => (
-            <article key={title} className="border border-sumi/10 bg-white/35 p-7">
-              <h3 className="font-serifjp text-xl tracking-[0.1em]">{title}</h3>
-              <p className="mt-4 text-sm leading-7 text-sumi/65">{detail}</p>
-              <p className="mt-3 text-sm leading-7 text-sumi/65">{allergy}</p>
+          {catalogSets.map((product) => (
+            <article key={product.slug} className="border border-sumi/10 bg-white/35 p-7">
+              <h3 className="font-serifjp text-xl tracking-[0.1em]">{product.cardName}</h3>
+              <p className="mt-4 text-sm leading-7 text-sumi/65">
+                {product.content} / {product.price}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-sumi/65">アレルゲン：{product.allergy}</p>
               <a
-                href={href}
+                href={product.baseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-7 inline-flex bg-green px-5 py-3 text-sm tracking-[0.1em] text-white transition hover:bg-sumi"
@@ -196,12 +176,15 @@ export default function GiftPage() {
       <section className="ym-container py-20 md:py-24">
         <div className="mx-auto max-w-3xl border-y border-sumi/10 py-8">
           <p className="text-xs tracking-brand text-brown/60">GIFT DETAILS</p>
-          <h2 className="mt-4 font-serifjp text-2xl tracking-[0.1em] md:text-3xl">{gift.name}</h2>
+          <h2 className="mt-4 font-serifjp text-2xl tracking-[0.1em] md:text-3xl">
+            {sixFlavorGift.name}
+          </h2>
           <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
             {[
-              ['価格', `${gift.price}・${gift.shipping}`],
-              ['内容', gift.contents],
-              ['内容量', gift.quantity],
+              ['価格', `${sixFlavorGift.price}・送料別`],
+              ['内容', sixFlavorGift.ingredients],
+              ['内容量', sixFlavorGift.content],
+              ['梱包', sixFlavorGift.packaging],
             ].map(([label, value]) => (
               <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[8rem_1fr]">
                 <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>
@@ -209,9 +192,13 @@ export default function GiftPage() {
               </div>
             ))}
           </dl>
-          <PurchaseGuide shelfLife={gift.shelfLife} shipping={gift.shippingMethod} isGift />
+          <PurchaseGuide
+            shelfLife={sixFlavorGift.shelfLife}
+            shipping={sixFlavorGift.shipping}
+            isGift
+          />
           <a
-            href={site.baseItems.sixSet}
+            href={sixFlavorGift.baseUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] md:w-auto"

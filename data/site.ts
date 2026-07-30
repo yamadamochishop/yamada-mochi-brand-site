@@ -14,17 +14,6 @@ export const site = {
   tel: '0577-33-7633',
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'info@yamadamochi.com',
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://yamadamochi.thebase.in',
-  baseItems: {
-    plain: 'https://yamadamochi.thebase.in/items/42083183',
-    sansyokumame: 'https://yamadamochi.thebase.in/items/42083299',
-    yomogi: 'https://yamadamochi.thebase.in/items/42083333',
-    kombu: 'https://yamadamochi.thebase.in/items/42083403',
-    tamari: 'https://yamadamochi.thebase.in/items/42083448',
-    ebi: 'https://yamadamochi.thebase.in/items/42083499',
-    sixSet: 'https://yamadamochi.thebase.in/items/149543143',
-    choiceSixSet: 'https://yamadamochi.thebase.in/items/149543351',
-    twelveSet: 'https://yamadamochi.thebase.in/items/149544078',
-  },
   pokeMarcheUrl: 'https://poke-m.com/producers/297308',
   tabechokuUrl: 'https://www.tabechoku.com/producers/23313',
   siteUrl: configuredSiteUrl,
@@ -40,14 +29,3 @@ export const site = {
     mapQuery: '高山陣屋前朝市',
   },
 };
-
-export const gift = {
-  name: '飛騨高山 朝市の切り餅 6種類食べ比べセット',
-  price: '2,980円（税込）',
-  shipping: '送料別',
-  contents: 'プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅を各1袋',
-  quantity: '200g（4枚）×6袋',
-  shelfLife: '製造日より8日',
-  shippingMethod: '常温便',
-  shippingLeadTime: '通常、ご注文から3〜5営業日以内に発送',
-} as const;

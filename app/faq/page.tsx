@@ -1,21 +1,22 @@
-import type { Metadata } from "next";
-import { Cta } from "@/components/Cta";
-import { SectionHeading } from "@/components/SectionHeading";
-import { JsonLd } from "@/components/JsonLd";
-import { faqs } from "@/data/faqs";
-import { faqPageJsonLd, pageOpenGraph } from "@/lib/seo";
+import type { Metadata } from 'next';
+import { Cta } from '@/components/Cta';
+import { SectionHeading } from '@/components/SectionHeading';
+import { JsonLd } from '@/components/JsonLd';
+import { sixFlavorGift } from '@/data/catalog';
+import { faqs } from '@/data/faqs';
+import { faqPageJsonLd, pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: "よくある質問",
-  description: "山田もち店の飛騨高山 朝市の切り餅 6種類食べ比べセットについて、内容・価格・賞味期限をご案内します。",
+  title: 'よくある質問',
+  description: `山田もち店の${sixFlavorGift.name}について、内容・価格・賞味期限をご案内します。`,
   openGraph: pageOpenGraph({
-    title: "よくある質問｜山田もち店",
-    description: "山田もち店の飛騨高山 朝市の切り餅 6種類食べ比べセットについて、内容・価格・賞味期限をご案内します。",
-    path: "/faq"
+    title: 'よくある質問｜山田もち店',
+    description: `山田もち店の${sixFlavorGift.name}について、内容・価格・賞味期限をご案内します。`,
+    path: '/faq',
   }),
   alternates: {
-    canonical: "/faq"
-  }
+    canonical: '/faq',
+  },
 };
 
 export default function FaqPage() {
@@ -27,7 +28,9 @@ export default function FaqPage() {
         <div className="mx-auto mt-16 max-w-3xl space-y-4">
           {faqs.map((faq) => (
             <details key={faq.q} className="border border-sumi/10 bg-white/30 p-6">
-              <summary className="cursor-pointer font-serifjp text-xl tracking-[0.08em]">{faq.q}</summary>
+              <summary className="cursor-pointer font-serifjp text-xl tracking-[0.08em]">
+                {faq.q}
+              </summary>
               <p className="mt-5 leading-8 text-sumi/65">{faq.a}</p>
             </details>
           ))}

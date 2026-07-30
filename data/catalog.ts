@@ -32,6 +32,26 @@ export type Product = {
   };
 };
 
+export type CatalogSet = {
+  slug: string;
+  name: string;
+  cardName: string;
+  image: string;
+  baseUrl: string;
+  price: string;
+  content: string;
+  packaging: string;
+  ingredients: string;
+  allergy: string;
+  shelfLife: string;
+  storage: string;
+  shipping: string;
+  seo: {
+    title: string;
+    description: string;
+  };
+};
+
 export const products: Product[] = [
   {
     slug: 'plain',
@@ -298,6 +318,68 @@ export const products: Product[] = [
     },
   },
 ];
+
+const commonSetDetails = {
+  image: '/images/latest-sixset-field.webp',
+  ingredients:
+    'プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅の各商品情報をご確認ください。',
+  shelfLife: '製造日より8日',
+  storage: '直射日光・高温多湿を避けてください。',
+  shipping: '常温便 / 通常、ご注文から3〜5営業日以内に発送',
+} as const;
+
+export const catalogSets: CatalogSet[] = [
+  {
+    slug: 'six-flavor-gift',
+    name: '飛騨高山 朝市の切り餅 6種類食べ比べセット',
+    cardName: '6種類食べ比べセット',
+    ...commonSetDetails,
+    baseUrl: 'https://yamadamochi.thebase.in/items/149543143',
+    price: '2,980円（税込）',
+    content: '200g × 6袋',
+    packaging: '贈り物用ギフトボックス入り',
+    allergy: 'えび・ごま・大豆・小麦',
+    seo: {
+      title: '飛騨高山 朝市の切り餅 6種類食べ比べセット｜山田もち店',
+      description:
+        '飛騨高山・陣屋前朝市で親しまれる6種類の切り餅を各1袋、贈り物用ギフトボックスに詰めた食べ比べセットです。',
+    },
+  },
+  {
+    slug: 'choice-six-set',
+    name: '選べる6袋セット',
+    cardName: '選べる6袋セット',
+    ...commonSetDetails,
+    baseUrl: 'https://yamadamochi.thebase.in/items/149543351',
+    price: '2,980円（税込）',
+    content: '200g × 6袋',
+    packaging: 'ギフトボックス入り',
+    allergy:
+      '選択された商品のアレルゲンをご確認ください。各商品の詳細ページに原材料・アレルゲンを掲載しています。',
+    seo: {
+      title: '選べる6袋セット｜山田もち店',
+      description: '6種類の切り餅から、お好きな味を合計6袋選べるセットです。',
+    },
+  },
+  {
+    slug: 'twelve-set',
+    name: '12袋セット',
+    cardName: '12袋セット',
+    ...commonSetDetails,
+    baseUrl: 'https://yamadamochi.thebase.in/items/149544078',
+    price: '5,960円（税込）',
+    content: '200g × 12袋',
+    packaging: 'ギフトボックス入り',
+    allergy: 'えび・ごま・大豆・小麦',
+    seo: {
+      title: '12袋セット｜山田もち店',
+      description: '飛騨高山の切り餅6種類を各2袋、合計12袋詰め合わせたセットです。',
+    },
+  },
+];
+
+export const catalog = [...products, ...catalogSets] as const;
+export const sixFlavorGift = catalogSets[0];
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);

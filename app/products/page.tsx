@@ -4,7 +4,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { SectionHeading } from '@/components/SectionHeading';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
-import { products } from '@/data/products';
+import { products } from '@/data/catalog';
 import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {

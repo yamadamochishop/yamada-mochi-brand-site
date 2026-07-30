@@ -1,19 +1,19 @@
-import Image from "next/image";
-import Link from "next/link";
-import type { Product } from "@/data/products";
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Product } from '@/data/catalog';
 
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group">
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-[#efe9dc] p-8">
-        <Image
-          src={product.cardImage || product.image}
-          alt={product.cardImageAlt || product.imageAlt || `${product.name}の商品写真`}
-          fill
-          sizes="(min-width: 1024px) 30vw, 90vw"
-          className="object-contain p-6 transition duration-700 group-hover:scale-[1.04]"
-        />
+          <Image
+            src={product.cardImage || product.image}
+            alt={product.cardImageAlt || product.imageAlt || `${product.name}の商品写真`}
+            fill
+            sizes="(min-width: 1024px) 30vw, 90vw"
+            className="object-contain p-6 transition duration-700 group-hover:scale-[1.04]"
+          />
         </div>
       </Link>
       <div className="mt-7 text-center">

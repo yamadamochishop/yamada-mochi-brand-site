@@ -1,3 +1,5 @@
+import { sixFlavorGift } from '@/data/catalog';
+
 export const faqs = [
   {
     q: '6種類食べ比べセットの内容を教えてください。',
@@ -5,11 +7,11 @@ export const faqs = [
   },
   {
     q: 'ギフトの価格を教えてください。',
-    a: '飛騨高山 朝市の切り餅 6種類食べ比べセットは、2,980円（税込）です。送料は別途かかります。',
+    a: `${sixFlavorGift.name}は、${sixFlavorGift.price}です。送料は別途かかります。`,
   },
   {
     q: '内容量を教えてください。',
-    a: '4枚入り（200g）×6袋です。',
+    a: `${sixFlavorGift.content}です。`,
   },
   {
     q: '12袋セットの価格と内容量を教えてください。',
