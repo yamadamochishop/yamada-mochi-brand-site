@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import { Cta } from "@/components/Cta";
-import { site } from "@/data/site";
-import { pageOpenGraph } from "@/lib/seo";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { ArticlePurchaseCTA } from '@/components/ArticlePurchaseCTA';
+import { site } from '@/data/site';
+import { pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: "陣屋前朝市",
-  description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。",
+  title: '陣屋前朝市',
+  description: '山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。',
   openGraph: pageOpenGraph({
-    title: "陣屋前朝市｜山田もち店",
-    description: "山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。",
-    path: "/market",
-    image: "/images/latest-morning-market.webp",
-    imageAlt: "人々が行き交う飛騨高山の陣屋前朝市"
+    title: '陣屋前朝市｜山田もち店',
+    description: '山田もち店が出店する飛騨高山・陣屋前朝市の営業時間、アクセス、通販情報。',
+    path: '/market',
+    image: '/images/latest-morning-market.webp',
+    imageAlt: '人々が行き交う飛騨高山の陣屋前朝市',
   }),
   alternates: {
-    canonical: "/market"
-  }
+    canonical: '/market',
+  },
 };
 
 export default function MarketPage() {
@@ -26,7 +26,14 @@ export default function MarketPage() {
       <section className="ym-container py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <Image src="/images/latest-morning-market.webp" alt="人々が行き交う飛騨高山の陣屋前朝市" fill priority sizes="(min-width: 768px) 55vw, 100vw" className="object-cover object-center" />
+            <Image
+              src="/images/latest-morning-market.webp"
+              alt="人々が行き交う飛騨高山の陣屋前朝市"
+              fill
+              priority
+              sizes="(min-width: 768px) 55vw, 100vw"
+              className="object-cover object-center"
+            />
           </div>
           <div>
             <p className="mb-6 text-xs tracking-brand text-brown/60">MORNING MARKET</p>
@@ -42,10 +49,10 @@ export default function MarketPage() {
         </div>
         <dl className="mt-16 grid gap-4 border-y border-sumi/10 py-8 md:grid-cols-2">
           {[
-            ["営業時間", site.market.hours],
-            ["営業期間", site.market.season],
-            ["アクセス", site.market.access],
-            ["駐車場", site.market.parking]
+            ['営業時間', site.market.hours],
+            ['営業期間', site.market.season],
+            ['アクセス', site.market.access],
+            ['駐車場', site.market.parking],
           ].map(([label, value]) => (
             <div key={label} className="border-b border-sumi/10 py-5 md:border-b-0">
               <dt className="text-xs tracking-brand text-sumi/45">{label}</dt>
@@ -53,14 +60,25 @@ export default function MarketPage() {
             </div>
           ))}
         </dl>
-        <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block underline underline-offset-8">
+        <a
+          href={mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-block underline underline-offset-8"
+        >
           Google Mapで見る
         </a>
         <div className="relative mt-16 aspect-[4/3] overflow-hidden md:aspect-[16/7]">
-          <Image src="/images/latest-hida-street.webp" alt="夕暮れの飛騨高山の古い町並み" fill sizes="(min-width: 768px) 1200px, 100vw" className="object-cover object-center" />
+          <Image
+            src="/images/latest-hida-street.webp"
+            alt="夕暮れの飛騨高山の古い町並み"
+            fill
+            sizes="(min-width: 768px) 1200px, 100vw"
+            className="object-cover object-center"
+          />
         </div>
       </section>
-      <Cta title="朝市で出会った味を、ご自宅へ。" />
+      <ArticlePurchaseCTA message="朝市でお届けしているお餅を、全国へお届けしています。" />
     </main>
   );
 }
