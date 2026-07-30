@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { site } from "@/data/site";
+import Link from 'next/link';
+import { site } from '@/data/site';
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-sumi/10 bg-[#ede7dc]">
+    <footer data-purchase-area className="border-t border-sumi/10 bg-[#ede7dc]">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[1.2fr_1fr_1fr] md:px-8">
         <div>
           <p className="font-serifjp text-2xl tracking-[0.2em]">{site.name}</p>

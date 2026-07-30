@@ -1,14 +1,14 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export function Cta({
-  title = "飛騨高山の思い出を、大切な人へ。",
-  text = "ご自宅用にも、季節の贈り物にも。山田もち店のお餅はBASEからご購入いただけます。"
+  title = '飛騨高山の思い出を、大切な人へ。',
+  text = 'ご自宅用にも、季節の贈り物にも。山田もち店のお餅はBASEからご購入いただけます。',
 }: {
   title?: string;
   text?: string;
 }) {
   return (
-    <section className="bg-green px-5 py-20 text-base md:px-8">
+    <section data-purchase-area className="bg-green px-5 py-20 text-base md:px-8">
       <div className="mx-auto max-w-5xl text-center">
         <p className="mb-5 text-xs tracking-brand text-base/60">ONLINE SHOP</p>
         <h2 className="font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
