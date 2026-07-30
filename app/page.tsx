@@ -1,187 +1,223 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Cta } from '@/components/Cta';
 import { HeroSlideshow } from '@/components/HeroSlideshow';
-import { ProductCard } from '@/components/ProductCard';
 import { SectionHeading } from '@/components/SectionHeading';
-import { products, sixFlavorGift } from '@/data/catalog';
-import { news } from '@/data/news';
+import { TrackedLink } from '@/components/TrackedLink';
+import { sixFlavorGift } from '@/data/catalog';
+import { site } from '@/data/site';
+import { voices } from '@/data/voices';
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: '/',
-  },
-};
+export const metadata: Metadata = { alternates: { canonical: '/' } };
+
+const primaryCta =
+  'inline-flex min-h-12 items-center justify-center bg-green px-7 text-sm tracking-[0.1em] text-white transition hover:bg-sumi';
+const quietCta =
+  'inline-flex min-h-12 items-center justify-center border border-sumi/20 px-7 text-sm tracking-[0.1em] transition hover:border-green hover:text-green';
 
 export default function HomePage() {
   return (
     <main className="ym-page">
-      <section className="relative min-h-[88vh] overflow-hidden bg-green text-base">
+      <section className="relative min-h-[78vh] overflow-hidden bg-green text-base md:min-h-[88vh]">
         <div className="absolute inset-0">
           <HeroSlideshow />
-          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5 md:from-green/72 md:via-green/28" />
-          <div className="absolute inset-0 bg-gradient-to-t from-green/30 via-transparent to-green/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5" />
         </div>
-        <div className="relative mx-auto flex min-h-[88vh] max-w-7xl items-center px-5 py-28 md:px-8">
+        <div className="relative mx-auto flex min-h-[78vh] max-w-7xl items-center px-5 py-24 md:min-h-[88vh] md:px-8">
           <div className="max-w-3xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.42)]">
-            <p className="mb-8 text-xs font-semibold tracking-brand text-base/78">
+            <p className="mb-7 text-xs font-semibold tracking-brand text-base/80">
               FROM HIDA TAKAYAMA
             </p>
-            <h1 className="font-serifjp text-5xl leading-[1.45] tracking-[0.18em] md:text-7xl">
+            <h1 className="font-serifjp text-4xl leading-[1.5] tracking-[0.14em] sm:text-5xl md:text-7xl">
               思い出に残る
               <br />
               お餅を。
             </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-10 text-base/90">
+            <p className="mt-7 max-w-2xl leading-9 text-base/90">
               飛騨高山の田んぼで育てたもち米を使い、
               <br className="hidden md:block" />
               陣屋前朝市から届ける切り餅です。
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <a
-                href="#products"
-                className="inline-flex min-w-64 justify-center border border-base px-8 py-4 tracking-[0.14em] transition hover:bg-base hover:text-green"
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <TrackedLink
+                href="#popular"
+                event="hero_cta_click"
+                className="inline-flex min-h-12 min-w-60 items-center justify-center border border-base bg-base/10 px-7 tracking-[0.12em] transition hover:bg-base hover:text-green"
               >
-                商品を選ぶ
-              </a>
+                人気商品を見る
+              </TrackedLink>
               <Link
-                href="/third-generation"
-                className="inline-flex min-w-64 justify-center border border-base/40 px-8 py-4 tracking-[0.14em] text-base/85 transition hover:border-base hover:text-base"
+                href="/brand-story"
+                className="inline-flex min-h-12 min-w-60 items-center justify-center border border-base/50 px-7 tracking-[0.12em]"
               >
-                三代目の想い
+                山田もち店について
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="ym-container py-24 md:py-32">
-        <div className="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative aspect-[4/5] overflow-hidden">
+      <section id="popular" className="bg-kinari py-20 md:py-28">
+        <div className="ym-container grid items-center gap-10 md:grid-cols-2">
+          <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src="/images/morning-market-real.webp"
-              alt="飛騨高山の陣屋前朝市に並ぶ店々"
+              src={sixFlavorGift.image}
+              alt={sixFlavorGift.name}
               fill
-              sizes="(min-width: 768px) 45vw, 90vw"
-              className="object-cover object-top"
+              priority
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
             />
           </div>
           <div>
-            <p className="mb-5 text-xs tracking-brand text-brown/60">BRAND STORY</p>
-            <h2 className="font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
-              飛騨高山の思い出を、
-              <br />
-              食卓へ。
+            <p className="text-xs tracking-brand text-brown/80">POPULAR GIFT</p>
+            <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.1em] md:text-5xl">
+              {sixFlavorGift.name}
             </h2>
-            <p className="mt-8 leading-9 text-sumi/70">
-              山田もち店は、1975年創業。飛騨高山の陣屋前朝市で、家族で育てたもち米を使い、お餅を届けてきました。
-              朝市で出会った味が、ご自宅の食卓や贈り物につながるように。田んぼから始まるものづくりを大切にしています。
+            <p className="mt-6 leading-8 text-sumi/70">
+              六つの味を一袋ずつ。飛騨高山で出会った味わいを、ご自宅や贈り物で楽しめるセットです。
             </p>
-            <Link href="/brand-story" className="mt-8 inline-block underline underline-offset-8">
-              ブランドストーリーを読む
+            <p className="mt-5 text-lg">
+              {sixFlavorGift.content} ／ {sixFlavorGift.price}
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/gift" className={quietCta}>
+                商品を見る
+              </Link>
+              <TrackedLink
+                href={sixFlavorGift.baseUrl}
+                event="top_cta_click"
+                external
+                className={primaryCta}
+              >
+                オンラインショップ
+              </TrackedLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="ym-container py-20 text-center md:py-28">
+        <p className="text-xs tracking-brand text-brown/80">OUR STORY</p>
+        <h2 className="mt-5 font-serifjp text-4xl tracking-[0.14em] md:text-6xl">
+          思い出に残るお餅を。
+        </h2>
+        <p className="mx-auto mt-8 max-w-3xl leading-9 text-sumi/70">
+          飛騨高山で自家栽培したもち米を使い、家族でつくる山田もち店。陣屋前朝市で生まれる出会いとともに、お餅を届けています。
+        </p>
+        <Link href="/brand-story" className={`${quietCta} mt-8`}>
+          ブランドストーリー
+        </Link>
+      </section>
+
+      <section className="bg-green py-20 text-base md:py-28">
+        <div className="ym-container grid items-center gap-10 md:grid-cols-[1.15fr_0.85fr]">
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <Image
+              src="/images/latest-morning-market.webp"
+              alt="人々が行き交う飛騨高山の陣屋前朝市"
+              fill
+              sizes="(min-width: 768px) 58vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <p className="text-xs tracking-brand text-base/70">MORNING MARKET</p>
+            <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
+              朝市で出会う、
+              <br />
+              飛騨高山の味。
+            </h2>
+            <p className="mt-6 leading-8 text-base/80">
+              旅の朝に交わす言葉や、手から手へ渡す時間。山田もち店の原点は、陣屋前朝市にあります。
+            </p>
+            <Link
+              href="/market"
+              className="mt-8 inline-flex min-h-12 items-center justify-center border border-base px-7 text-sm tracking-[0.1em]"
+            >
+              朝市について見る
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f1ece3] py-24 md:py-32">
-        <div className="ym-container">
-          <SectionHeading
-            eyebrow="OUR CRAFT"
-            title="家族の手仕事から生まれる、やさしいおいしさ。"
-          />
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              [
-                '01',
-                'もち米',
-                '千島町・越後町の田んぼで育てた「たかやまもち」を100％使用しています。',
-              ],
-              ['02', '水と土地', '飛騨高山の澄んだ空気と水。土地の恵みを、そのままお餅へ。'],
-              [
-                '03',
-                '家族のものづくり',
-                '栽培から製造・販売までを家族で一貫して行い、もち米本来の風味と粘りを大切にしています。',
-              ],
-            ].map(([num, title, text]) => (
-              <article key={num} className="border border-sumi/10 bg-base p-8">
-                <span className="text-xs tracking-brand text-brown/50">{num}</span>
-                <h3 className="mt-8 font-serifjp text-2xl tracking-[0.12em]">{title}</h3>
-                <p className="mt-5 leading-8 text-sumi/65">{text}</p>
-              </article>
-            ))}
-          </div>
-          <div className="relative mt-10 aspect-[4/3] overflow-hidden md:mt-14 md:aspect-[16/7]">
-            <Image
-              src="/images/latest-craft-rolling.webp"
-              alt="家族の手で餅を均一に伸ばして整える製造風景"
-              fill
-              sizes="(min-width: 768px) 1200px, 100vw"
-              className="object-cover object-[58%_center] md:object-center"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section id="products" className="ym-container py-24 md:py-32">
-        <SectionHeading
-          eyebrow="PRODUCTS"
-          title="飛騨高山の切り餅 6種類"
-          lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
-        />
-        <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
-          {products.map((product) => (
-            <ProductCard key={product.slug} product={product} />
-          ))}
-        </div>
-      </section>
-
-      <section className="ym-container py-24">
-        <div className="grid items-center gap-12 md:grid-cols-2">
+      <section className="ym-container py-20 md:py-28">
+        <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="mb-5 text-xs tracking-brand text-brown/60">GIFT</p>
-            <h2 className="font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
-              飛騨高山で出会った味わいを、
+            <p className="text-xs tracking-brand text-brown/80">GIFT</p>
+            <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
+              大切な人にも、
               <br />
-              大切な人にも。
+              旅の思い出を。
             </h2>
-            <p className="mt-7 leading-9 text-sumi/70">
-              6種類の切り餅を各1袋ずつ、{sixFlavorGift.packaging}。{sixFlavorGift.content}、
-              {sixFlavorGift.price}・送料別です。
+            <p className="mt-6 leading-8 text-sumi/70">
+              ご自宅用、贈り物、お中元、お歳暮、お祝いに。六種類の切り餅をギフトボックスに詰めてお届けします。
             </p>
-            <Link href="/gift" className="mt-8 inline-block underline underline-offset-8">
-              六種詰め合わせを見る
-            </Link>
+            <TrackedLink href="/gift" event="gift_cta_click" className={`${primaryCta} mt-8`}>
+              ギフトを見る
+            </TrackedLink>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src="/images/latest-sixset-hands.webp"
-              alt="飛騨高山から贈る切り餅6種詰め合わせ"
+              src="/images/web-sixset-gifting.webp"
+              alt="飛騨高山の切り餅ギフトを贈る様子"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover object-[50%_45%]"
+              className="object-cover"
             />
           </div>
         </div>
       </section>
 
-      <section className="border-y border-sumi/10 bg-[#f1ece3] py-20">
+      <section className="bg-kinari py-20 md:py-28">
         <div className="ym-container">
-          <SectionHeading eyebrow="NEWS" title="お知らせ" />
-          <div className="mx-auto max-w-3xl divide-y divide-sumi/10">
-            {news.map((item) => (
-              <article key={item.title} className="py-6">
-                <p className="text-xs tracking-brand text-sumi/45">{item.date}</p>
-                <h3 className="mt-3 font-serifjp text-xl tracking-[0.08em]">{item.title}</h3>
-                <p className="mt-3 leading-7 text-sumi/65">{item.body}</p>
-              </article>
+          <SectionHeading eyebrow="CUSTOMER VOICES" title="お客様からいただいた言葉" />
+          <div className="grid gap-5 md:grid-cols-2">
+            {voices.map((voice) => (
+              <blockquote key={voice.title} className="border border-brown/15 bg-base p-7 md:p-9">
+                <p className="font-serifjp text-xl leading-9 tracking-[0.06em]">
+                  「{voice.title}」
+                </p>
+                <p className="mt-5 leading-8 text-sumi/70">{voice.body}</p>
+                <footer className="mt-5 text-sm text-sumi/60">— {voice.source}</footer>
+              </blockquote>
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/voices" className={quietCta}>
+              お客様の声を見る
+            </Link>
           </div>
         </div>
       </section>
 
-      <Cta />
+      <section data-purchase-area className="bg-green px-5 py-24 text-base md:px-8 md:py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-xs tracking-brand text-base/70">ONLINE SHOP</p>
+          <h2 className="mt-5 font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
+            飛騨高山から、
+            <br />
+            思い出に残るお餅をお届けします。
+          </h2>
+          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+            <TrackedLink
+              href="/products"
+              event="top_cta_click"
+              className="inline-flex min-h-12 items-center justify-center border border-base px-8 tracking-[0.1em]"
+            >
+              商品一覧
+            </TrackedLink>
+            <TrackedLink
+              href={site.baseUrl}
+              event="top_cta_click"
+              external
+              className="inline-flex min-h-12 items-center justify-center bg-base px-8 tracking-[0.1em] text-green"
+            >
+              オンラインショップ
+            </TrackedLink>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
