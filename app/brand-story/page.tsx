@@ -1,21 +1,23 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import { Cta } from "@/components/Cta";
-import { pageOpenGraph } from "@/lib/seo";
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { ArticlePurchaseCTA } from '@/components/ArticlePurchaseCTA';
+import { pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: "ブランドストーリー",
-  description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。",
+  title: 'ブランドストーリー',
+  description:
+    '飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。',
   openGraph: pageOpenGraph({
-    title: "ブランドストーリー｜山田もち店",
-    description: "飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。",
-    path: "/brand-story",
-    image: "/images/morning-market-real.webp",
-    imageAlt: "飛騨高山の陣屋前朝市に並ぶ店々"
+    title: 'ブランドストーリー｜山田もち店',
+    description:
+      '飛騨高山の思い出を食卓へ。山田もち店が大切にする、朝市・家族の手仕事・もち米づくりの物語。',
+    path: '/brand-story',
+    image: '/images/morning-market-real.webp',
+    imageAlt: '飛騨高山の陣屋前朝市に並ぶ店々',
   }),
   alternates: {
-    canonical: "/brand-story"
-  }
+    canonical: '/brand-story',
+  },
 };
 
 export default function BrandStoryPage() {
@@ -23,7 +25,12 @@ export default function BrandStoryPage() {
     <main className="ym-page">
       <section className="ym-container grid gap-12 py-24 md:grid-cols-[0.9fr_1.1fr] md:py-32">
         <div className="relative aspect-[4/5] overflow-hidden">
-          <Image src="/images/morning-market-real.webp" alt="飛騨高山の陣屋前朝市に並ぶ店々" fill className="object-cover object-top" />
+          <Image
+            src="/images/morning-market-real.webp"
+            alt="飛騨高山の陣屋前朝市に並ぶ店々"
+            fill
+            className="object-cover object-top"
+          />
         </div>
         <article className="self-center">
           <p className="mb-6 text-xs tracking-brand text-brown/60">BRAND STORY</p>
@@ -48,14 +55,26 @@ export default function BrandStoryPage() {
       <section className="ym-container pb-24 md:pb-32">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="relative aspect-[4/3] overflow-hidden md:col-span-2">
-            <Image src="/images/latest-craft-rolling.webp" alt="餅を均一に伸ばして整える家族の手仕事" fill sizes="(min-width: 768px) 66vw, 100vw" className="object-cover object-[58%_center] md:object-center" />
+            <Image
+              src="/images/latest-craft-rolling.webp"
+              alt="餅を均一に伸ばして整える家族の手仕事"
+              fill
+              sizes="(min-width: 768px) 66vw, 100vw"
+              className="object-cover object-[58%_center] md:object-center"
+            />
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
-            <Image src="/images/latest-hida-street.webp" alt="夕暮れの飛騨高山の古い町並み" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover object-center" />
+            <Image
+              src="/images/latest-hida-street.webp"
+              alt="夕暮れの飛騨高山の古い町並み"
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className="object-cover object-center"
+            />
           </div>
         </div>
       </section>
-      <Cta />
+      <ArticlePurchaseCTA message="飛騨高山で長く親しまれてきた味を、ご自宅でもお楽しみいただけます。" />
     </main>
   );
 }

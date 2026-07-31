@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { SectionHeading } from '@/components/SectionHeading';
-import { Cta } from '@/components/Cta';
+import { ArticlePurchaseCTA } from '@/components/ArticlePurchaseCTA';
 import { pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -78,7 +78,7 @@ export default function CraftPage() {
           ))}
         </div>
       </section>
-      <Cta />
+      <ArticlePurchaseCTA message="飛騨高山で育てたもち米を、家族でお餅に仕立ててお届けします。" />
     </main>
   );
 }
