@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-concurrency=1 tests/seo-safety.test.mts",
+    "test:unit": "SEO_TEST_SKIP_BUILD=true node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test --test-concurrency=1 tests/seo-safety.test.mts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:catalog": "node scripts/check-catalog.mjs",
