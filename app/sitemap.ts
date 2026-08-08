@@ -1,29 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { products } from '@/data/catalog';
 import { site } from '@/data/site';
-
-const staticPaths = [
-  '',
-  '/brand-story',
-  '/third-generation',
-  '/craft',
-  '/products',
-  '/gift',
-  '/market',
-  '/news',
-  '/voices',
-  '/faq',
-  '/contact',
-];
+import { currentIndexablePaths } from '@/lib/current-urls';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const productPaths = products.map((product) => `/products/${product.slug}`);
 
-  return [...staticPaths, ...productPaths].map((path) => ({
-    url: `${site.siteUrl}${path}`,
+  return currentIndexablePaths.map((path) => ({
+    url: `${site.siteUrl}${path === '/' ? '' : path}`,
     lastModified: now,
     changeFrequency: path.startsWith('/products') ? 'monthly' : 'weekly',
-    priority: path === '' ? 1 : path.startsWith('/products') ? 0.8 : 0.7,
+    priority: path === '/' ? 1 : path.startsWith('/products') ? 0.8 : 0.7,
   }));
 }
