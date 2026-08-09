@@ -17,6 +17,7 @@ export type SalesPeriod = {
   startDay?: number;
   endMonth?: number;
   endDay?: number;
+  note?: string;
 };
 
 export type Availability = {
@@ -58,7 +59,25 @@ export type AllergenInfo = {
   items?: string[];
 };
 
-export type ProductCategory = 'mochi' | 'confectionery' | 'pickles' | 'other';
+export type ProductCategory = 'mochi' | 'confectionery' | 'pickles' | 'pie' | 'wagashi' | 'other';
+
+export type Seasonality = 'year_round' | 'seasonal';
+
+export type SeasonalCommerceStatus = 'available' | 'unavailable' | 'preparing' | 'undecided';
+
+export type SeasonalCommerceOfferStatus = 'confirmed' | 'preparing' | 'undecided';
+
+export type SeasonalCommerceOffer = {
+  channelId: string;
+  status: SeasonalCommerceOfferStatus;
+  url?: string;
+  offerLabel?: string;
+};
+
+export type SeasonalCommerce = {
+  status: SeasonalCommerceStatus;
+  offers: SeasonalCommerceOffer[];
+};
 
 export type ProductCompatibilityFields = {
   cardName: string;
@@ -142,10 +161,12 @@ export type SeasonalProductRecord = {
   slug: string;
   name: string;
   category: ProductCategory;
+  seasonality: Seasonality;
   salesPeriod: SalesPeriod;
   availabilityStatus: AvailabilityStatus;
+  availabilityNote?: string;
   price?: Money;
-  salesChannelIds?: string[];
+  salesLocationIds: string[];
   story?: string;
   ingredients?: string;
   allergens?: AllergenInfo;
@@ -154,7 +175,7 @@ export type SeasonalProductRecord = {
   storage?: string;
   shipping?: string;
   notes?: string[];
-  commerce?: Commerce;
+  commerce: SeasonalCommerce;
   giftEligible?: boolean;
   images: MediaAsset[];
   seo?: SeoMetadata;
@@ -163,9 +184,33 @@ export type SeasonalProductRecord = {
   status: PublicationStatus;
 };
 
+export type SalesLocationType = 'morning_market' | 'store' | 'other';
+
+export type SalesLocation = {
+  id: string;
+  name: string;
+  type: SalesLocationType;
+  active: boolean;
+};
+
+export type ProductCalendarReference = {
+  productId: string;
+  seasonality: 'year_round';
+  availabilityStatus: AvailabilityStatus;
+};
+
+export type SeasonalReplacementRule = {
+  id: string;
+  replacedProductId: string;
+  replacementSeasonalProductId: string;
+  months: number[];
+};
+
 export type SalesChannelType =
   | 'morning_market'
   | 'base'
+  | 'tabechoku'
+  | 'pokemaru'
   | 'furusato_tax'
   | 'store'
   | 'chilled_shipping'
@@ -225,4 +270,7 @@ export type ContentModelData = {
   seasonalProducts: SeasonalProductRecord[];
   recipes: RecipeRecord[];
   salesChannels: SalesChannel[];
+  salesLocations: SalesLocation[];
+  productCalendarReferences: ProductCalendarReference[];
+  seasonalReplacementRules: SeasonalReplacementRule[];
 };

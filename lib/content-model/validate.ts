@@ -3,7 +3,10 @@ import type {
   Commerce,
   ContentModelData,
   Money,
+  ProductCategory,
   SalesPeriod,
+  SeasonalCommerce,
+  Seasonality,
 } from '../../types/content-model.ts';
 
 const availabilityStatuses = new Set<AvailabilityStatus>([
@@ -13,6 +16,17 @@ const availabilityStatuses = new Set<AvailabilityStatus>([
   'sold_out',
   'ended',
 ]);
+
+const productCategories = new Set<ProductCategory>([
+  'mochi',
+  'confectionery',
+  'pickles',
+  'pie',
+  'wagashi',
+  'other',
+]);
+
+const seasonalities = new Set<Seasonality>(['year_round', 'seasonal']);
 
 type Identified = {
   id: string;
@@ -71,6 +85,56 @@ function validateCommerce(
   }
 }
 
+function validateSeasonalCommerce(
+  owner: string,
+  commerce: SeasonalCommerce,
+  channelIds: Set<string>,
+  errors: string[],
+) {
+  const statuses = new Set(['available', 'unavailable', 'preparing', 'undecided']);
+  const offerStatuses = new Set(['confirmed', 'preparing', 'undecided']);
+
+  if (!statuses.has(commerce.status)) {
+    errors.push(`${owner}: invalid commerce status "${commerce.status}"`);
+  }
+  if (commerce.status === 'unavailable' && commerce.offers.length > 0) {
+    errors.push(`${owner}: unavailable commerce cannot have offers`);
+  }
+  if (
+    commerce.status === 'available' &&
+    !commerce.offers.some((offer) => offer.status === 'confirmed')
+  ) {
+    errors.push(`${owner}: available commerce requires a confirmed offer`);
+  }
+
+  const seen = new Set<string>();
+  for (const offer of commerce.offers) {
+    if (seen.has(offer.channelId)) {
+      errors.push(`${owner}: duplicate commerce channelId "${offer.channelId}"`);
+    }
+    seen.add(offer.channelId);
+    if (!channelIds.has(offer.channelId)) {
+      errors.push(`${owner}: unknown commerce channelId "${offer.channelId}"`);
+    }
+    if (!offerStatuses.has(offer.status)) {
+      errors.push(`${owner}: invalid commerce offer status "${offer.status}"`);
+    }
+    if (offer.url && offer.status !== 'confirmed') {
+      errors.push(`${owner}: only a confirmed commerce offer may have a CTA URL`);
+    }
+    if (offer.url) {
+      try {
+        const url = new URL(offer.url);
+        if (url.protocol !== 'https:') {
+          errors.push(`${owner}: commerce offer URL must use HTTPS`);
+        }
+      } catch {
+        errors.push(`${owner}: invalid commerce offer URL`);
+      }
+    }
+  }
+}
+
 function validateChannelReferences(
   owner: string,
   references: string[] | undefined,
@@ -85,6 +149,25 @@ function validateChannelReferences(
     seen.add(channelId);
     if (!channelIds.has(channelId)) {
       errors.push(`${owner}: unknown salesChannelId "${channelId}"`);
+    }
+  }
+}
+
+function validateLocationReferences(
+  owner: string,
+  references: string[],
+  locationIds: Set<string>,
+  errors: string[],
+) {
+  const seen = new Set<string>();
+
+  for (const locationId of references) {
+    if (seen.has(locationId)) {
+      errors.push(`${owner}: duplicate salesLocationId "${locationId}"`);
+    }
+    seen.add(locationId);
+    if (!locationIds.has(locationId)) {
+      errors.push(`${owner}: unknown salesLocationId "${locationId}"`);
     }
   }
 }
@@ -117,6 +200,13 @@ function validateSalesPeriod(
   }
 }
 
+function salesPeriodIncludesMonth(salesPeriod: SalesPeriod, month: number): boolean {
+  const { startMonth, endMonth } = salesPeriod;
+  if (startMonth === undefined || endMonth === undefined) return false;
+  if (startMonth <= endMonth) return month >= startMonth && month <= endMonth;
+  return month >= startMonth || month <= endMonth;
+}
+
 function validateRelatedProducts(
   owner: string,
   relatedProductIds: string[],
@@ -142,9 +232,13 @@ export function validateContentModel(data: ContentModelData): string[] {
   validateIdentity('seasonalProducts', data.seasonalProducts, errors);
   validateIdentity('recipes', data.recipes, errors);
   validateIdentity('salesChannels', data.salesChannels, errors);
+  validateIdentity('salesLocations', data.salesLocations, errors);
+  validateIdentity('seasonalReplacementRules', data.seasonalReplacementRules, errors);
 
   const productIds = new Set(data.products.map((product) => product.id));
+  const seasonalProductIds = new Set(data.seasonalProducts.map((product) => product.id));
   const channelIds = new Set(data.salesChannels.map((channel) => channel.id));
+  const locationIds = new Set(data.salesLocations.map((location) => location.id));
 
   for (const product of data.products) {
     const owner = `product:${product.id}`;
@@ -184,11 +278,72 @@ export function validateContentModel(data: ContentModelData): string[] {
   for (const seasonalProduct of data.seasonalProducts) {
     const owner = `seasonalProduct:${seasonalProduct.id}`;
     if (!seasonalProduct.name.trim()) errors.push(`${owner}: missing product name`);
+    if (!productCategories.has(seasonalProduct.category)) {
+      errors.push(`${owner}: invalid category "${seasonalProduct.category}"`);
+    }
+    if (!seasonalities.has(seasonalProduct.seasonality)) {
+      errors.push(`${owner}: invalid seasonality "${seasonalProduct.seasonality}"`);
+    }
+    if (
+      seasonalProduct.seasonality === 'year_round' &&
+      (seasonalProduct.salesPeriod.startMonth !== undefined ||
+        seasonalProduct.salesPeriod.endMonth !== undefined)
+    ) {
+      errors.push(`${owner}: year_round product cannot have calendar month boundaries`);
+    }
     validateMoney(owner, seasonalProduct.price, errors);
-    validateCommerce(owner, seasonalProduct.commerce, channelIds, errors);
-    validateChannelReferences(owner, seasonalProduct.salesChannelIds, channelIds, errors);
+    validateSeasonalCommerce(owner, seasonalProduct.commerce, channelIds, errors);
+    validateLocationReferences(owner, seasonalProduct.salesLocationIds, locationIds, errors);
     validateAvailability(owner, seasonalProduct.availabilityStatus, errors);
     validateSalesPeriod(owner, seasonalProduct.salesPeriod, errors);
+  }
+
+  const referencedProducts = new Set<string>();
+  for (const reference of data.productCalendarReferences) {
+    const owner = `productCalendarReference:${reference.productId}`;
+    if (referencedProducts.has(reference.productId)) {
+      errors.push(`${owner}: duplicate product calendar reference`);
+    }
+    referencedProducts.add(reference.productId);
+    if (!productIds.has(reference.productId)) {
+      errors.push(`${owner}: unknown productId "${reference.productId}"`);
+    }
+    if (reference.seasonality !== 'year_round') {
+      errors.push(`${owner}: existing product reference must be year_round`);
+    }
+    validateAvailability(owner, reference.availabilityStatus, errors);
+  }
+
+  for (const rule of data.seasonalReplacementRules) {
+    const owner = `seasonalReplacementRule:${rule.id}`;
+    const replacement = data.seasonalProducts.find(
+      (product) => product.id === rule.replacementSeasonalProductId,
+    );
+    if (!productIds.has(rule.replacedProductId)) {
+      errors.push(`${owner}: unknown replacedProductId "${rule.replacedProductId}"`);
+    }
+    if (!referencedProducts.has(rule.replacedProductId)) {
+      errors.push(`${owner}: replaced product must have a calendar reference`);
+    }
+    if (!seasonalProductIds.has(rule.replacementSeasonalProductId) || !replacement) {
+      errors.push(
+        `${owner}: unknown replacementSeasonalProductId "${rule.replacementSeasonalProductId}"`,
+      );
+    } else if (replacement.seasonality !== 'seasonal') {
+      errors.push(`${owner}: replacement product must be seasonal`);
+    }
+    if (rule.months.length === 0) errors.push(`${owner}: replacement months cannot be empty`);
+    const seenMonths = new Set<number>();
+    for (const month of rule.months) {
+      if (!Number.isInteger(month) || month < 1 || month > 12) {
+        errors.push(`${owner}: replacement month must be an integer from 1 to 12`);
+      }
+      if (seenMonths.has(month)) errors.push(`${owner}: duplicate replacement month "${month}"`);
+      seenMonths.add(month);
+      if (replacement && !salesPeriodIncludesMonth(replacement.salesPeriod, month)) {
+        errors.push(`${owner}: replacement month "${month}" is outside replacement salesPeriod`);
+      }
+    }
   }
 
   for (const recipe of data.recipes) {
@@ -210,6 +365,10 @@ export function validateContentModel(data: ContentModelData): string[] {
         errors.push(`salesChannel:${channel.id}: invalid URL`);
       }
     }
+  }
+
+  for (const location of data.salesLocations) {
+    if (!location.name.trim()) errors.push(`salesLocation:${location.id}: missing name`);
   }
 
   return errors;

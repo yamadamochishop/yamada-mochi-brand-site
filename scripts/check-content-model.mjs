@@ -16,5 +16,5 @@ assert.deepEqual(
 );
 
 console.log(
-  `check:content-model passed: ${contentModel.products.length} products, ${contentModel.giftSets.length} gift sets, ${contentModel.salesChannels.length} channels.`,
+  `check:content-model passed: ${contentModel.products.length} products, ${contentModel.giftSets.length} gift sets, ${contentModel.seasonalProducts.length} seasonal records, ${contentModel.salesChannels.length} channels, ${contentModel.salesLocations.length} locations.`,
 );
