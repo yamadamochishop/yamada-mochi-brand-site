@@ -7,6 +7,7 @@ const linkClassName =
 
 const productLinks = [
   { label: '商品一覧', href: '/products' },
+  { label: '季節の商品', href: '/seasonal' },
   { label: 'ギフト・食べ比べセット', href: '/gift' },
 ];
 

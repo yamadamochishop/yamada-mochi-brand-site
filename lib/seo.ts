@@ -132,6 +132,19 @@ export function productListJsonLd(products: Product[]) {
   };
 }
 
+export function simpleItemListJsonLd(name: string, itemNames: string[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    itemListElement: itemNames.map((itemName, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: itemName,
+    })),
+  };
+}
+
 export function faqPageJsonLd(faqs: { q: string; a: string }[]) {
   return {
     '@context': 'https://schema.org',

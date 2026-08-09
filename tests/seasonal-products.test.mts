@@ -178,7 +178,7 @@ test('Mutation D: removing the May replacement rule is killed by the calendar ex
   );
 });
 
-test('Mutation E: empty images remain valid', () => {
+test('Image policy regression: empty seasonal image arrays remain valid', () => {
   const mutation = cloneContentModel();
   mutation.seasonalProducts.forEach((product) => {
     product.images = [];
