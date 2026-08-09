@@ -37,12 +37,15 @@ function seasonalFixture(): SeasonalProductRecord {
     slug: 'seasonal-sample',
     name: '検証用季節商品',
     category: 'confectionery',
+    seasonality: 'seasonal',
     salesPeriod: {
       display: '8月〜9月中旬',
       startMonth: 8,
       endMonth: 9,
     },
     availabilityStatus: 'upcoming',
+    salesLocationIds: ['jinya-morning-market'],
+    commerce: { status: 'unavailable', offers: [] },
     images: [],
     status: 'draft',
   };

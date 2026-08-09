@@ -19,6 +19,16 @@ export const salesChannels: SalesChannel[] = [
     active: true,
   },
   {
+    id: 'tabechoku',
+    name: '食べチョク',
+    type: 'tabechoku',
+  },
+  {
+    id: 'pokemaru',
+    name: 'ポケマル',
+    type: 'pokemaru',
+  },
+  {
     id: 'furusato-tax',
     name: 'ふるさと納税',
     type: 'furusato_tax',

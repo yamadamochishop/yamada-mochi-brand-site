@@ -5,6 +5,12 @@ import {
   type Product,
 } from './catalog.ts';
 import { salesChannels } from './sales-channels.ts';
+import { salesLocations } from './sales-locations.ts';
+import {
+  productCalendarReferences,
+  seasonalProducts,
+  seasonalReplacementRules,
+} from './seasonal-products.ts';
 import type {
   ContentModelData,
   GiftSetRecord,
@@ -12,7 +18,6 @@ import type {
   Money,
   ProductRecord,
   RecipeRecord,
-  SeasonalProductRecord,
 } from '../types/content-model.ts';
 
 const BASE_CHANNEL_ID = 'base';
@@ -233,8 +238,8 @@ export function toLegacyGiftSet(record: GiftSetRecord): CatalogSet {
 export const productRecords: ProductRecord[] = legacyProducts.map(migrateLegacyProduct);
 export const giftSetRecords: GiftSetRecord[] = legacyCatalogSets.map(migrateLegacyGiftSet);
 
-// The public UI is not publishing these content types in YM-002.
-export const seasonalProducts: SeasonalProductRecord[] = [];
+// The public UI does not consume these draft content types in YM-003A.
+export { seasonalProducts };
 export const recipes: RecipeRecord[] = [];
 
 /**
@@ -250,4 +255,7 @@ export const contentModel: ContentModelData = {
   seasonalProducts,
   recipes,
   salesChannels,
+  salesLocations,
+  productCalendarReferences,
+  seasonalReplacementRules,
 };
