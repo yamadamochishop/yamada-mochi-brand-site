@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import type { Product } from '@/data/catalog';
-import { site } from '@/data/site';
+import type { Product } from '../data/catalog.ts';
+import { site } from '../data/site.ts';
 
 export function absoluteUrl(path = '') {
   const base = site.siteUrl.replace(/\/$/, '');
