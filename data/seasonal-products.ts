@@ -104,7 +104,7 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     salesPeriod: { display: '8月', startMonth: 8, endMonth: 8 },
     availabilityStatus: 'available',
     salesLocationIds: [JINYA_MARKET_ID],
-    notes: ['8月末まで'],
+    notes: ['8月末終了予定'],
     commerce: unavailableCommerce(),
     images: [],
     status: 'draft',

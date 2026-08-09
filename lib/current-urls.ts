@@ -6,6 +6,7 @@ export const staticIndexablePaths = [
   '/third-generation',
   '/craft',
   '/products',
+  '/seasonal',
   '/gift',
   '/market',
   '/news',

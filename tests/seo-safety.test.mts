@@ -25,6 +25,7 @@ const currentIndexablePaths = [
   '/products/kombu',
   '/products/tamari',
   '/products/ebi',
+  '/seasonal',
   '/gift',
   '/brand-story',
   '/craft',
@@ -228,6 +229,55 @@ test('E: all current indexable URLs have a self-referencing production canonical
     const expected = `${productionOrigin}${path === '/' ? '' : path}`;
     assert.equal(canonical, expected, path);
   }
+});
+
+test('Seasonal list: confirmed content and conservative schema are rendered safely', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const response = await fetch(`${localOrigin}/seasonal`, { headers: productionHeaders() });
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  for (const name of ['青朴葉餅', '飛騨桃パイ', '小茄子の漬物', '赤かぶの漬物 長漬け']) {
+    assert.match(html, new RegExp(name));
+  }
+  for (const period of ['1月〜3月', '2月〜4月', '4月〜11月', '7月〜10月', '9月〜5月']) {
+    assert.match(html, new RegExp(period));
+  }
+  assert.match(html, /8月末終了予定/);
+  assert.doesNotMatch(html, />8月末まで</);
+  assert.match(html, /8月15日ごろまで/);
+  assert.equal((html.match(/>販売中</g) ?? []).length, 3);
+  assert.equal((html.match(/>まもなく終了</g) ?? []).length, 1);
+  assert.equal((html.match(/data-seasonal-cta=/g) ?? []).length, 3);
+  assert.equal((html.match(/<img\b/g) ?? []).length, 0);
+  assert.doesNotMatch(html, /placeholder|写真が届いたら|写真なし|仮画像/u);
+  assert.doesNotMatch(html, /data-seasonal-commerce-cta/);
+  assert.match(html, /通販[^<]*準備中|<dd[^>]*>準備中<\/dd>/);
+  assert.match(html, /あり（BASE・食べチョク・ポケマル）/);
+  for (let month = 1; month <= 12; month += 1) {
+    assert.match(html, new RegExp(`href=["']#month-${month}["']`));
+    assert.match(html, new RegExp(`id=["']month-${month}["']`));
+  }
+
+  const jsonLd = [...html.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g)].map(
+    (match) => JSON.parse(match[1]),
+  );
+  assert.equal(
+    jsonLd.some((entry) => entry['@type'] === 'BreadcrumbList'),
+    true,
+  );
+  assert.equal(
+    jsonLd.some((entry) => entry['@type'] === 'ItemList'),
+    true,
+  );
+  assert.equal(
+    jsonLd.some((entry) => entry['@type'] === 'Product'),
+    false,
+  );
+  assert.equal(
+    jsonLd.some((entry) => entry['@type'] === 'Offer'),
+    false,
+  );
 });
 
 test('F: sitemap contains every current URL once and no legacy URL', async () => {

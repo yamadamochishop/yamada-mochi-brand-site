@@ -9,6 +9,7 @@ import { site } from '@/data/site';
 const nav = [
   ['ブランド', '/brand-story'],
   ['商品', '/products'],
+  ['季節', '/seasonal'],
   ['ものづくり', '/craft'],
   ['三代目の想い', '/third-generation'],
   ['ギフト', '/gift'],

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { site } from '@/data/site';
 import { trackBaseClick } from '@/lib/analytics';
 
 export function StickyPurchaseBar() {
+  const pathname = usePathname();
   const [hasScrolled, setHasScrolled] = useState(false);
   const [overlapsPurchaseArea, setOverlapsPurchaseArea] = useState(false);
 
@@ -25,7 +27,7 @@ export function StickyPurchaseBar() {
     };
   }, []);
 
-  const visible = hasScrolled && !overlapsPurchaseArea;
+  const visible = pathname !== '/seasonal' && hasScrolled && !overlapsPurchaseArea;
   return (
     <aside
       aria-label="購入メニュー"
