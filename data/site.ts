@@ -1,4 +1,4 @@
-import { isIndexable } from '@/lib/indexing';
+import { isIndexable } from '../lib/indexing.ts';
 
 const productionSiteUrl = 'https://www.yamadamochi.com';
 // Indexing is opt-in: only an explicit `true` enables it.
