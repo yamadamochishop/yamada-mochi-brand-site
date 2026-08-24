@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
+import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { catalogSets, sixFlavorGift } from '@/data/catalog';
 import { site } from '@/data/site';
 import { absoluteUrl, breadcrumbJsonLd, numericPrice, pageOpenGraph } from '@/lib/seo';
@@ -72,14 +73,13 @@ export default function GiftPage() {
           <p className="mt-8 leading-9 text-sumi/70">
             飛騨高山・陣屋前朝市で長く親しまれてきた、山田もち店の切り餅を六種類詰め合わせました。
           </p>
-          <a
+          <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            placement="gift_hero"
             className="mt-9 inline-flex bg-green px-8 py-4 text-base tracking-[0.12em]"
           >
             BASEで購入する
-          </a>
+          </TrackedBaseLink>
         </div>
         <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
           <Image
@@ -122,14 +122,13 @@ export default function GiftPage() {
                 {product.content} / {product.price}
               </p>
               <p className="mt-3 text-sm leading-7 text-sumi/65">アレルゲン：{product.allergy}</p>
-              <a
+              <TrackedBaseLink
                 href={product.baseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                placement="gift_set_card"
                 className="mt-7 inline-flex bg-green px-5 py-3 text-sm tracking-[0.1em] text-white transition hover:bg-sumi"
               >
                 BASEの商品ページへ
-              </a>
+              </TrackedBaseLink>
             </article>
           ))}
         </div>
@@ -197,14 +196,13 @@ export default function GiftPage() {
             shipping={sixFlavorGift.shipping}
             isGift
           />
-          <a
+          <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            placement="gift_details"
             className="mt-8 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] md:w-auto"
           >
             BASEで購入する
-          </a>
+          </TrackedBaseLink>
         </div>
       </section>
       <Cta title="季節のご挨拶に、高山もちを。" />

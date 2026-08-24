@@ -7,6 +7,7 @@ import { Cta } from '@/components/Cta';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
 import { JsonLd } from '@/components/JsonLd';
 import { ProductCard } from '@/components/ProductCard';
+import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from '@/lib/seo';
 import { getProduct, getRelatedProducts, products } from '@/data/catalog';
 import { faqs } from '@/data/faqs';
@@ -89,14 +90,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <p className="text-sm tracking-brand text-sumi/45">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
               <PurchaseGuide shelfLife={product.shelfLife} shipping={product.shipping} />
-              <a
+              <TrackedBaseLink
                 href={product.baseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                placement="product_detail"
                 className="mt-6 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] transition hover:bg-sumi md:w-auto"
               >
                 BASEで購入する
-              </a>
+              </TrackedBaseLink>
             </div>
           </section>
 
