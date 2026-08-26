@@ -1,4 +1,5 @@
 import { sixFlavorGift } from '@/data/catalog';
+import { nekoposMixedOrderNote, nekoposShippingDetail } from '@/lib/shipping';
 
 export const faqs = [
   {
@@ -16,6 +17,10 @@ export const faqs = [
   {
     q: '12袋セットの価格と内容量を教えてください。',
     a: '12袋セットは5,960円（税込）、4枚入り（200g）×12袋です。',
+  },
+  {
+    q: '4枚入りの切り餅の送料を教えてください。',
+    a: `${nekoposShippingDetail}${nekoposMixedOrderNote}`,
   },
   {
     q: '賞味期限を教えてください。',
