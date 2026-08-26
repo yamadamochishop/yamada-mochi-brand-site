@@ -7,8 +7,10 @@ import { Cta } from '@/components/Cta';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
 import { JsonLd } from '@/components/JsonLd';
 import { ProductCard } from '@/components/ProductCard';
+import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from '@/lib/seo';
 import { getProduct, getRelatedProducts, products } from '@/data/catalog';
+import { isNekoposEligible, nekoposHeadline, nekoposLead } from '@/lib/shipping';
 import { faqs } from '@/data/faqs';
 
 export function generateStaticParams() {
@@ -44,6 +46,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = getProduct(slug);
   if (!product) notFound();
   const related = getRelatedProducts(product.related);
+  const nekopos = isNekoposEligible(product.slug);
 
   return (
     <main className="ym-page">
@@ -88,15 +91,26 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="mt-10 border-y border-sumi/10 py-8">
               <p className="text-sm tracking-brand text-sumi/45">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
-              <PurchaseGuide shelfLife={product.shelfLife} shipping={product.shipping} />
-              <a
+              {nekopos ? (
+                <p className="mt-6 border border-green/25 bg-white/50 px-5 py-4 text-sm leading-7 text-sumi/75">
+                  <span className="block font-serifjp text-lg leading-8 tracking-[0.08em] text-green">
+                    {nekoposHeadline}
+                  </span>
+                  {nekoposLead}
+                </p>
+              ) : null}
+              <PurchaseGuide
+                shelfLife={product.shelfLife}
+                shipping={product.shipping}
+                nekopos={nekopos}
+              />
+              <TrackedBaseLink
                 href={product.baseUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                placement="product_detail"
                 className="mt-6 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] transition hover:bg-sumi md:w-auto"
               >
                 BASEで購入する
-              </a>
+              </TrackedBaseLink>
             </div>
           </section>
 

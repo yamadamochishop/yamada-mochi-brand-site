@@ -1,4 +1,12 @@
-export type BaseClickPlacement = 'sticky_bar' | 'product_card' | 'article_cta' | 'footer_cta';
+export type BaseClickPlacement =
+  | 'sticky_bar'
+  | 'product_card'
+  | 'article_cta'
+  | 'footer_cta'
+  | 'product_detail'
+  | 'gift_hero'
+  | 'gift_set_card'
+  | 'gift_details';
 
 export function trackBaseClick(placement: BaseClickPlacement) {
   if (typeof window === 'undefined') return;

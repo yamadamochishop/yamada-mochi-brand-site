@@ -5,6 +5,7 @@ import { SectionHeading } from '@/components/SectionHeading';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { products } from '@/data/catalog';
+import { nekoposListNote } from '@/lib/shipping';
 import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -41,6 +42,9 @@ export default function ProductsPage() {
           lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
           as="h1"
         />
+        <p className="mx-auto -mt-4 mb-14 max-w-2xl border border-green/25 bg-white/50 px-5 py-3 text-center text-sm leading-7 text-sumi/75">
+          {nekoposListNote}
+        </p>
         <div className="relative mb-16 aspect-[4/3] overflow-hidden bg-[#efe9dc] md:mb-20 md:aspect-[16/7]">
           <Image
             src="/images/latest-six-flavors-light.webp"
