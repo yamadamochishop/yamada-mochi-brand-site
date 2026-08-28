@@ -165,6 +165,8 @@ export type SeasonalProductRecord = {
   salesPeriod: SalesPeriod;
   availabilityStatus: AvailabilityStatus;
   availabilityNote?: string;
+  /** Human確定の短いリード文。カードの一行目に使う（推測で埋めない）。 */
+  catchcopy?: string;
   price?: Money;
   salesLocationIds: string[];
   story?: string;

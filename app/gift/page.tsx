@@ -64,7 +64,7 @@ export default function GiftPage() {
       <JsonLd data={giftLineupJsonLd} />
       <section className="ym-container grid gap-12 py-24 md:grid-cols-2 md:py-32">
         <div className="self-center">
-          <p className="mb-6 text-xs tracking-brand text-brown/60">GIFT</p>
+          <p className="mb-6 text-xs tracking-brand text-brown/85">GIFT</p>
           <h1 className="font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl">
             飛騨高山の思い出を、
             <br />
@@ -110,7 +110,7 @@ export default function GiftPage() {
         </div>
       </section>
       <section className="ym-container py-20 md:py-24">
-        <p className="text-xs tracking-brand text-brown/60">GIFT LINEUP</p>
+        <p className="text-xs tracking-brand text-brown/85">GIFT LINEUP</p>
         <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
           用途に合わせて選ぶ
         </h2>
@@ -174,7 +174,7 @@ export default function GiftPage() {
       </section>
       <section className="ym-container py-20 md:py-24">
         <div className="mx-auto max-w-3xl border-y border-sumi/10 py-8">
-          <p className="text-xs tracking-brand text-brown/60">GIFT DETAILS</p>
+          <p className="text-xs tracking-brand text-brown/85">GIFT DETAILS</p>
           <h2 className="mt-4 font-serifjp text-2xl tracking-[0.1em] md:text-3xl">
             {sixFlavorGift.name}
           </h2>
@@ -186,7 +186,7 @@ export default function GiftPage() {
               ['梱包', sixFlavorGift.packaging],
             ].map(([label, value]) => (
               <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[8rem_1fr]">
-                <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>
+                <dt className="tracking-[0.12em] text-sumi/65">{label}</dt>
                 <dd className="leading-7 text-sumi/70">{value}</dd>
               </div>
             ))}

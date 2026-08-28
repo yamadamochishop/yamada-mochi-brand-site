@@ -83,7 +83,7 @@ export function SiteHeader() {
           </span>
           <span>
             <span className="block font-serifjp text-lg tracking-[0.2em]">{site.name}</span>
-            <span className="block text-[10px] tracking-brand text-sumi/55">{site.enName}</span>
+            <span className="block text-xs tracking-brand text-sumi/65">{site.enName}</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm tracking-[0.08em] text-sumi/70 lg:flex xl:gap-7 xl:tracking-[0.12em]">

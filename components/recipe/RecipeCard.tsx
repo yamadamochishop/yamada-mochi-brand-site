@@ -28,7 +28,7 @@ export function RecipeCard({
         </div>
       ) : null}
       {productLabels && productLabels.length > 0 ? (
-        <p className="text-xs tracking-brand text-brown/65">{productLabels.join('・')}</p>
+        <p className="text-xs tracking-brand text-brown/85">{productLabels.join('・')}</p>
       ) : null}
       <h3 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.1em]">
         <Link

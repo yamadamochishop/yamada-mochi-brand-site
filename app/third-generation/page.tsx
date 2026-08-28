@@ -53,7 +53,7 @@ export default function ThirdGenerationPage() {
       <section className="ym-container py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-end">
           <div>
-            <p className="mb-6 text-xs tracking-brand text-brown/60">THIRD GENERATION</p>
+            <p className="mb-6 text-xs tracking-brand text-brown/85">THIRD GENERATION</p>
             <h1 className="font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl">
               三代目の想い
             </h1>
@@ -79,7 +79,7 @@ export default function ThirdGenerationPage() {
               key={chapter.title}
               className="grid gap-6 border-t border-sumi/10 pt-10 md:grid-cols-[8rem_1fr]"
             >
-              <p className="text-xs tracking-brand text-brown/50">
+              <p className="text-xs tracking-brand text-brown/85">
                 CHAPTER {String(index + 1).padStart(2, '0')}
               </p>
               <div>

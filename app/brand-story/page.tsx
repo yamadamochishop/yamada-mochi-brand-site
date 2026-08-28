@@ -33,7 +33,7 @@ export default function BrandStoryPage() {
           />
         </div>
         <article className="self-center">
-          <p className="mb-6 text-xs tracking-brand text-brown/60">BRAND STORY</p>
+          <p className="mb-6 text-xs tracking-brand text-brown/85">BRAND STORY</p>
           <h1 className="font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl">
             飛騨高山の思い出を、
             <br />

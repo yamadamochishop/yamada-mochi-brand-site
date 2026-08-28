@@ -1,20 +1,22 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { SectionHeading } from "@/components/SectionHeading";
-import { site } from "@/data/site";
-import { pageOpenGraph } from "@/lib/seo";
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { SectionHeading } from '@/components/SectionHeading';
+import { site } from '@/data/site';
+import { pageOpenGraph } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: "お問い合わせ",
-  description: "山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。",
+  title: 'お問い合わせ',
+  description:
+    '山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。',
   openGraph: pageOpenGraph({
-    title: "お問い合わせ｜山田もち店",
-    description: "山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。",
-    path: "/contact"
+    title: 'お問い合わせ｜山田もち店',
+    description:
+      '山田もち店へのお問い合わせページです。商品、ギフト、朝市での販売についてお気軽にご連絡ください。',
+    path: '/contact',
   }),
   alternates: {
-    canonical: "/contact"
-  }
+    canonical: '/contact',
+  },
 };
 
 export default function ContactPage() {
@@ -29,11 +31,11 @@ export default function ContactPage() {
           </p>
           <dl className="mt-10 divide-y divide-sumi/10 border-y border-sumi/10">
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">
-              <dt className="text-sm tracking-[0.12em] text-sumi/45">TEL</dt>
+              <dt className="text-sm tracking-[0.12em] text-sumi/65">TEL</dt>
               <dd>{site.tel}</dd>
             </div>
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">
-              <dt className="text-sm tracking-[0.12em] text-sumi/45">MAIL</dt>
+              <dt className="text-sm tracking-[0.12em] text-sumi/65">MAIL</dt>
               <dd>
                 <a className="underline-offset-4 hover:underline" href={`mailto:${site.email}`}>
                   {site.email}
@@ -41,17 +43,25 @@ export default function ContactPage() {
               </dd>
             </div>
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">
-              <dt className="text-sm tracking-[0.12em] text-sumi/45">ADDRESS</dt>
+              <dt className="text-sm tracking-[0.12em] text-sumi/65">ADDRESS</dt>
               <dd>{site.address}</dd>
             </div>
           </dl>
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             {site.googleFormUrl && (
-              <a className="inline-flex justify-center bg-green px-8 py-4 text-sm tracking-[0.12em] text-white" href={site.googleFormUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                className="inline-flex justify-center bg-green px-8 py-4 text-sm tracking-[0.12em] text-white"
+                href={site.googleFormUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 お問い合わせフォームへ
               </a>
             )}
-            <Link className="inline-flex justify-center border border-sumi/20 px-8 py-4 text-sm tracking-[0.12em]" href="/faq">
+            <Link
+              className="inline-flex justify-center border border-sumi/20 px-8 py-4 text-sm tracking-[0.12em]"
+              href="/faq"
+            >
               よくある質問を見る
             </Link>
           </div>

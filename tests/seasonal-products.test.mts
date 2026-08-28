@@ -16,6 +16,7 @@ const includedIds = [
   'konasu-pickles',
   'hida-apple-pie',
   'hida-peach-pie',
+  'yonashi-pie',
   'strawberry-daifuku',
   'shin-yomogi-mochi',
   'ao-hoba-mochi',
@@ -31,8 +32,8 @@ function idsFor(month: number, group: 'yearRound' | 'seasonal') {
   return getSeasonalProductsForMonth(month)[group].map((entry) => entry.id);
 }
 
-test('YM-003A contains exactly the ten human-confirmed seasonal records', () => {
-  assert.equal(seasonalProducts.length, 10);
+test('seasonal data contains exactly the eleven human-confirmed records', () => {
+  assert.equal(seasonalProducts.length, 11);
   assert.deepEqual(
     seasonalProducts.map((product) => product.id),
     includedIds,
@@ -72,8 +73,12 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-nagazuke',
     'konasu-pickles',
     'hida-peach-pie',
-    'ao-hoba-mochi',
   ]);
+  // 青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  assert.equal(
+    seasonalProducts.find((product) => product.id === 'ao-hoba-mochi')?.availabilityStatus,
+    'ended',
+  );
   assert.equal(
     contentModel.productCalendarReferences.every(
       (reference) => reference.availabilityStatus === 'available',
@@ -196,13 +201,20 @@ test('invalid category and year-round month boundaries are rejected', () => {
   assert.match(validateContentModel(invalidYearRound).join('\n'), /year_round product/);
 });
 
+function seasonalRecord(model: ReturnType<typeof cloneContentModel>, id: string) {
+  const record = model.seasonalProducts.find((product) => product.id === id);
+  assert.ok(record, `missing seasonal record: ${id}`);
+  return record;
+}
+
 test('commerce offer validation protects channel references and CTA status', () => {
   const unknownChannel = cloneContentModel();
-  unknownChannel.seasonalProducts[8].commerce.offers[0].channelId = 'unknown-channel';
+  seasonalRecord(unknownChannel, 'shin-yomogi-mochi').commerce.offers[0].channelId =
+    'unknown-channel';
   assert.match(validateContentModel(unknownChannel).join('\n'), /unknown commerce channelId/);
 
   const invalidCta = cloneContentModel();
-  invalidCta.seasonalProducts[5].commerce.offers = [
+  seasonalRecord(invalidCta, 'hida-apple-pie').commerce.offers = [
     { channelId: 'base', status: 'preparing', url: 'https://example.com/not-confirmed' },
   ];
   assert.match(validateContentModel(invalidCta).join('\n'), /only a confirmed commerce offer/);

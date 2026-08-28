@@ -34,7 +34,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-2 md:gap-x-8 md:gap-y-14 md:px-8 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <p className="font-serifjp text-2xl tracking-[0.2em]">{site.name}</p>
-          <p className="mt-3 text-xs tracking-brand text-sumi/55">{site.enName}</p>
+          <p className="mt-3 text-xs tracking-brand text-sumi/65">{site.enName}</p>
           <p className="mt-8 max-w-md leading-8 text-sumi/70">
             {site.tagline}
             <br />
@@ -55,7 +55,7 @@ export function SiteFooter() {
         </div>
 
         <nav aria-label="商品を選ぶ" className="text-sm leading-9 text-sumi/70">
-          <h2 className="text-xs tracking-brand text-sumi/50">商品を選ぶ</h2>
+          <h2 className="text-xs tracking-brand text-sumi/65">商品を選ぶ</h2>
           <ul className="mt-4">
             {productLinks.map((link) => (
               <li key={link.href}>
@@ -68,7 +68,7 @@ export function SiteFooter() {
         </nav>
 
         <nav aria-label="山田もち店について" className="text-sm leading-9 text-sumi/70">
-          <h2 className="text-xs tracking-brand text-sumi/50">山田もち店について</h2>
+          <h2 className="text-xs tracking-brand text-sumi/65">山田もち店について</h2>
           <ul className="mt-4">
             {brandLinks.map((link) => (
               <li key={link.href}>
@@ -81,7 +81,7 @@ export function SiteFooter() {
         </nav>
 
         <div className="text-sm leading-9 text-sumi/70">
-          <h2 className="text-xs tracking-brand text-sumi/50">店舗・お問い合わせ</h2>
+          <h2 className="text-xs tracking-brand text-sumi/65">店舗・お問い合わせ</h2>
           <address className="mt-4 not-italic leading-9">
             <p>{site.address}</p>
             <a href={telHref} className={linkClassName}>
@@ -101,7 +101,7 @@ export function SiteFooter() {
           </nav>
         </div>
       </div>
-      <div className="border-t border-sumi/10 px-5 py-5 text-center text-xs tracking-[0.12em] text-sumi/50">
+      <div className="border-t border-sumi/10 px-5 py-5 text-center text-xs tracking-[0.12em] text-sumi/65">
         © {site.name} ALL RIGHTS RESERVED.
       </div>
     </footer>
