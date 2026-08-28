@@ -104,8 +104,8 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     salesPeriod: { display: '8月〜9月上旬頃', startMonth: 8, endMonth: 9 },
     availabilityStatus: 'available',
     catchcopy: '桃のみずみずしさを残して。',
-    // 総額表示の有無はHuman未確認のため、表示文字列をそのまま使う。
-    price: { amount: 250, currency: 'JPY', taxIncluded: true, display: '1個 250円' },
+    // Human確認済み（2026-08-28）: 1個 250円（税込）。表記は既存商品と同じ「◯◯円（税込）」に揃える。
+    price: { amount: 250, currency: 'JPY', taxIncluded: true, display: '1個 250円（税込）' },
     salesLocationIds: [JINYA_MARKET_ID],
     story:
       '桃はさっと煮込み、果汁だけをじっくりと濃縮しています。みずみずしい桃の食感と、ぎゅっと凝縮した果汁のおいしさ。素材そのものの味わいを楽しんでいただけるよう、余計なものを加えずシンプルに仕上げました。',
@@ -180,9 +180,10 @@ export const seasonalProducts: SeasonalProductRecord[] = [
       endMonth: 8,
       note: '8月15日ごろまで',
     },
-    availabilityStatus: 'available',
-    availabilityNote: 'まもなく終了',
+    // Human確認済み（2026-08-28）: 2026年の販売は8月中旬で終了。
+    availabilityStatus: 'ended',
     salesLocationIds: [JINYA_MARKET_ID],
+    notes: ['2026年の販売は8月中旬で終了しました'],
     commerce: unavailableCommerce(),
     images: [],
     status: 'draft',

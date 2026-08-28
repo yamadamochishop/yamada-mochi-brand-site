@@ -73,8 +73,12 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-nagazuke',
     'konasu-pickles',
     'hida-peach-pie',
-    'ao-hoba-mochi',
   ]);
+  // 青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  assert.equal(
+    seasonalProducts.find((product) => product.id === 'ao-hoba-mochi')?.availabilityStatus,
+    'ended',
+  );
   assert.equal(
     contentModel.productCalendarReferences.every(
       (reference) => reference.availabilityStatus === 'available',

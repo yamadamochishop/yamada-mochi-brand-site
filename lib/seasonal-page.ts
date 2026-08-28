@@ -3,13 +3,16 @@ import { contentModel } from '../data/content-model.ts';
 import { salesChannels } from '../data/sales-channels.ts';
 import { salesLocations } from '../data/sales-locations.ts';
 import { seasonalProducts } from '../data/seasonal-products.ts';
-import { buildSeasonalProductsForMonth } from './content-model/seasonal-calendar.ts';
+import {
+  buildSeasonalProductsForMonth,
+  isMonthInSalesPeriod,
+} from './content-model/seasonal-calendar.ts';
 import type { SeasonalProductRecord } from '../types/content-model.ts';
 
 export const SEASONAL_LISTING_MONTH = 8;
 
+/** 「今、店先にあるもの」に出す商品はHuman管理。販売が終わった商品はここから外す。 */
 export const currentSeasonalProductIds = [
-  'ao-hoba-mochi',
   'hida-peach-pie',
   'konasu-pickles',
   'akakabu-nagazuke',
@@ -144,6 +147,33 @@ export function getSeasonalCalendarWarnings(records = seasonalProducts): string[
     return startMonth === undefined || endMonth === undefined
       ? [`${product.id}: seasonal sales period is missing a month boundary`]
       : [];
+  });
+}
+
+/**
+ * 「{月}月のお品書き」の見出しと中身が食い違わないための門。
+ *
+ * SEASONAL_LISTING_MONTH と currentSeasonalProductIds はどちらもHuman管理で、
+ * 月を進めてリストを直し忘れる／販売終了にしたのにリストへ残す、が事故の型。
+ * 現在時刻は一切見ない（build時刻・タイムゾーンに依存させない）。
+ */
+export function getSeasonalListingConsistencyErrors(records = seasonalProducts): string[] {
+  return currentSeasonalProductIds.flatMap((id) => {
+    const product = records.find((candidate) => candidate.id === id);
+    if (!product) return [`${id}: is listed as a current product but has no seasonal record`];
+
+    const errors: string[] = [];
+    if (product.availabilityStatus !== 'available') {
+      errors.push(
+        `${id}: is listed as a current product but availabilityStatus is "${product.availabilityStatus}"`,
+      );
+    }
+    if (!isMonthInSalesPeriod(SEASONAL_LISTING_MONTH, product)) {
+      errors.push(
+        `${id}: is listed as a current product but its sales period does not include month ${SEASONAL_LISTING_MONTH}`,
+      );
+    }
+    return errors;
   });
 }
 

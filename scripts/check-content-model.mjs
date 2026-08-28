@@ -2,13 +2,22 @@ import assert from 'node:assert/strict';
 import { catalogSets, products } from '../data/catalog.ts';
 import { compatibleGiftSets, compatibleProducts, contentModel } from '../data/content-model.ts';
 import { assertValidContentModel } from '../lib/content-model/validate.ts';
-import { getSeasonalListingWarnings } from '../lib/seasonal-page.ts';
+import {
+  getSeasonalListingConsistencyErrors,
+  getSeasonalListingWarnings,
+} from '../lib/seasonal-page.ts';
 
 assertValidContentModel(contentModel);
 assert.deepEqual(
   compatibleProducts,
   products,
   'normalized product compatibility projection drifted',
+);
+
+assert.deepEqual(
+  getSeasonalListingConsistencyErrors(),
+  [],
+  'the seasonal listing month and its current product list disagree',
 );
 
 for (const warning of getSeasonalListingWarnings(new Date())) {
