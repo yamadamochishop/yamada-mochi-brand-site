@@ -64,7 +64,7 @@ export default function RecipesPage() {
             山田もち店のお餅を楽しむ
           </h2>
           <p className="mt-6 leading-8 text-sumi/70">
-            山田家で実際に食べている食べ方を、そのままご紹介します。特別な道具は使わず、トースターやフライパンで作れるものばかりです。
+            山田家で実際に食べている食べ方を、そのままご紹介します。
           </p>
         </div>
 

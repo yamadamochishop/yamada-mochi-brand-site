@@ -95,8 +95,29 @@ Console data and human approval and is deliberately out of scope here.
 - **CMS**: `data/recipes.ts` is a plain typed array validated by `check:content-model`, so it can be
   replaced by a CMS fetch without touching the routes or components.
 
+## Sticky purchase bar and client-side navigation
+
+`StickyPurchaseBar` observes `[data-purchase-area]` so it hides instead of covering a purchase CTA.
+Its `IntersectionObserver` used to be created once on mount (`[]` deps), so after a client-side route
+transition it still watched the previous page's nodes and never saw the new page's CTA. It now
+re-registers per `pathname`, resets the carried-over intersection state, disconnects on cleanup, and
+accumulates intersecting targets in a `Set` (an `IntersectionObserver` callback only receives the
+targets whose state changed, so `entries.some(...)` mis-read pages with more than one purchase area).
+
+Every page must therefore keep marking its purchase areas with `data-purchase-area`; a regression test
+pins both the per-page marker count and the per-route re-registration.
+
 ## Human review
 
 - Confirm whether 揚げ豆餅 should carry an oil-splatter caution; no safety wording was invented.
+- 「たまり餅自体に味がついているため無塩バターを推奨」 is **decided as not published**. R7 shows the
+  「無塩バターをのせる」 step only; the reason sentence stays out. This is settled — do not restore it.
 - Photograph the seven recipes so the HERO images, card thumbnails, and Recipe structured data can turn on.
 - Decide the legacy `/アレンジレシピ` redirect disposition with Search Console data.
+
+## Follow-up (not merge blockers)
+
+- Recipe runtime validation (required fields, step ordering) beyond the current identity/relation checks.
+- `ItemList.url` for Google recipe host carousels.
+- A visible breadcrumb to match the existing `BreadcrumbList` markup.
+- Legacy recipe redirects, recipe photography, and the 金継ぎ UI pass.

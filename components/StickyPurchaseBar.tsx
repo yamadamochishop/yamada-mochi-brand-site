@@ -15,17 +15,36 @@ export function StickyPurchaseBar() {
     const updateScrollState = () => setHasScrolled(window.scrollY > 480);
     updateScrollState();
     window.addEventListener('scroll', updateScrollState, { passive: true });
-    const targets = document.querySelectorAll('[data-purchase-area]');
+    return () => window.removeEventListener('scroll', updateScrollState);
+  }, []);
+
+  // 購入エリアはページごとに入れ替わる。クライアント遷移では前のページの
+  // ノードが差し替わるため、pathnameごとに監視対象を取り直さないと
+  // 遷移後のページの購入エリアが監視されず、バーが重なってしまう。
+  useEffect(() => {
+    // 前のページの交差状態を引き継がない。
+    setOverlapsPurchaseArea(false);
+
+    // IntersectionObserverのコールバックは変化した要素だけを渡すため、
+    // 交差中の要素を保持して全体の状態から判定する。
+    const intersecting = new Set<Element>();
     const observer = new IntersectionObserver(
-      (entries) => setOverlapsPurchaseArea(entries.some((entry) => entry.isIntersecting)),
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) intersecting.add(entry.target);
+          else intersecting.delete(entry.target);
+        }
+        setOverlapsPurchaseArea(intersecting.size > 0);
+      },
       { rootMargin: '0px 0px 80px' },
     );
-    targets.forEach((target) => observer.observe(target));
-    return () => {
-      window.removeEventListener('scroll', updateScrollState);
-      observer.disconnect();
-    };
-  }, []);
+
+    document.querySelectorAll('[data-purchase-area]').forEach((target) => {
+      observer.observe(target);
+    });
+
+    return () => observer.disconnect();
+  }, [pathname]);
 
   const visible = pathname !== '/seasonal' && hasScrolled && !overlapsPurchaseArea;
   return (

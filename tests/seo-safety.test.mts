@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { after, before, test } from 'node:test';
 
@@ -320,6 +321,32 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
     assert.doesNotMatch(html, /人分|カロリー|kcal|調理時間/u);
   }
 
+  // Independent Reviewで削除したHuman未確定の工程・エピソード・補足が戻らないこと。
+  const visible = (html: string) => html.replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.doesNotMatch(visible(detailHtml), /山田家でいちばんよく食べている/u);
+  assert.doesNotMatch(visible(detailHtml), /基本の目安/u);
+  assert.doesNotMatch(visible(detailHtml), /甘さを調整/u);
+  // 磯辺焼き・お雑煮風・バター黒胡椒は「水で濡らす」工程がHuman未確定。
+  for (const slug of ['isobeyaki', 'kombu-mochi-ozoni-fu', 'tamari-mochi-butter-pepper']) {
+    const response = await fetch(`${localOrigin}/recipes/${slug}`, {
+      headers: productionHeaders(),
+    });
+    assert.equal(response.status, 200, slug);
+    assert.doesNotMatch(visible(await response.text()), /水で濡ら/u, slug);
+  }
+
+  // アレンジ文言はHuman確定内容そのままで固定する。意味を広げる表現を許さない。
+  assert.match(visible(detailHtml), /九州地方の甘い醤油/u);
+  assert.doesNotMatch(visible(detailHtml), /九州地方などの甘い醤油/u);
+
+  const zenzai = await fetch(`${localOrigin}/recipes/yomogi-mochi-zenzai`, {
+    headers: productionHeaders(),
+  });
+  assert.equal(zenzai.status, 200);
+  const zenzaiHtml = visible(await zenzai.text());
+  assert.match(zenzaiHtml, /お湯の代わりに甘酒/u);
+  assert.doesNotMatch(zenzaiHtml, /水の代わりに甘酒/u);
+
   const detailJsonLd = [
     ...detailHtml.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g),
   ].map((match) => JSON.parse(match[1]));
@@ -337,6 +364,52 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
       assert.equal(forbidden in entry, false, `${forbidden} must not be published`);
     }
   }
+});
+
+test('StickyPurchaseBar: every purchase area stays observable on the pages it guards', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+
+  // StickyPurchaseBarはpathnameごとに[data-purchase-area]を取り直して監視する。
+  // このマーカーが落ちると、クライアント遷移後にバーが購入エリアへ重なる。
+  const expectedAreas = new Map([
+    ['/recipes', 2], // ページ末尾のCta + footer
+    ['/recipes/isobeyaki', 2], // RecipeProductCta + footer
+    ['/recipes/mochi-yakikata', 2], // 全商品向けCta + footer
+    ['/products/kombu', 2], // 商品末尾のCta + footer
+    ['/gift', 2],
+    ['/seasonal', 1], // footerのみ
+  ]);
+
+  for (const [path, expected] of expectedAreas) {
+    const response = await fetch(`${localOrigin}${path}`, { headers: productionHeaders() });
+    assert.equal(response.status, 200, path);
+    // RSCペイロードのscriptにも属性名が現れるため、要素だけを数える。
+    const html = (await response.text()).replace(/<script[\s\S]*?<\/script>/g, '');
+    assert.equal((html.match(/data-purchase-area/g) ?? []).length, expected, path);
+  }
+
+  // レシピ詳細の購入CTA自体がマーカーを持っていること。
+  const detail = await fetch(`${localOrigin}/recipes/isobeyaki`, { headers: productionHeaders() });
+  const detailHtml = (await detail.text()).replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.match(
+    detailHtml,
+    /<section[^>]*data-purchase-area[^>]*aria-labelledby="recipe-product-title"/,
+  );
+});
+
+test('StickyPurchaseBar: the purchase-area observer is re-registered per route', async () => {
+  // 依存配列が [] に戻ると、クライアント遷移後の購入エリアが監視されなくなる。
+  // 実ブラウザのroute transitionはこのテストランナーでは再現できないため、
+  // 根本原因となる購読の張り直しをソース契約として固定する。
+  const source = await readFile(
+    new URL('../components/StickyPurchaseBar.tsx', import.meta.url),
+    'utf8',
+  );
+  const observerEffect = source.slice(source.indexOf('new IntersectionObserver'));
+  const dependencies = observerEffect.match(/\}, \[([^\]]*)\]\);/)?.[1];
+  assert.equal(dependencies, 'pathname');
+  assert.match(observerEffect, /observer\.disconnect\(\)/);
+  assert.match(source, /setOverlapsPurchaseArea\(false\)/);
 });
 
 test('Product → Recipe: every product detail page links to its recipes', async (context) => {
