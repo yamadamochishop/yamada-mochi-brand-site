@@ -21,7 +21,7 @@ export function ArticlePurchaseCTA({ message }: { message: string }) {
           />
         </div>
         <div className="flex flex-col justify-center px-7 py-12 sm:px-10 md:px-12 md:py-16">
-          <p className="text-xs tracking-brand text-brown/60">FROM HIDA TAKAYAMA</p>
+          <p className="text-xs tracking-brand text-brown/85">FROM HIDA TAKAYAMA</p>
           <h2
             id="article-purchase-title"
             className="mt-5 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"

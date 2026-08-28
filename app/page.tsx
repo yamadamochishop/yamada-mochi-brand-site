@@ -70,7 +70,7 @@ export default function HomePage() {
             />
           </div>
           <div>
-            <p className="text-xs tracking-brand text-brown/80">POPULAR GIFT</p>
+            <p className="text-xs tracking-brand text-brown/85">POPULAR GIFT</p>
             <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.1em] md:text-5xl">
               {sixFlavorGift.name}
             </h2>
@@ -98,7 +98,7 @@ export default function HomePage() {
       </section>
 
       <section className="ym-container py-20 text-center md:py-28">
-        <p className="text-xs tracking-brand text-brown/80">OUR STORY</p>
+        <p className="text-xs tracking-brand text-brown/85">OUR STORY</p>
         <h2 className="mt-5 font-serifjp text-4xl tracking-[0.14em] md:text-6xl">
           思い出に残るお餅を。
         </h2>
@@ -144,7 +144,7 @@ export default function HomePage() {
       <section className="ym-container py-20 md:py-28">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="text-xs tracking-brand text-brown/80">GIFT</p>
+            <p className="text-xs tracking-brand text-brown/85">GIFT</p>
             <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
               大切な人にも、
               <br />
@@ -179,7 +179,7 @@ export default function HomePage() {
                   「{voice.title}」
                 </p>
                 <p className="mt-5 leading-8 text-sumi/70">{voice.body}</p>
-                <footer className="mt-5 text-sm text-sumi/60">— {voice.source}</footer>
+                <footer className="mt-5 text-sm text-sumi/70">— {voice.source}</footer>
               </blockquote>
             ))}
           </div>

@@ -74,7 +74,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <div className="mx-auto mt-14 max-w-3xl text-center md:mt-20">
-            <p className="mb-5 text-xs tracking-brand text-brown/60">{product.english}</p>
+            <p className="mb-5 text-xs tracking-brand text-brown/85">{product.english}</p>
             <h1 className="font-serifjp text-4xl tracking-[0.16em] md:text-6xl">{product.name}</h1>
             <p className="mt-8 font-serifjp text-3xl leading-relaxed tracking-[0.1em] md:text-5xl">
               {product.catchcopy}
@@ -82,7 +82,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">ABOUT THIS MOCHI</p>
+            <p className="text-xs tracking-brand text-brown/85">ABOUT THIS MOCHI</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
               このお餅について
             </h2>
@@ -91,7 +91,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               家族で育てたもち米を使い、状態を見ながら一つひとつ丁寧に仕上げています。素材ごとの味わいを生かし、日々の食卓でも楽しんでいただける切り餅です。
             </p>
             <div className="mt-10 border-y border-sumi/10 py-8">
-              <p className="text-sm tracking-brand text-sumi/45">PRICE</p>
+              <p className="text-sm tracking-brand text-sumi/65">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
               {nekopos ? (
                 <p className="mt-6 border border-green/25 bg-white/50 px-5 py-4 text-sm leading-7 text-sumi/75">
@@ -147,7 +147,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">TASTE</p>
+            <p className="text-xs tracking-brand text-brown/85">TASTE</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">味の特徴</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {product.traits.map((trait) => (
@@ -163,7 +163,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             className="mx-auto mt-14 max-w-3xl border-l-2 border-[color:var(--accent)] bg-white/35 p-7 md:mt-20"
             style={{ '--accent': product.accent } as CSSProperties}
           >
-            <p className="text-xs tracking-brand text-brown/60">OWNER&apos;S RECOMMENDATION</p>
+            <p className="text-xs tracking-brand text-brown/85">OWNER&apos;S RECOMMENDATION</p>
             <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em]">店主おすすめ</h2>
             <p className="mt-5 leading-8 text-sumi/70">{product.ownerRecommendation}</p>
           </section>
@@ -181,7 +181,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">HOW TO ENJOY</p>
+            <p className="text-xs tracking-brand text-brown/85">HOW TO ENJOY</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
               おすすめの食べ方
             </h2>
@@ -197,7 +197,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {recipes.length > 0 ? (
             <section className="mx-auto mt-14 max-w-3xl border border-sumi/15 bg-white/35 p-7 md:mt-20">
-              <p className="text-xs tracking-brand text-brown/60">RECIPES</p>
+              <p className="text-xs tracking-brand text-brown/85">RECIPES</p>
               <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em]">
                 {product.name}をもっと楽しむ
               </h2>
@@ -215,7 +215,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </ul>
               <Link
                 href="/recipes"
-                className="mt-6 inline-flex text-sm text-sumi/60 underline underline-offset-8"
+                className="mt-6 inline-flex text-sm text-sumi/70 underline underline-offset-8"
               >
                 お餅のレシピ一覧を見る
               </Link>
@@ -237,7 +237,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </section>
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">PRODUCT INFORMATION</p>
+            <p className="text-xs tracking-brand text-brown/85">PRODUCT INFORMATION</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">商品情報</h2>
             <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
               {[
@@ -252,7 +252,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 ['アレルギー', product.allergy],
               ].map(([label, value]) => (
                 <div key={label} className="grid gap-3 py-4 text-sm md:grid-cols-[9rem_1fr]">
-                  <dt className="tracking-[0.12em] text-sumi/45">{label}</dt>
+                  <dt className="tracking-[0.12em] text-sumi/65">{label}</dt>
                   <dd className="leading-7 text-sumi/70">{value}</dd>
                 </div>
               ))}

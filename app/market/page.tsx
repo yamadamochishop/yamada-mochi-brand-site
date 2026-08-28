@@ -36,7 +36,7 @@ export default function MarketPage() {
             />
           </div>
           <div>
-            <p className="mb-6 text-xs tracking-brand text-brown/60">MORNING MARKET</p>
+            <p className="mb-6 text-xs tracking-brand text-brown/85">MORNING MARKET</p>
             <h1 className="font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl">
               飛騨高山を感じる、
               <br />
@@ -55,7 +55,7 @@ export default function MarketPage() {
             ['駐車場', site.market.parking],
           ].map(([label, value]) => (
             <div key={label} className="border-b border-sumi/10 py-5 md:border-b-0">
-              <dt className="text-xs tracking-brand text-sumi/45">{label}</dt>
+              <dt className="text-xs tracking-brand text-sumi/65">{label}</dt>
               <dd className="mt-3 leading-8 text-sumi/70">{value}</dd>
             </div>
           ))}

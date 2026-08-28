@@ -18,7 +18,7 @@ const statusBadgeClasses: Record<SeasonalStatusLabel, string> = {
   販売中: 'bg-green/10 text-green',
   まもなく終了: 'bg-[#f0dfbd] text-[#6f4b0c]',
   販売予定: 'bg-brown/10 text-brown',
-  販売終了: 'bg-sumi/[0.06] text-sumi/55',
+  販売終了: 'bg-sumi/[0.06] text-sumi/65',
 };
 
 function StatusBadge({ label }: { label: SeasonalStatusLabel }) {
@@ -61,7 +61,7 @@ function ProductMetadata({ product }: { product: SeasonalPageProduct }) {
     <dl className="mt-6 grid gap-x-6 gap-y-4 text-sm leading-7 text-sumi/70 sm:grid-cols-3">
       {items.map((item) => (
         <div key={item.term}>
-          <dt className="text-xs tracking-brand text-sumi/45">{item.term}</dt>
+          <dt className="text-xs tracking-brand text-sumi/65">{item.term}</dt>
           <dd className="mt-1">{item.value}</dd>
         </div>
       ))}
@@ -73,7 +73,7 @@ function ProductNotes({ product }: { product: SeasonalPageProduct }) {
   const notes = [product.salesPeriod.note, ...(product.notes ?? [])].filter(Boolean);
   if (notes.length === 0) return null;
   return (
-    <ul className="mt-5 space-y-1 text-sm leading-7 text-sumi/60">
+    <ul className="mt-5 space-y-1 text-sm leading-7 text-sumi/70">
       {notes.map((note) => (
         <li key={note}>※{note}</li>
       ))}
@@ -87,7 +87,7 @@ function SeasonalProductCard({ product }: { product: SeasonalPageProduct }) {
       <ProductImage image={product.images[0]} name={product.name} />
       <div className={product.images[0] ? 'mt-6' : ''}>
         <div className="flex min-h-7 items-start justify-between gap-4">
-          <p className="text-xs tracking-brand text-brown/65">{product.categoryLabel}</p>
+          <p className="text-xs tracking-brand text-brown/85">{product.categoryLabel}</p>
           {product.statusLabel ? <StatusBadge label={product.statusLabel} /> : null}
         </div>
         <h3 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.1em]">
@@ -109,7 +109,7 @@ function CurrentMonthPanel() {
       aria-labelledby="current-month-title"
       className="border border-sumi/15 bg-[#eee8dc] p-6 md:p-8"
     >
-      <p className="text-xs tracking-brand text-brown/65">THIS MONTH</p>
+      <p className="text-xs tracking-brand text-brown/85">THIS MONTH</p>
       <h2 id="current-month-title" className="mt-3 font-serifjp text-2xl tracking-[0.12em]">
         {SEASONAL_LISTING_MONTH}月のお品書き
       </h2>
@@ -117,7 +117,7 @@ function CurrentMonthPanel() {
         {model.currentProducts.map((product) => (
           <li key={product.id} className="flex min-h-14 items-center justify-between gap-4 py-3">
             <span className="font-serifjp tracking-[0.06em]">{product.name}</span>
-            <span className="shrink-0 text-xs text-sumi/55">{product.currentMonthLabel}</span>
+            <span className="shrink-0 text-xs text-sumi/65">{product.currentMonthLabel}</span>
           </li>
         ))}
       </ol>
@@ -161,7 +161,7 @@ function SeasonalProductRow({ product }: { product: SeasonalPageProduct }) {
       <div className="flex flex-col gap-5 lg:flex-row">
         <ProductImage image={product.images[0]} name={product.name} />
         <div className="min-w-0 flex-1">
-          <p className="text-xs tracking-brand text-brown/65">{product.categoryLabel}</p>
+          <p className="text-xs tracking-brand text-brown/85">{product.categoryLabel}</p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
             <h4 className="font-serifjp text-xl tracking-[0.1em] md:text-2xl">{product.name}</h4>
             {product.statusLabel ? <StatusBadge label={product.statusLabel} /> : null}
@@ -173,7 +173,7 @@ function SeasonalProductRow({ product }: { product: SeasonalPageProduct }) {
             <p className="mt-3 max-w-3xl leading-8 text-sumi/70">{product.story}</p>
           ) : null}
           {product.commitment ? (
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-sumi/60">{product.commitment}</p>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-sumi/70">{product.commitment}</p>
           ) : null}
           <ProductMetadata product={product} />
           <ProductNotes product={product} />
@@ -191,7 +191,7 @@ function UpcomingProducts() {
   if (model.upcomingProducts.length === 0) return null;
   return (
     <section aria-labelledby="upcoming-title" className="mt-20 md:mt-24">
-      <p className="text-xs tracking-brand text-brown/65">COMING SOON</p>
+      <p className="text-xs tracking-brand text-brown/85">COMING SOON</p>
       <h2 id="upcoming-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-4xl">
         これから登場するもの
       </h2>
@@ -211,15 +211,15 @@ function EndedProducts() {
   if (model.endedProducts.length === 0) return null;
   return (
     <section aria-labelledby="ended-title" className="mt-20 md:mt-24">
-      <p className="text-xs tracking-brand text-brown/65">FINISHED</p>
+      <p className="text-xs tracking-brand text-brown/85">FINISHED</p>
       <h2 id="ended-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-4xl">
         今季の販売を終えたもの
       </h2>
-      <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm leading-7 text-sumi/60">
+      <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm leading-7 text-sumi/70">
         {model.endedProducts.map((product) => (
           <li key={product.id}>
             {product.name}
-            <span className="ml-2 text-xs text-sumi/45">{product.salesPeriod.display}</span>
+            <span className="ml-2 text-xs text-sumi/65">{product.salesPeriod.display}</span>
           </li>
         ))}
       </ul>
@@ -231,7 +231,7 @@ function AnnualFlow() {
   return (
     <section aria-labelledby="annual-flow-title" className="ym-container py-20 md:py-28">
       <div className="max-w-2xl">
-        <p className="text-xs tracking-brand text-brown/65">ALL YEAR ROUND</p>
+        <p className="text-xs tracking-brand text-brown/85">ALL YEAR ROUND</p>
         <h2
           id="annual-flow-title"
           className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl"
@@ -271,7 +271,7 @@ function AnnualFlow() {
                 <li key={product.id} className="flex items-baseline justify-between gap-3">
                   <span>{product.name}</span>
                   {product.statusLabel === '販売予定' ? (
-                    <span className="shrink-0 text-xs text-brown/70">予定</span>
+                    <span className="shrink-0 text-xs text-brown/85">予定</span>
                   ) : null}
                 </li>
               ))}
@@ -281,7 +281,7 @@ function AnnualFlow() {
       </div>
       <section aria-labelledby="seasonal-directory-title" className="mt-20">
         <div className="max-w-2xl">
-          <p className="text-xs tracking-brand text-brown/55">SEASONAL PRODUCTS</p>
+          <p className="text-xs tracking-brand text-brown/85">SEASONAL PRODUCTS</p>
           <h3
             id="seasonal-directory-title"
             className="mt-3 font-serifjp text-2xl tracking-[0.12em] md:text-3xl"
@@ -306,7 +306,7 @@ function YearRoundProducts() {
   return (
     <section aria-labelledby="standards-title" className="bg-[#eee8dc] py-20 md:py-28">
       <div className="ym-container">
-        <p className="text-xs tracking-brand text-brown/65">STANDARDS</p>
+        <p className="text-xs tracking-brand text-brown/85">STANDARDS</p>
         <h2
           id="standards-title"
           className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl"
@@ -315,10 +315,10 @@ function YearRoundProducts() {
         </h2>
         <div className="mt-12 grid gap-5 lg:grid-cols-[2fr_1fr_1fr]">
           <article className="border border-sumi/15 bg-base p-7 md:p-9">
-            <p className="text-xs tracking-brand text-brown/65">いつものお餅</p>
+            <p className="text-xs tracking-brand text-brown/85">いつものお餅</p>
             <h3 className="mt-4 font-serifjp text-2xl tracking-[0.1em]">定番の切り餅 6種類</h3>
             <p className="mt-5 leading-8 text-sumi/70">{model.regularMochiNames.join('・')}</p>
-            <p className="mt-5 text-sm leading-7 text-sumi/60">
+            <p className="mt-5 text-sm leading-7 text-sumi/70">
               ※5月〜6月は、草餅に代わって新草餅を販売します。
             </p>
             <Link href="/products" data-seasonal-cta="standards" className={`${buttonClass} mt-7`}>
@@ -327,7 +327,7 @@ function YearRoundProducts() {
           </article>
           {model.yearRoundPickles.map((product) => (
             <article key={product.id} className="border border-sumi/15 bg-base p-7 md:p-9">
-              <p className="text-xs tracking-brand text-brown/65">{product.categoryLabel}</p>
+              <p className="text-xs tracking-brand text-brown/85">{product.categoryLabel}</p>
               <h3 className="mt-4 font-serifjp text-xl leading-relaxed tracking-[0.1em]">
                 {product.name}
               </h3>
@@ -385,7 +385,7 @@ export function SeasonalPage() {
       >
         <div className="grid gap-12 lg:grid-cols-[1fr_460px] lg:items-center">
           <div>
-            <p className="text-xs tracking-brand text-brown/65">SEASONAL</p>
+            <p className="text-xs tracking-brand text-brown/85">SEASONAL</p>
             <h1
               id="seasonal-page-title"
               className="mt-5 font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl"
@@ -406,7 +406,7 @@ export function SeasonalPage() {
       <div className="bg-white/45 py-20 md:py-28">
         <div className="ym-container">
           <section id="now" aria-labelledby="now-title" className="scroll-mt-24">
-            <p className="text-xs tracking-brand text-brown/65">NOW</p>
+            <p className="text-xs tracking-brand text-brown/85">NOW</p>
             <h2 id="now-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl">
               今、店先にあるもの
             </h2>

@@ -59,7 +59,7 @@ export default function RecipesPage() {
         </div>
 
         <div className="mx-auto max-w-3xl">
-          <p className="text-xs tracking-brand text-brown/60">FROM OUR KITCHEN</p>
+          <p className="text-xs tracking-brand text-brown/85">FROM OUR KITCHEN</p>
           <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
             山田もち店のお餅を楽しむ
           </h2>
@@ -78,7 +78,7 @@ export default function RecipesPage() {
       <section className="border-t border-sumi/10 bg-[#f1ece3]">
         <div className="ym-container py-20 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs tracking-brand text-brown/60">BY PRODUCT</p>
+            <p className="text-xs tracking-brand text-brown/85">BY PRODUCT</p>
             <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
               お餅から探す
             </h2>

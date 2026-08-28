@@ -68,7 +68,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
 
       <section className="ym-container py-20 md:py-28">
         <article className="mx-auto max-w-3xl">
-          <p className="text-xs tracking-brand text-brown/60">RECIPE</p>
+          <p className="text-xs tracking-brand text-brown/85">RECIPE</p>
           <h1 className="mt-5 font-serifjp text-3xl leading-relaxed tracking-[0.14em] md:text-5xl">
             {recipe.title}
           </h1>
@@ -105,7 +105,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           ) : null}
 
           <section className="mt-14 md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">INGREDIENTS</p>
+            <p className="text-xs tracking-brand text-brown/85">INGREDIENTS</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">材料</h2>
             <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
               {recipe.ingredients.map((ingredient) => (
@@ -117,7 +117,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   <dd className="text-right leading-7 text-sumi/70">
                     {ingredient.amount}
                     {ingredient.note ? (
-                      <span className="ml-2 text-xs text-sumi/55">（{ingredient.note}）</span>
+                      <span className="ml-2 text-xs text-sumi/65">（{ingredient.note}）</span>
                     ) : null}
                   </dd>
                 </div>
@@ -126,7 +126,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           </section>
 
           <section className="mt-14 md:mt-20">
-            <p className="text-xs tracking-brand text-brown/60">STEPS</p>
+            <p className="text-xs tracking-brand text-brown/85">STEPS</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">作り方</h2>
             <ol className="mt-8 space-y-6">
               {recipe.steps.map((step) => (
@@ -145,7 +145,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
 
           {recipe.notes && recipe.notes.length > 0 ? (
             <section className="mt-14 border-l-2 border-brown/40 bg-white/35 p-7 md:mt-20">
-              <p className="text-xs tracking-brand text-brown/60">POINT</p>
+              <p className="text-xs tracking-brand text-brown/85">POINT</p>
               <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em]">おいしく作るポイント</h2>
               <ul className="mt-5 space-y-3">
                 {recipe.notes.map((note) => (
@@ -159,7 +159,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
 
           {recipe.variations && recipe.variations.length > 0 ? (
             <section className="mt-14 md:mt-20">
-              <p className="text-xs tracking-brand text-brown/60">VARIATION</p>
+              <p className="text-xs tracking-brand text-brown/85">VARIATION</p>
               <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">アレンジ</h2>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {recipe.variations.map((variation) => (
@@ -174,7 +174,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
 
           {recipe.column ? (
             <section className="mt-14 bg-[#eee8dc] p-7 md:mt-20 md:p-10">
-              <p className="text-xs tracking-brand text-brown/60">COLUMN</p>
+              <p className="text-xs tracking-brand text-brown/85">COLUMN</p>
               <h2 className="mt-3 font-serifjp text-2xl leading-relaxed tracking-[0.12em]">
                 {recipe.column.title}
               </h2>

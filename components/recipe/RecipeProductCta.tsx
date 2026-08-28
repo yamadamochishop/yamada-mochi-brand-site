@@ -20,7 +20,7 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
       className="bg-[#f1ece3] px-5 py-20 md:px-8 md:py-24"
     >
       <div className="mx-auto max-w-5xl">
-        <p className="text-center text-xs tracking-brand text-brown/60">FOR THIS RECIPE</p>
+        <p className="text-center text-xs tracking-brand text-brown/85">FOR THIS RECIPE</p>
         <h2
           id="recipe-product-title"
           className="mt-4 text-center font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"

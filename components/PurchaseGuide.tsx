@@ -34,7 +34,7 @@ export function PurchaseGuide({
           ],
         ].map(([label, value]) => (
           <div key={label} className="grid gap-1 py-3 sm:grid-cols-[7rem_1fr]">
-            <dt className="text-xs tracking-[0.12em] text-sumi/45">{label}</dt>
+            <dt className="text-xs tracking-[0.12em] text-sumi/65">{label}</dt>
             <dd className="leading-6">{value}</dd>
           </div>
         ))}
