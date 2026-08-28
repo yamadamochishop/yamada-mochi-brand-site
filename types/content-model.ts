@@ -240,6 +240,21 @@ export type RecipeStep = {
   image?: MediaAsset;
 };
 
+/** 「もうひとつの好きな食べ方」など、基本の作り方に対する任意のアレンジ。 */
+export type RecipeVariation = {
+  title: string;
+  text: string;
+};
+
+/**
+ * レシピに添える暮らしのコラム。調理手順ではないため、
+ * 手順・材料とは別の枠として扱う。
+ */
+export type RecipeColumn = {
+  title: string;
+  body: string;
+};
+
 export type RecipeRecord = {
   id: string;
   slug: string;
@@ -249,7 +264,9 @@ export type RecipeRecord = {
   season?: string;
   ingredients: RecipeIngredient[];
   steps: RecipeStep[];
-  servings: string;
+  /** 人数・分量はHuman確認が取れたレシピにだけ設定する（推測で埋めない）。 */
+  servings?: string;
+  /** 調理時間もHuman確認が取れた場合にだけ設定する。 */
   cookingTimeMinutes?: number;
   relatedProductIds: string[];
   mainImage?: MediaAsset;
@@ -257,7 +274,10 @@ export type RecipeRecord = {
   author?: string;
   publishedAt?: string;
   updatedAt?: string;
+  /** 「おいしく作るポイント」として表示する補足。 */
   notes?: string[];
+  variations?: RecipeVariation[];
+  column?: RecipeColumn;
   allergens?: AllergenInfo;
   storageNotes?: string;
   seo?: SeoMetadata;

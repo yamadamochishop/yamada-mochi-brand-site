@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { Product } from '../data/catalog.ts';
 import { site } from '../data/site.ts';
+import type { RecipeRecord } from '../types/content-model.ts';
 
 export function absoluteUrl(path = '') {
   const base = site.siteUrl.replace(/\/$/, '');
@@ -141,6 +142,39 @@ export function simpleItemListJsonLd(name: string, itemNames: string[]) {
       '@type': 'ListItem',
       position: index + 1,
       name: itemName,
+    })),
+  };
+}
+
+/**
+ * Recipe構造化データ。
+ *
+ * ページに表示されている事実だけを出力する。人数・調理時間・カロリーなどは
+ * Human確認が取れていないため含めない。Googleのレシピリッチリザルトは画像を
+ * 必須とするため、写真が未登録のレシピでは `null` を返し、構造化データ自体を
+ * 出力しない。`mainImage` を登録した時点で自動的に有効になる。
+ */
+export function recipeJsonLd(recipe: RecipeRecord) {
+  if (!recipe.mainImage) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Recipe',
+    name: recipe.title,
+    description: recipe.description,
+    image: absoluteUrl(recipe.mainImage.src),
+    url: absoluteUrl(`/recipes/${recipe.slug}`),
+    inLanguage: 'ja',
+    author: { '@id': organizationId },
+    publisher: { '@id': organizationId },
+    recipeCategory: 'お餅',
+    recipeIngredient: recipe.ingredients.map((ingredient) =>
+      `${ingredient.name} ${ingredient.amount}`.trim(),
+    ),
+    recipeInstructions: recipe.steps.map((step) => ({
+      '@type': 'HowToStep',
+      position: step.position,
+      text: step.instruction,
     })),
   };
 }

@@ -1,0 +1,245 @@
+import type { RecipeRecord } from '../types/content-model.ts';
+
+/**
+ * Recipe Hub Ver.1 の公開レシピ。
+ *
+ * すべて山田家で実際に行っている食べ方をHumanから受け取った内容だけで構成する。
+ * 次の値は確認が取れていないため、意図的に設定しない。
+ *
+ * - `servings`（人数）
+ * - `cookingTimeMinutes`（調理時間）
+ * - `allergens`（アレルゲン表示は各商品ページの正本を参照する）
+ * - `mainImage` / `stepImages`（レシピ写真は未撮影）
+ *
+ * 写真が用意でき次第 `mainImage` を追加すると、詳細ページのHEROと
+ * Recipe構造化データが自動的に有効になる（`lib/recipe-page.ts` を参照）。
+ */
+export const recipes: RecipeRecord[] = [
+  {
+    id: 'mochi-yakikata',
+    slug: 'mochi-yakikata',
+    title: 'お餅のおいしい焼き方',
+    description:
+      '山田もち店のお餅は、まず焼くところから。ご家庭のトースターでおいしく焼くための、いちばん基本の焼き方です。',
+    category: 'mochi',
+    ingredients: [{ name: '山田もち店の切り餅', amount: '適量' }],
+    steps: [
+      { position: 1, instruction: 'お餅の表面を、さっと水で濡らします。' },
+      { position: 2, instruction: 'トースター（1000W）で4〜5分を目安に焼きます。' },
+      {
+        position: 3,
+        instruction:
+          'お餅が硬くなっている場合はもう少し時間がかかるため、様子を見ながら追加で焼きます。',
+      },
+    ],
+    column: {
+      title: '山田家では、ストーブの上で。',
+      body: '冬になると、山田家では石油ストーブの上でじっくり焼くことも多くあります。ご家庭でおすすめしているのはトースターです。',
+    },
+    relatedProductIds: ['plain', 'yomogi', 'sansyokumame', 'kombu', 'tamari', 'ebi'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: 'お餅のおいしい焼き方',
+      description:
+        '飛騨高山・山田もち店の切り餅を、トースター1000Wで4〜5分を目安に焼く基本の焼き方をご紹介します。',
+      canonicalPath: '/recipes/mochi-yakikata',
+    },
+  },
+  {
+    id: 'isobeyaki',
+    slug: 'isobeyaki',
+    title: '山田家の磯辺焼き',
+    description: '焼いた白餅に砂糖醤油を絡めて、炙った焼き海苔で包みます。',
+    category: 'mochi',
+    ingredients: [
+      { name: 'プレーン（白餅）', amount: '適量' },
+      { name: '上白糖', amount: '大さじ1' },
+      { name: '濃口醤油', amount: '大さじ2' },
+      { name: '焼き海苔', amount: '適量' },
+    ],
+    steps: [
+      { position: 1, instruction: '白餅をトースターで焼きます。' },
+      { position: 2, instruction: '上白糖大さじ1と濃口醤油大さじ2を混ぜます。' },
+      { position: 3, instruction: '焼けた餅を絡めます。' },
+      { position: 4, instruction: '焼き海苔をさっと炙ります。' },
+      { position: 5, instruction: '海苔で餅を包んで食べます。' },
+    ],
+    variations: [
+      {
+        title: '九州地方の甘い醤油で',
+        text: '砂糖を入れずに、九州地方の甘い醤油で絡めて食べるのもおすすめです。',
+      },
+    ],
+    relatedProductIds: ['plain'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: '山田家の磯辺焼き',
+      description: '焼いた白餅に砂糖醤油を絡め、炙った焼き海苔で包む、山田家の磯辺焼きです。',
+      canonicalPath: '/recipes/isobeyaki',
+    },
+  },
+  {
+    id: 'ebi-mochi-cheese-pizza',
+    slug: 'ebi-mochi-cheese-pizza',
+    title: '海老餅の簡単チーズピザ',
+    description:
+      '焼いた海老餅に、とろけるチーズをのせるだけ。海老餅そのものに塩味があるので、ソースがなくても味が決まります。',
+    category: 'mochi',
+    ingredients: [
+      { name: '黒ごま海老餅', amount: '適量' },
+      { name: 'スライスのとろけるチーズ', amount: '適量' },
+    ],
+    steps: [
+      { position: 1, instruction: '海老餅を、さっと水で濡らします。' },
+      { position: 2, instruction: 'トースターで焼きます。' },
+      { position: 3, instruction: '焼けてきたら、スライスのとろけるチーズをのせます。' },
+      { position: 4, instruction: 'チーズが溶けるまで、追加で焼きます。' },
+    ],
+    notes: [
+      '海老餅には塩味がついているため、ソースや追加の調味料がなくてもおいしく食べられます。',
+      'おすすめは海老餅ですが、他のお餅でも作れます。',
+    ],
+    relatedProductIds: ['ebi'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: '海老餅の簡単チーズピザ',
+      description:
+        '焼いた黒ごま海老餅にとろけるチーズをのせるだけの簡単アレンジ。飛騨高山・山田もち店の食べ方です。',
+      canonicalPath: '/recipes/ebi-mochi-cheese-pizza',
+    },
+  },
+  {
+    id: 'kombu-mochi-ozoni-fu',
+    slug: 'kombu-mochi-ozoni-fu',
+    title: '昆布餅のお雑煮風',
+    description: '焼いた昆布餅をお椀に入れ、薄めに作った鰹だしを注ぎます。',
+    category: 'mochi',
+    ingredients: [
+      { name: '昆布餅', amount: '適量' },
+      { name: '鰹だし', amount: '約100ml', note: 'ほんだしでも可' },
+    ],
+    steps: [
+      { position: 1, instruction: '昆布餅をトースターで焼きます。' },
+      { position: 2, instruction: '鰹だしを、塩味が控えめになるよう薄めに作ります。' },
+      { position: 3, instruction: '焼いた昆布餅をお椀に入れます。' },
+      { position: 4, instruction: '鰹だしを注ぎます。' },
+    ],
+    notes: ['焼いた昆布餅から昆布の旨みが出て、合わせだしのような味わいになります。'],
+    relatedProductIds: ['kombu'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: '昆布餅のお雑煮風',
+      description:
+        '焼いた昆布餅に薄めの鰹だしを注ぐお雑煮風。飛騨高山・山田もち店の昆布餅を使ったレシピです。',
+      canonicalPath: '/recipes/kombu-mochi-ozoni-fu',
+    },
+  },
+  {
+    id: 'age-mame-mochi',
+    slug: 'age-mame-mochi',
+    title: 'カリッと揚げ豆餅',
+    description: '三色豆餅を約2cm角に切って揚げ、熱いうちに軽く塩をふる食べ方です。',
+    category: 'mochi',
+    ingredients: [
+      { name: '三色豆餅', amount: '適量' },
+      { name: 'サラダ油', amount: '適量', note: 'フライパンに少し多めに' },
+      { name: '塩', amount: '少々' },
+    ],
+    steps: [
+      { position: 1, instruction: '三色豆餅を、約2cm角に切ります。' },
+      {
+        position: 2,
+        instruction: 'フライパンにサラダ油を少し多めに入れ、約180℃に温めます。',
+      },
+      {
+        position: 3,
+        instruction: 'お餅同士がくっつかないよう、1つずつ離して入れます。',
+      },
+      { position: 4, instruction: 'ふくらんでカリッとしたら引き上げます。' },
+      { position: 5, instruction: '熱いうちに、軽く塩をふります。' },
+    ],
+    notes: ['まとめて入れるとお餅同士がくっつきやすいため、1つずつ離して入れてください。'],
+    variations: [
+      {
+        title: '塩を変えて',
+        text: '塩のかわりに、山椒塩、抹茶塩、七味もおすすめです。',
+      },
+    ],
+    relatedProductIds: ['sansyokumame'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: 'カリッと揚げ豆餅',
+      description:
+        '三色豆餅を約2cm角に切って揚げ、熱いうちに塩をふる食べ方。飛騨高山・山田もち店の豆餅アレンジです。',
+      canonicalPath: '/recipes/age-mame-mochi',
+    },
+  },
+  {
+    id: 'yomogi-mochi-zenzai',
+    slug: 'yomogi-mochi-zenzai',
+    title: '焼き草餅のぜんざい',
+    description: '市販のつぶあんをお湯で溶かし、焼いた草餅を加えるぜんざいです。',
+    category: 'mochi',
+    ingredients: [
+      { name: '草餅', amount: '適量' },
+      { name: '市販のつぶあん', amount: '適量' },
+      { name: 'お湯', amount: '適量' },
+      { name: '砂糖', amount: '好みで少し' },
+    ],
+    steps: [
+      { position: 1, instruction: '草餅をトースターで焼きます。' },
+      {
+        position: 2,
+        instruction: '市販のつぶあんをお湯で溶かし、お汁粉くらいの濃度にします。',
+      },
+      { position: 3, instruction: '甘さが欲しければ、砂糖を少し足します。' },
+      { position: 4, instruction: '焼いた草餅を加えます。' },
+    ],
+    variations: [
+      {
+        title: '甘酒で作る',
+        text: 'お湯の代わりに甘酒を入れて作るのもおすすめです。',
+      },
+    ],
+    relatedProductIds: ['yomogi'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: '焼き草餅のぜんざい',
+      description:
+        '市販のつぶあんをお湯で溶かし、焼いた草餅を加えるぜんざい。飛騨高山・山田もち店の草餅を使ったレシピです。',
+      canonicalPath: '/recipes/yomogi-mochi-zenzai',
+    },
+  },
+  {
+    id: 'tamari-mochi-butter-pepper',
+    slug: 'tamari-mochi-butter-pepper',
+    title: 'たまり餅のバター黒胡椒',
+    description: '焼いたたまり餅に無塩バターをのせ、ブラックペッパーを削りかけます。',
+    category: 'mochi',
+    ingredients: [
+      { name: 'たまり餅', amount: '適量' },
+      { name: '無塩バター', amount: '適量' },
+      { name: 'ブラックペッパー', amount: '適量' },
+    ],
+    steps: [
+      { position: 1, instruction: 'たまり餅をトースターで焼きます。' },
+      { position: 2, instruction: '無塩バターをのせます。' },
+      { position: 3, instruction: 'ブラックペッパーを削りかけて食べます。' },
+    ],
+    relatedProductIds: ['tamari'],
+    author: '山田もち店',
+    status: 'published',
+    seo: {
+      title: 'たまり餅のバター黒胡椒',
+      description:
+        '焼いたたまり餅に無塩バターとブラックペッパーを合わせる、飛騨高山・山田もち店のたまり餅の食べ方です。',
+      canonicalPath: '/recipes/tamari-mochi-butter-pepper',
+    },
+  },
+];

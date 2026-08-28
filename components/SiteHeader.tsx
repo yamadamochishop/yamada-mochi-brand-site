@@ -10,6 +10,7 @@ const nav = [
   ['ブランド', '/brand-story'],
   ['商品', '/products'],
   ['季節', '/seasonal'],
+  ['レシピ', '/recipes'],
   ['ものづくり', '/craft'],
   ['三代目の想い', '/third-generation'],
   ['ギフト', '/gift'],
@@ -85,15 +86,15 @@ export function SiteHeader() {
             <span className="block text-[10px] tracking-brand text-sumi/55">{site.enName}</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-7 text-sm tracking-[0.12em] text-sumi/70 lg:flex">
+        <nav className="hidden items-center gap-5 text-sm tracking-[0.08em] text-sumi/70 lg:flex xl:gap-7 xl:tracking-[0.12em]">
           {nav.map(([label, href]) => (
-            <Link key={href} href={href} className="transition hover:text-sumi">
+            <Link key={href} href={href} className="whitespace-nowrap transition hover:text-sumi">
               {label}
             </Link>
           ))}
           <Link
             href="/products"
-            className="border border-sumi px-5 py-3 text-sumi transition hover:bg-sumi hover:text-base"
+            className="whitespace-nowrap border border-sumi px-4 py-3 text-sumi transition hover:bg-sumi hover:text-base xl:px-5"
           >
             商品を選ぶ
           </Link>
