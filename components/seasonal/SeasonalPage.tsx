@@ -5,6 +5,7 @@ import {
   SEASONAL_LISTING_MONTH,
   buildSeasonalPageModel,
   type SeasonalPageProduct,
+  type SeasonalStatusLabel,
 } from '@/lib/seasonal-page';
 import { site } from '@/data/site';
 
@@ -13,13 +14,18 @@ const model = buildSeasonalPageModel();
 const buttonClass =
   'inline-flex min-h-11 items-center justify-center border border-sumi px-6 py-3 text-sm tracking-[0.1em] transition hover:bg-sumi hover:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi';
 
-function StatusBadge({ label }: { label: '販売中' | 'まもなく終了' }) {
-  const endingSoon = label === 'まもなく終了';
+const statusBadgeClasses: Record<SeasonalStatusLabel, string> = {
+  販売中: 'bg-green/10 text-green',
+  まもなく終了: 'bg-[#f0dfbd] text-[#6f4b0c]',
+  販売予定: 'bg-brown/10 text-brown',
+  販売終了: 'bg-sumi/[0.06] text-sumi/55',
+};
+
+function StatusBadge({ label }: { label: SeasonalStatusLabel }) {
   return (
     <span
-      className={`inline-flex min-h-7 items-center rounded-full px-3 text-xs font-semibold tracking-[0.08em] ${
-        endingSoon ? 'bg-[#f0dfbd] text-[#6f4b0c]' : 'bg-green/10 text-green'
-      }`}
+      data-seasonal-status={label}
+      className={`inline-flex min-h-7 items-center rounded-full px-3 text-xs font-semibold tracking-[0.08em] ${statusBadgeClasses[label]}`}
     >
       <span aria-hidden="true" className="mr-2 h-1.5 w-1.5 rounded-full bg-current" />
       {label}
@@ -42,21 +48,23 @@ function ProductImage({ image, name }: { image?: MediaAsset; name: string }) {
   );
 }
 
+/** Human確定済みの項目だけを並べる。未確定の項目は行そのものを描画しない。 */
 function ProductMetadata({ product }: { product: SeasonalPageProduct }) {
+  const items = [
+    ...(product.price ? [{ term: '価格', value: product.price.display }] : []),
+    { term: '販売予定', value: product.salesPeriod.display },
+    { term: '販売場所', value: product.salesLocationLabel },
+    ...(product.shelfLife ? [{ term: '賞味期限', value: product.shelfLife }] : []),
+    { term: '通販', value: product.commerceLabel },
+  ];
   return (
-    <dl className="mt-6 grid gap-3 text-sm leading-7 text-sumi/70 sm:grid-cols-3">
-      <div>
-        <dt className="text-xs tracking-brand text-sumi/45">販売予定</dt>
-        <dd className="mt-1">{product.salesPeriod.display}</dd>
-      </div>
-      <div>
-        <dt className="text-xs tracking-brand text-sumi/45">販売場所</dt>
-        <dd className="mt-1">{product.salesLocationLabel}</dd>
-      </div>
-      <div>
-        <dt className="text-xs tracking-brand text-sumi/45">通販</dt>
-        <dd className="mt-1">{product.commerceLabel}</dd>
-      </div>
+    <dl className="mt-6 grid gap-x-6 gap-y-4 text-sm leading-7 text-sumi/70 sm:grid-cols-3">
+      {items.map((item) => (
+        <div key={item.term}>
+          <dt className="text-xs tracking-brand text-sumi/45">{item.term}</dt>
+          <dd className="mt-1">{item.value}</dd>
+        </div>
+      ))}
     </dl>
   );
 }
@@ -85,6 +93,9 @@ function SeasonalProductCard({ product }: { product: SeasonalPageProduct }) {
         <h3 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.1em]">
           {product.name}
         </h3>
+        {product.catchcopy ? (
+          <p className="mt-3 font-serifjp leading-8 text-sumi/75">{product.catchcopy}</p>
+        ) : null}
         <ProductMetadata product={product} />
         <ProductNotes product={product} />
       </div>
@@ -151,12 +162,68 @@ function SeasonalProductRow({ product }: { product: SeasonalPageProduct }) {
         <ProductImage image={product.images[0]} name={product.name} />
         <div className="min-w-0 flex-1">
           <p className="text-xs tracking-brand text-brown/65">{product.categoryLabel}</p>
-          <h4 className="mt-3 font-serifjp text-xl tracking-[0.1em] md:text-2xl">{product.name}</h4>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <h4 className="font-serifjp text-xl tracking-[0.1em] md:text-2xl">{product.name}</h4>
+            {product.statusLabel ? <StatusBadge label={product.statusLabel} /> : null}
+          </div>
+          {product.catchcopy ? (
+            <p className="mt-4 font-serifjp text-lg leading-9 text-sumi/85">{product.catchcopy}</p>
+          ) : null}
+          {product.story ? (
+            <p className="mt-3 max-w-3xl leading-8 text-sumi/70">{product.story}</p>
+          ) : null}
+          {product.commitment ? (
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-sumi/60">{product.commitment}</p>
+          ) : null}
           <ProductMetadata product={product} />
           <ProductNotes product={product} />
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * 「今 / これから / 終わったもの」を同じ並びで扱うための予告枠。
+ * 該当レコードが無い時期はセクションごと描画しない。
+ */
+function UpcomingProducts() {
+  if (model.upcomingProducts.length === 0) return null;
+  return (
+    <section aria-labelledby="upcoming-title" className="mt-20 md:mt-24">
+      <p className="text-xs tracking-brand text-brown/65">COMING SOON</p>
+      <h2 id="upcoming-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-4xl">
+        これから登場するもの
+      </h2>
+      <p className="mt-6 max-w-2xl leading-8 text-sumi/70">
+        いまは準備中の商品です。仕様や販売時期はこれから決まります。
+      </p>
+      <div className="mt-10">
+        {model.upcomingProducts.map((product) => (
+          <SeasonalProductRow key={product.id} product={product} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EndedProducts() {
+  if (model.endedProducts.length === 0) return null;
+  return (
+    <section aria-labelledby="ended-title" className="mt-20 md:mt-24">
+      <p className="text-xs tracking-brand text-brown/65">FINISHED</p>
+      <h2 id="ended-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-4xl">
+        今季の販売を終えたもの
+      </h2>
+      <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm leading-7 text-sumi/60">
+        {model.endedProducts.map((product) => (
+          <li key={product.id}>
+            {product.name}
+            <span className="ml-2 text-xs text-sumi/45">{product.salesPeriod.display}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -201,7 +268,12 @@ function AnnualFlow() {
             </div>
             <ul className="mt-5 space-y-2 border-t border-sumi/10 pt-4 text-sm leading-7 text-sumi/75">
               {products.map((product) => (
-                <li key={product.id}>{product.name}</li>
+                <li key={product.id} className="flex items-baseline justify-between gap-3">
+                  <span>{product.name}</span>
+                  {product.statusLabel === '販売予定' ? (
+                    <span className="shrink-0 text-xs text-brown/70">予定</span>
+                  ) : null}
+                </li>
               ))}
             </ul>
           </section>
@@ -331,23 +403,23 @@ export function SeasonalPage() {
         </aside>
       </section>
 
-      <section
-        id="now"
-        aria-labelledby="now-title"
-        className="bg-white/45 py-20 scroll-mt-24 md:py-28"
-      >
+      <div className="bg-white/45 py-20 md:py-28">
         <div className="ym-container">
-          <p className="text-xs tracking-brand text-brown/65">NOW</p>
-          <h2 id="now-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl">
-            今、店先にあるもの
-          </h2>
-          <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {model.currentProducts.map((product) => (
-              <SeasonalProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <section id="now" aria-labelledby="now-title" className="scroll-mt-24">
+            <p className="text-xs tracking-brand text-brown/65">NOW</p>
+            <h2 id="now-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl">
+              今、店先にあるもの
+            </h2>
+            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {model.currentProducts.map((product) => (
+                <SeasonalProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+          <UpcomingProducts />
+          <EndedProducts />
         </div>
-      </section>
+      </div>
 
       <AnnualFlow />
       <YearRoundProducts />

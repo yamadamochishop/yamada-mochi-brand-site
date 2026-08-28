@@ -24,11 +24,13 @@ const categoryLabels: Record<SeasonalProductRecord['category'], string> = {
   other: 'その他',
 };
 
+export type SeasonalStatusLabel = '販売中' | 'まもなく終了' | '販売予定' | '販売終了';
+
 export type SeasonalPageProduct = SeasonalProductRecord & {
   categoryLabel: string;
   salesLocationLabel: string;
   commerceLabel: string;
-  statusLabel?: '販売中' | 'まもなく終了';
+  statusLabel?: SeasonalStatusLabel;
   currentMonthLabel?: string;
 };
 
@@ -54,6 +56,21 @@ function commerceLabel(product: SeasonalProductRecord): string {
   return names.length > 0 ? `あり（${names.join('・')}）` : 'あり';
 }
 
+/**
+ * `upcoming` / `ended` は今月の在庫状況ではなく公開上の状態なので、
+ * 「今、店先にあるもの」以外の一覧でも誤読を防ぐために常にラベルを付ける。
+ */
+function resolveStatusLabel(
+  product: SeasonalProductRecord,
+  includeStatus: boolean,
+): SeasonalStatusLabel | undefined {
+  if (product.availabilityStatus === 'upcoming') return '販売予定';
+  if (product.availabilityStatus === 'ended') return '販売終了';
+  if (!includeStatus) return undefined;
+  if (product.availabilityNote === 'まもなく終了') return 'まもなく終了';
+  return product.availabilityStatus === 'available' ? '販売中' : undefined;
+}
+
 function toPageProduct(
   product: SeasonalProductRecord,
   includeStatus: boolean,
@@ -63,13 +80,7 @@ function toPageProduct(
     if (!location) throw new Error(`Unknown sales location: ${locationId}`);
     return location.name;
   });
-  const statusLabel = includeStatus
-    ? product.availabilityNote === 'まもなく終了'
-      ? 'まもなく終了'
-      : product.availabilityStatus === 'available'
-        ? '販売中'
-        : undefined
-    : undefined;
+  const statusLabel = resolveStatusLabel(product, includeStatus);
   const currentMonthLabel = includeStatus
     ? product.salesPeriod.note ||
       product.notes?.find((note) => note.includes('終了予定')) ||
@@ -79,7 +90,7 @@ function toPageProduct(
   return {
     ...product,
     categoryLabel: categoryLabels[product.category],
-    salesLocationLabel: locations.join('・'),
+    salesLocationLabel: locations.length > 0 ? locations.join('・') : '未定',
     commerceLabel: commerceLabel(product),
     ...(statusLabel ? { statusLabel } : {}),
     ...(currentMonthLabel ? { currentMonthLabel } : {}),
@@ -100,12 +111,24 @@ export function buildSeasonalPageModel(records = seasonalProducts) {
   const seasonalDirectory = records
     .filter((product) => product.seasonality === 'seasonal')
     .map((product) => toPageProduct(product, false));
+  /**
+   * 「今 / これから / 終わったもの」を同じ構造で並べられるようにしておく。
+   * 該当レコードが無い期間はセクションごと描画しない。
+   */
+  const upcomingProducts = records
+    .filter((product) => product.availabilityStatus === 'upcoming')
+    .map((product) => toPageProduct(product, false));
+  const endedProducts = records
+    .filter((product) => product.availabilityStatus === 'ended')
+    .map((product) => toPageProduct(product, false));
   const yearRoundPickles = ['umezuke', 'akakabu-maruzuke'].map((id) =>
     toPageProduct(resolveProduct(id, records), false),
   );
 
   return {
     currentProducts,
+    upcomingProducts,
+    endedProducts,
     monthlyCalendar,
     seasonalDirectory,
     yearRoundPickles,

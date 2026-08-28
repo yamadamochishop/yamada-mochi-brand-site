@@ -101,11 +101,36 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     name: '飛騨桃パイ',
     category: 'pie',
     seasonality: 'seasonal',
-    salesPeriod: { display: '8月', startMonth: 8, endMonth: 8 },
+    salesPeriod: { display: '8月〜9月上旬頃', startMonth: 8, endMonth: 9 },
     availabilityStatus: 'available',
+    catchcopy: '桃のみずみずしさを残して。',
+    // 総額表示の有無はHuman未確認のため、表示文字列をそのまま使う。
+    price: { amount: 250, currency: 'JPY', taxIncluded: true, display: '1個 250円' },
     salesLocationIds: [JINYA_MARKET_ID],
-    notes: ['8月末終了予定'],
+    story:
+      '桃はさっと煮込み、果汁だけをじっくりと濃縮しています。みずみずしい桃の食感と、ぎゅっと凝縮した果汁のおいしさ。素材そのものの味わいを楽しんでいただけるよう、余計なものを加えずシンプルに仕上げました。',
+    commitment:
+      '桃をさっと煮込み、果汁を濃縮し、レモンとバターで仕上げています。桃以外の果物や具材は加えていません。白桃・黄桃とも同じ基本製法です。',
+    shelfLife: '当日',
+    notes: ['白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）', '黄桃：8月下旬〜9月上旬頃'],
     commerce: unavailableCommerce(),
+    images: [],
+    status: 'draft',
+  },
+  {
+    id: 'yonashi-pie',
+    slug: 'yonashi-pie',
+    name: '洋梨パイ',
+    category: 'pie',
+    seasonality: 'seasonal',
+    salesPeriod: { display: '9月〜10月頃', startMonth: 9, endMonth: 10 },
+    // 試作段階のため upcoming。製法・価格・賞味期限・原材料はHuman未確定なので設定しない。
+    availabilityStatus: 'upcoming',
+    story: '飛騨桃パイと同じように、旬の果物を活かしたシンプルなパイとして作る予定です。',
+    // 販売場所はHuman未確定のため空のまま。
+    salesLocationIds: [],
+    notes: ['試作中のため、内容や販売時期は変わる場合があります。'],
+    commerce: { status: 'undecided', offers: [] },
     images: [],
     status: 'draft',
   },

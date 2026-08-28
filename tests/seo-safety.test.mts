@@ -246,17 +246,39 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  for (const name of ['青朴葉餅', '飛騨桃パイ', '小茄子の漬物', '赤かぶの漬物 長漬け']) {
+  for (const name of [
+    '青朴葉餅',
+    '飛騨桃パイ',
+    '洋梨パイ',
+    '小茄子の漬物',
+    '赤かぶの漬物 長漬け',
+  ]) {
     assert.match(html, new RegExp(name));
   }
   for (const period of ['1月〜3月', '2月〜4月', '4月〜11月', '7月〜10月', '9月〜5月']) {
     assert.match(html, new RegExp(period));
   }
-  assert.match(html, /8月末終了予定/);
   assert.doesNotMatch(html, />8月末まで</);
   assert.match(html, /8月15日ごろまで/);
-  assert.equal((html.match(/>販売中</g) ?? []).length, 3);
-  assert.equal((html.match(/>まもなく終了</g) ?? []).length, 1);
+
+  // 飛騨桃パイ: Human確定の事実だけが出ていること。
+  assert.match(html, /桃のみずみずしさを残して。/);
+  assert.match(html, /1個 250円/);
+  assert.match(html, /8月〜9月上旬頃/);
+  assert.match(html, /白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）/);
+  assert.match(html, /黄桃：8月下旬〜9月上旬頃/);
+  assert.match(html, /レモンとバターで仕上げています/);
+  assert.doesNotMatch(html, /無添加|保存料|品種|糖度|毎日販売/u);
+
+  // 洋梨パイ: 予告のみ。桃パイの確定値を流用していないこと。
+  assert.match(html, /9月〜10月頃/);
+  assert.doesNotMatch(html, /洋梨パイ[\s\S]{0,400}?1個 250円/u);
+  const statusBadges = (label: string) =>
+    (html.match(new RegExp(`data-seasonal-status="${label}"`, 'g')) ?? []).length;
+  assert.equal(statusBadges('販売中'), 3);
+  assert.equal(statusBadges('まもなく終了'), 1);
+  assert.equal(statusBadges('販売予定'), 2);
+  assert.equal(statusBadges('販売終了'), 0);
   assert.equal((html.match(/data-seasonal-cta=/g) ?? []).length, 3);
   assert.equal((html.match(/<img\b/g) ?? []).length, 0);
   assert.doesNotMatch(html, /placeholder|写真が届いたら|写真なし|仮画像/u);

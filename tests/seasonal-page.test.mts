@@ -22,8 +22,8 @@ const expectedSeasonalIdsByMonth: Record<number, string[]> = {
   6: ['akakabu-nagazuke', 'shin-yomogi-mochi'],
   7: ['akakabu-nagazuke', 'konasu-pickles', 'ao-hoba-mochi'],
   8: ['akakabu-nagazuke', 'konasu-pickles', 'hida-peach-pie', 'ao-hoba-mochi'],
-  9: ['akakabu-nagazuke', 'konasu-pickles', 'hida-apple-pie'],
-  10: ['akakabu-nagazuke', 'konasu-pickles', 'hida-apple-pie'],
+  9: ['akakabu-nagazuke', 'konasu-pickles', 'hida-apple-pie', 'hida-peach-pie', 'yonashi-pie'],
+  10: ['akakabu-nagazuke', 'konasu-pickles', 'hida-apple-pie', 'yonashi-pie'],
   11: ['akakabu-nagazuke', 'hida-apple-pie'],
   12: ['hida-apple-pie'],
 };
@@ -34,14 +34,14 @@ function seasonalIdsForMonth(month: number, records = seasonalProducts) {
   );
 }
 
-test('seasonal list model publishes ten draft records without creating detail routes', () => {
+test('seasonal list model publishes eleven draft records without creating detail routes', () => {
   const model = buildSeasonalPageModel();
   assert.deepEqual(
     model.currentProducts.map((product) => product.id),
     [...currentSeasonalProductIds],
   );
-  assert.equal(model.seasonalDirectory.length, 8);
-  assert.equal(new Set(model.seasonalDirectory.map((product) => product.id)).size, 8);
+  assert.equal(model.seasonalDirectory.length, 9);
+  assert.equal(new Set(model.seasonalDirectory.map((product) => product.id)).size, 9);
   assert.equal(model.yearRoundPickles.length, 2);
   assert.equal(model.regularMochiNames.length, 6);
   assert.equal(
@@ -58,7 +58,7 @@ test('current status labels are human-managed and unknown products receive no ba
   );
   assert.deepEqual(
     model.currentProducts.map((product) => product.currentMonthLabel),
-    ['8月15日ごろまで', '8月末終了予定', '7月〜10月', '4月〜11月'],
+    ['8月15日ごろまで', '8月〜9月上旬頃', '7月〜10月', '4月〜11月'],
   );
   const unknownIds = seasonalProducts
     .filter((product) => product.availabilityStatus === 'unknown')
@@ -79,8 +79,78 @@ test('human-confirmed sales periods and copy overrides remain intact', () => {
   assert.equal(byId.get('akakabu-nagazuke')?.salesPeriod.display, '4月〜11月');
   assert.equal(byId.get('konasu-pickles')?.salesPeriod.display, '7月〜10月');
   assert.equal(byId.get('hida-apple-pie')?.salesPeriod.display, '9月〜5月');
-  assert.deepEqual(byId.get('hida-peach-pie')?.notes, ['8月末終了予定']);
   assert.equal(byId.get('ao-hoba-mochi')?.salesPeriod.note, '8月15日ごろまで');
+});
+
+test('飛騨桃パイ renders only the human-confirmed product facts', () => {
+  const peach = seasonalProducts.find((product) => product.id === 'hida-peach-pie')!;
+  assert.equal(peach.salesPeriod.display, '8月〜9月上旬頃');
+  assert.deepEqual([peach.salesPeriod.startMonth, peach.salesPeriod.endMonth], [8, 9]);
+  assert.equal(peach.catchcopy, '桃のみずみずしさを残して。');
+  assert.equal(peach.price?.display, '1個 250円');
+  assert.equal(peach.price?.amount, 250);
+  assert.equal(peach.shelfLife, '当日');
+  assert.deepEqual(peach.salesLocationIds, ['jinya-morning-market']);
+  assert.deepEqual(peach.notes, [
+    '白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）',
+    '黄桃：8月下旬〜9月上旬頃',
+  ]);
+  assert.match(peach.story!, /余計なものを加えずシンプルに仕上げました。$/u);
+  assert.match(peach.commitment!, /レモンとバターで仕上げています/u);
+  // 産地・品種・保存方法・原材料・アレルゲンはHuman未確定なので設定してはいけない。
+  assert.equal(peach.ingredients, undefined);
+  assert.equal(peach.allergens, undefined);
+  assert.equal(peach.storage, undefined);
+  assert.equal(peach.images.length, 0);
+  assert.equal(peach.commerce.status, 'unavailable');
+});
+
+test('洋梨パイ is announced as upcoming and copies nothing from the peach pie', () => {
+  const model = buildSeasonalPageModel();
+  const pear = seasonalProducts.find((product) => product.id === 'yonashi-pie')!;
+  assert.equal(pear.availabilityStatus, 'upcoming');
+  assert.equal(pear.salesPeriod.display, '9月〜10月頃');
+  assert.equal(pear.status, 'draft');
+  for (const field of [
+    pear.price,
+    pear.shelfLife,
+    pear.ingredients,
+    pear.allergens,
+    pear.commitment,
+    pear.catchcopy,
+  ]) {
+    assert.equal(field, undefined);
+  }
+  assert.equal(pear.images.length, 0);
+  assert.equal(pear.commerce.status, 'undecided');
+  assert.deepEqual(pear.salesLocationIds, []);
+
+  const pageProduct = model.upcomingProducts.find((product) => product.id === 'yonashi-pie');
+  assert.deepEqual(
+    model.upcomingProducts.map((product) => product.id),
+    ['yonashi-pie'],
+  );
+  assert.equal(pageProduct?.statusLabel, '販売予定');
+  assert.equal(pageProduct?.salesLocationLabel, '未定');
+  assert.equal(pageProduct?.commerceLabel, '未定');
+  assert.deepEqual(model.endedProducts, []);
+});
+
+test('Mutation F: copying the peach pie price onto the pear pie is detectable', () => {
+  const mutation = cloneRecords();
+  const pear = mutation.find((product) => product.id === 'yonashi-pie')!;
+  pear.price = { amount: 250, currency: 'JPY', taxIncluded: true, display: '1個 250円' };
+  assert.notDeepEqual(
+    buildSeasonalPageModel(mutation).upcomingProducts[0].price,
+    buildSeasonalPageModel().upcomingProducts[0].price,
+  );
+});
+
+test('Mutation G: promoting the pear pie to available would create a forbidden 販売中 badge', () => {
+  const mutation = cloneRecords();
+  mutation.find((product) => product.id === 'yonashi-pie')!.availabilityStatus = 'available';
+  assert.equal(buildSeasonalPageModel(mutation).upcomingProducts.length, 0);
+  assert.equal(buildSeasonalPageModel().upcomingProducts[0].statusLabel, '販売予定');
 });
 
 test('commerce copy exposes facts but never invents a listing CTA URL', () => {
@@ -136,7 +206,13 @@ test('cross-boundary periods remain correct in the monthly listing', () => {
     Array.from({ length: 12 }, (_, index) => index + 1).filter((month) =>
       seasonalIdsForMonth(month).includes('hida-peach-pie'),
     ),
-    [8],
+    [8, 9],
+  );
+  assert.deepEqual(
+    Array.from({ length: 12 }, (_, index) => index + 1).filter((month) =>
+      seasonalIdsForMonth(month).includes('yonashi-pie'),
+    ),
+    [9, 10],
   );
 });
 
@@ -212,7 +288,7 @@ test('Mutation A: changing blue hoba to ordinary availability breaks the ending-
 
 test('Mutation B: restoring the old peach copy breaks the confirmed display contract', () => {
   const mutation = cloneRecords();
-  mutation.find((product) => product.id === 'hida-peach-pie')!.notes = ['8月末まで'];
+  mutation.find((product) => product.id === 'hida-peach-pie')!.notes = ['8月末終了予定'];
   assert.notDeepEqual(
     buildSeasonalPageModel(mutation).currentProducts.find(
       (product) => product.id === 'hida-peach-pie',
