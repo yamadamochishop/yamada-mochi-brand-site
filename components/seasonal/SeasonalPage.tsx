@@ -48,17 +48,37 @@ function ProductImage({ image, name }: { image?: MediaAsset; name: string }) {
   );
 }
 
-/** Human確定済みの項目だけを並べる。未確定の項目は行そのものを描画しない。 */
-function ProductMetadata({ product }: { product: SeasonalPageProduct }) {
+const metadataColumnClasses = {
+  1: '',
+  2: 'sm:grid-cols-2',
+  3: 'sm:grid-cols-3',
+} as const;
+
+/**
+ * Human確定済みの項目だけを並べる。未確定の項目は行そのものを描画しない。
+ *
+ * columns は器の幅に合わせる。全幅の行は3列、「今、店先にあるもの」のカードは2列、
+ * さらに狭い通年カード（1024pxで幅230px）は1列。列を詰めすぎると
+ * 「1個 250円（税込）」「陣屋前朝市」のような値が2行に折り返す。
+ */
+function ProductMetadata({
+  product,
+  columns = 3,
+}: {
+  product: SeasonalPageProduct;
+  columns?: keyof typeof metadataColumnClasses;
+}) {
   const items = [
     ...(product.price ? [{ term: '価格', value: product.price.display }] : []),
-    { term: '販売予定', value: product.salesPeriod.display },
+    { term: '販売時期', value: product.salesPeriod.display },
     { term: '販売場所', value: product.salesLocationLabel },
     ...(product.shelfLife ? [{ term: '賞味期限', value: product.shelfLife }] : []),
     { term: '通販', value: product.commerceLabel },
   ];
   return (
-    <dl className="mt-6 grid gap-x-6 gap-y-4 text-sm leading-7 text-sumi/70 sm:grid-cols-3">
+    <dl
+      className={`mt-6 grid gap-x-6 gap-y-4 text-sm leading-7 text-sumi/70 ${metadataColumnClasses[columns]}`}
+    >
       {items.map((item) => (
         <div key={item.term}>
           <dt className="text-xs tracking-brand text-sumi/65">{item.term}</dt>
@@ -96,7 +116,7 @@ function SeasonalProductCard({ product }: { product: SeasonalPageProduct }) {
         {product.catchcopy ? (
           <p className="mt-3 font-serifjp leading-8 text-sumi/75">{product.catchcopy}</p>
         ) : null}
-        <ProductMetadata product={product} />
+        <ProductMetadata product={product} columns={2} />
         <ProductNotes product={product} />
       </div>
     </article>
@@ -331,7 +351,7 @@ function YearRoundProducts() {
               <h3 className="mt-4 font-serifjp text-xl leading-relaxed tracking-[0.1em]">
                 {product.name}
               </h3>
-              <ProductMetadata product={product} />
+              <ProductMetadata product={product} columns={1} />
             </article>
           ))}
         </div>
@@ -410,7 +430,7 @@ export function SeasonalPage() {
             <h2 id="now-title" className="mt-4 font-serifjp text-3xl tracking-[0.12em] md:text-5xl">
               今、店先にあるもの
             </h2>
-            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {model.currentProducts.map((product) => (
                 <SeasonalProductCard key={product.id} product={product} />
               ))}

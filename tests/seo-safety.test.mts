@@ -279,6 +279,9 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.equal(statusBadges('まもなく終了'), 0);
   assert.equal(statusBadges('販売予定'), 2);
   assert.equal(statusBadges('販売終了'), 1);
+  // 状態バッジと項目名で「販売予定」が二重の意味を持たないこと。
+  assert.match(html, /<dt[^>]*>販売時期<\/dt>/);
+  assert.doesNotMatch(html, /<dt[^>]*>販売予定<\/dt>/);
   // 販売を終えた商品は「今、店先にあるもの」ではなく終えたものの枠にだけ出る。
   assert.match(html, /今季の販売を終えたもの/);
   assert.match(html, /2026年の販売は8月中旬で終了しました/);
