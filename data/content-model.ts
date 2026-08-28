@@ -4,6 +4,7 @@ import {
   type CatalogSet,
   type Product,
 } from './catalog.ts';
+import { recipes } from './recipes.ts';
 import { salesChannels } from './sales-channels.ts';
 import { salesLocations } from './sales-locations.ts';
 import {
@@ -17,7 +18,6 @@ import type {
   MediaAsset,
   Money,
   ProductRecord,
-  RecipeRecord,
 } from '../types/content-model.ts';
 
 const BASE_CHANNEL_ID = 'base';
@@ -240,7 +240,8 @@ export const giftSetRecords: GiftSetRecord[] = legacyCatalogSets.map(migrateLega
 
 // The public UI does not consume these draft content types in YM-003A.
 export { seasonalProducts };
-export const recipes: RecipeRecord[] = [];
+// Recipe Hub Ver.1 publishes these records at /recipes.
+export { recipes };
 
 /**
  * Compatibility projections prove that the normalized model can feed the

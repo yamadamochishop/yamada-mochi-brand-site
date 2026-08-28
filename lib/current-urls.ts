@@ -1,4 +1,5 @@
 import { products } from '../data/catalog';
+import { publishedRecipes } from './recipe-page';
 
 export const staticIndexablePaths = [
   '/',
@@ -8,6 +9,7 @@ export const staticIndexablePaths = [
   '/products',
   '/seasonal',
   '/gift',
+  '/recipes',
   '/market',
   '/news',
   '/voices',
@@ -18,4 +20,5 @@ export const staticIndexablePaths = [
 export const currentIndexablePaths = [
   ...staticIndexablePaths,
   ...products.map((product) => `/products/${product.slug}`),
+  ...publishedRecipes.map((recipe) => `/recipes/${recipe.slug}`),
 ];

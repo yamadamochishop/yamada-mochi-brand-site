@@ -6,7 +6,8 @@ export type BaseClickPlacement =
   | 'product_detail'
   | 'gift_hero'
   | 'gift_set_card'
-  | 'gift_details';
+  | 'gift_details'
+  | 'recipe_product';
 
 export function trackBaseClick(placement: BaseClickPlacement) {
   if (typeof window === 'undefined') return;

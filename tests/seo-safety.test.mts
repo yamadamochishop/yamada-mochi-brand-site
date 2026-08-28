@@ -27,6 +27,14 @@ const currentIndexablePaths = [
   '/products/ebi',
   '/seasonal',
   '/gift',
+  '/recipes',
+  '/recipes/mochi-yakikata',
+  '/recipes/isobeyaki',
+  '/recipes/ebi-mochi-cheese-pizza',
+  '/recipes/kombu-mochi-ozoni-fu',
+  '/recipes/age-mame-mochi',
+  '/recipes/yomogi-mochi-zenzai',
+  '/recipes/tamari-mochi-butter-pepper',
   '/brand-story',
   '/craft',
   '/third-generation',
@@ -278,6 +286,82 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
     jsonLd.some((entry) => entry['@type'] === 'Offer'),
     false,
   );
+});
+
+test('Recipe Hub: confirmed content is rendered and unverified values stay out', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+
+  const hub = await fetch(`${localOrigin}/recipes`, { headers: productionHeaders() });
+  assert.equal(hub.status, 200);
+  const hubHtml = await hub.text();
+  for (const title of [
+    'お餅のおいしい焼き方',
+    '山田家の磯辺焼き',
+    '海老餅の簡単チーズピザ',
+    '昆布餅のお雑煮風',
+    'カリッと揚げ豆餅',
+    '焼き草餅のぜんざい',
+    'たまり餅のバター黒胡椒',
+  ]) {
+    assert.match(hubHtml, new RegExp(title));
+  }
+
+  const detail = await fetch(`${localOrigin}/recipes/isobeyaki`, { headers: productionHeaders() });
+  assert.equal(detail.status, 200);
+  const detailHtml = await detail.text();
+  // Human確認済みの分量がそのまま表示されていること。
+  assert.match(detailHtml, /大さじ1/);
+  assert.match(detailHtml, /大さじ2/);
+  // 商品詳細への内部リンク（Recipe → Product）。
+  assert.match(detailHtml, /href="\/products\/plain"/);
+
+  // 未確認の数値をSEO目的で生成していないこと。
+  for (const html of [hubHtml, detailHtml]) {
+    assert.doesNotMatch(html, /人分|カロリー|kcal|調理時間/u);
+  }
+
+  const detailJsonLd = [
+    ...detailHtml.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g),
+  ].map((match) => JSON.parse(match[1]));
+  assert.equal(
+    detailJsonLd.some((entry) => entry['@type'] === 'BreadcrumbList'),
+    true,
+  );
+  // レシピ写真が未撮影の間はRecipe構造化データを出力しない。
+  assert.equal(
+    detailJsonLd.some((entry) => entry['@type'] === 'Recipe'),
+    false,
+  );
+  for (const entry of detailJsonLd) {
+    for (const forbidden of ['prepTime', 'cookTime', 'totalTime', 'nutrition', 'recipeYield']) {
+      assert.equal(forbidden in entry, false, `${forbidden} must not be published`);
+    }
+  }
+});
+
+test('Product → Recipe: every product detail page links to its recipes', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const expected = new Map([
+    ['plain', 'isobeyaki'],
+    ['yomogi', 'yomogi-mochi-zenzai'],
+    ['sansyokumame', 'age-mame-mochi'],
+    ['kombu', 'kombu-mochi-ozoni-fu'],
+    ['tamari', 'tamari-mochi-butter-pepper'],
+    ['ebi', 'ebi-mochi-cheese-pizza'],
+  ]);
+
+  for (const [productSlug, recipeSlug] of expected) {
+    const response = await fetch(`${localOrigin}/products/${productSlug}`, {
+      headers: productionHeaders(),
+    });
+    assert.equal(response.status, 200, productSlug);
+    const html = await response.text();
+    assert.match(html, new RegExp(`href="/recipes/${recipeSlug}"`), productSlug);
+    assert.match(html, new RegExp('href="/recipes/mochi-yakikata"'), productSlug);
+    // 購入導線を圧迫しないよう、商品ページのレシピリンクは2件までとする。
+    const recipeLinks = html.match(/href="\/recipes\/[a-z-]+"/g) ?? [];
+    assert.equal(new Set(recipeLinks).size, 2, productSlug);
+  }
 });
 
 test('F: sitemap contains every current URL once and no legacy URL', async () => {

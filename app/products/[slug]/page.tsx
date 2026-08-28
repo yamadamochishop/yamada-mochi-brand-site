@@ -10,6 +10,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from '@/lib/seo';
 import { getProduct, getRelatedProducts, products } from '@/data/catalog';
+import { getRecipesForProduct } from '@/lib/recipe-page';
 import { isNekoposEligible, nekoposHeadline, nekoposLead } from '@/lib/shipping';
 import { faqs } from '@/data/faqs';
 
@@ -46,6 +47,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = getProduct(slug);
   if (!product) notFound();
   const related = getRelatedProducts(product.related);
+  const recipes = getRecipesForProduct(product.slug);
   const nekopos = isNekoposEligible(product.slug);
 
   return (
@@ -192,6 +194,33 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               ))}
             </div>
           </section>
+
+          {recipes.length > 0 ? (
+            <section className="mx-auto mt-14 max-w-3xl border border-sumi/15 bg-white/35 p-7 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/60">RECIPES</p>
+              <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em]">
+                {product.name}をもっと楽しむ
+              </h2>
+              <ul className="mt-6 divide-y divide-sumi/10 border-y border-sumi/10">
+                {recipes.map((recipe) => (
+                  <li key={recipe.id}>
+                    <Link
+                      href={`/recipes/${recipe.slug}`}
+                      className="flex min-h-14 items-center py-3 leading-8 text-sumi/70 underline underline-offset-8 transition hover:text-sumi"
+                    >
+                      {recipe.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/recipes"
+                className="mt-6 inline-flex text-sm text-sumi/60 underline underline-offset-8"
+              >
+                お餅のレシピ一覧を見る
+              </Link>
+            </section>
+          ) : null}
 
           <section className="mx-auto mt-14 max-w-3xl md:mt-20">
             <h2 className="font-serifjp text-2xl tracking-[0.12em]">こんな方におすすめ</h2>
