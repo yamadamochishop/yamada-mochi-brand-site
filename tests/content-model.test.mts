@@ -160,6 +160,195 @@ test('Recipe: an unknown related product ID fails validation', () => {
   assert.match(validateContentModel(candidate).join('\n'), /unknown relatedProductId/);
 });
 
+test('Recipe: required content fields fail validation when empty', () => {
+  const cases: [Partial<RecipeRecord>, RegExp][] = [
+    [{ description: '   ' }, /missing description/],
+    [{ ingredients: [] }, /requires at least one ingredient/],
+    [{ ingredients: [{ name: '   ', amount: '1枚' }] }, /missing ingredient name/],
+    [{ ingredients: [{ name: 'プレーン', amount: '  ' }] }, /missing amount for "プレーン"/],
+    [{ ingredients: [{ name: 'プレーン', amount: '' }] }, /missing amount for "プレーン"/],
+    [
+      {
+        ingredients: [
+          { name: 'プレーン', amount: '1枚' },
+          { name: 'プレーン', amount: '2枚' },
+        ],
+      },
+      /duplicate ingredient "プレーン"/,
+    ],
+    [{ steps: [] }, /requires at least one step/],
+    [{ steps: [{ position: 1, instruction: '  ' }] }, /step 1 has no instruction/],
+    [{ relatedProductIds: [] }, /requires at least one relatedProductId/],
+    [{ category: 'dessert' as RecipeRecord['category'] }, /invalid category "dessert"/],
+  ];
+
+  for (const [override, expectedError] of cases) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({ ...recipeFixture(), ...override });
+    assert.match(validateContentModel(candidate).join('\n'), expectedError);
+  }
+});
+
+test('Recipe: step positions must be a 1-based sequence matching the array order', () => {
+  const outOfOrder = cloneContentModel();
+  outOfOrder.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      { position: 2, instruction: 'お餅を焼きます。' },
+      { position: 1, instruction: '海苔で包みます。' },
+    ],
+  });
+  assert.match(validateContentModel(outOfOrder).join('\n'), /step position "2" must be 1/);
+
+  const gap = cloneContentModel();
+  gap.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      { position: 1, instruction: 'お餅を焼きます。' },
+      { position: 3, instruction: '海苔で包みます。' },
+    ],
+  });
+  assert.match(validateContentModel(gap).join('\n'), /step position "3" must be 2/);
+});
+
+test('Recipe: a registered image without alt text fails validation', () => {
+  const mainImage = cloneContentModel();
+  mainImage.recipes.push({
+    ...recipeFixture(),
+    mainImage: { src: '/images/recipe-sample.webp', alt: '', role: 'primary' },
+  });
+  assert.match(validateContentModel(mainImage).join('\n'), /missing image alt text/);
+
+  const stepImage = cloneContentModel();
+  stepImage.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      {
+        position: 1,
+        instruction: 'お餅を焼きます。',
+        image: { src: '/images/recipe-sample-step-1.webp', alt: '  ', role: 'recipe_step' },
+      },
+    ],
+  });
+  assert.match(validateContentModel(stepImage).join('\n'), /step 1: missing image alt text/);
+});
+
+test('Recipe: canonicalPath must match the published route', () => {
+  const mismatch = cloneContentModel();
+  mismatch.recipes.push({
+    ...recipeFixture(),
+    seo: {
+      title: '検証用レシピ',
+      description: '検証用レシピの説明です。',
+      canonicalPath: '/recipes/another-slug',
+    },
+  });
+  assert.match(
+    validateContentModel(mismatch).join('\n'),
+    /canonicalPath must be "\/recipes\/recipe-sample"/,
+  );
+
+  const matching = cloneContentModel();
+  matching.recipes.push({
+    ...recipeFixture(),
+    seo: {
+      title: '検証用レシピ',
+      description: '検証用レシピの説明です。',
+      canonicalPath: '/recipes/recipe-sample',
+    },
+  });
+  assert.equal(validateContentModel(matching).length, 0);
+});
+
+test('Recipe: cookingTimeMinutes must be a positive integer when present', () => {
+  for (const cookingTimeMinutes of [0, -5, 2.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({ ...recipeFixture(), cookingTimeMinutes });
+    assert.match(
+      validateContentModel(candidate).join('\n'),
+      /cookingTimeMinutes must be a positive integer/,
+    );
+  }
+});
+
+test('Recipe: the seven existing recipe records stay valid', () => {
+  assert.equal(contentModel.recipes.length, 7, 'recipe count changed without updating this test');
+  assert.deepEqual(validateContentModel(contentModel), []);
+
+  // 1件だけを載せたモデルでも通ることを見て、他レコードに紛れた見逃しを防ぐ。
+  for (const recipe of contentModel.recipes) {
+    const isolated = cloneContentModel();
+    isolated.recipes = [recipe];
+    assert.deepEqual(validateContentModel(isolated), [], `recipe "${recipe.id}" is invalid`);
+  }
+});
+
+test('Recipe: duplicate ingredient detection survives whitespace and ASCII case differences', () => {
+  const duplicates: [string, string][] = [
+    ['プレーン', ' プレーン '],
+    ['Salt', 'salt'],
+    ['BUTTER', 'Butter'],
+    ['ﾊﾞﾀｰ', 'バター'],
+  ];
+
+  for (const [first, second] of duplicates) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({
+      ...recipeFixture(),
+      ingredients: [
+        { name: first, amount: '1枚' },
+        { name: second, amount: '2枚' },
+      ],
+    });
+    assert.match(
+      validateContentModel(candidate).join('\n'),
+      /duplicate ingredient/,
+      `"${first}" and "${second}" must be detected as the same ingredient`,
+    );
+  }
+});
+
+test('Recipe: ingredient names that only look similar stay distinct', () => {
+  // 内部空白は詰めない。日本語の材料名では区切りとして意味を持ちうる。
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    ingredients: [
+      { name: '黒ごま', amount: '適量' },
+      { name: '黒 ごま', amount: '適量' },
+      { name: '白ごま', amount: '適量' },
+    ],
+  });
+  assert.equal(validateContentModel(candidate).length, 0);
+});
+
+test('Recipe: stepImages entries require alt text', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    stepImages: [
+      { src: '/images/recipe-sample-step-1.webp', alt: 'お餅を焼く', role: 'recipe_step' },
+      { src: '/images/recipe-sample-step-2.webp', alt: '', role: 'recipe_step' },
+    ],
+  });
+  assert.match(validateContentModel(candidate).join('\n'), /missing image alt text/);
+});
+
+test('Recipe: a registered image without a src fails validation', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    mainImage: { src: '  ', alt: '検証用レシピの完成写真', role: 'primary' },
+  });
+  assert.match(validateContentModel(candidate).join('\n'), /missing image src/);
+});
+
+test('Recipe: a duplicate relatedProductId fails validation', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({ ...recipeFixture(), relatedProductIds: ['plain', 'plain'] });
+  assert.match(validateContentModel(candidate).join('\n'), /duplicate relatedProductId "plain"/);
+});
+
 test('SalesChannel: unknown references and duplicate channel IDs fail validation', () => {
   const unknownReference = cloneContentModel();
   unknownReference.products[0].salesChannelIds = ['missing-channel'];

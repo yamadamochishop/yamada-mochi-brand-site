@@ -2,8 +2,11 @@ import type {
   AvailabilityStatus,
   Commerce,
   ContentModelData,
+  MediaAsset,
   Money,
   ProductCategory,
+  RecipeCategory,
+  RecipeRecord,
   SalesPeriod,
   SeasonalCommerce,
   Seasonality,
@@ -27,6 +30,8 @@ const productCategories = new Set<ProductCategory>([
 ]);
 
 const seasonalities = new Set<Seasonality>(['year_round', 'seasonal']);
+
+const recipeCategories = new Set<RecipeCategory>(['mochi', 'pickles', 'seasonal']);
 
 type Identified = {
   id: string;
@@ -224,6 +229,112 @@ function validateRelatedProducts(
   }
 }
 
+/**
+ * レシピ画像。altが無い画像は読み上げ・検索の両方で情報を失うため、
+ * 登録された画像には必ずaltを求める。
+ */
+function validateRecipeImage(owner: string, image: MediaAsset | undefined, errors: string[]) {
+  if (!image) return;
+  if (!image.src.trim()) errors.push(`${owner}: missing image src`);
+  if (!image.alt.trim()) errors.push(`${owner}: missing image alt text`);
+}
+
+/**
+ * 材料名の重複判定に使う比較キー。
+ *
+ * 前後の空白、全角・半角の違い（NFKC）、ASCIIの大文字小文字だけが異なる名前は、
+ * 同じ材料の書き分けとして重複扱いにする。内部の空白は残す。日本語の材料名では
+ * 空白が語の区切りとして意味を持つことがあり、詰めると別の材料まで同一視しかねない。
+ * ここで閉じたいのは明白な表記ゆれであって、材料名の意味解決ではない。
+ */
+function ingredientKey(name: string): string {
+  return name.trim().normalize('NFKC').toLowerCase();
+}
+
+/**
+ * 材料。名前と分量のどちらが欠けても読者は作れないため、両方を必須にする。
+ * 同じ材料名が二度現れるのは転記ミスなので弾く。
+ */
+function validateRecipeIngredients(owner: string, recipe: RecipeRecord, errors: string[]) {
+  if (recipe.ingredients.length === 0) {
+    errors.push(`${owner}: recipe requires at least one ingredient`);
+    return;
+  }
+
+  const seen = new Set<string>();
+  for (const ingredient of recipe.ingredients) {
+    const name = ingredient.name.trim();
+    if (!name) {
+      errors.push(`${owner}: missing ingredient name`);
+      continue;
+    }
+    const key = ingredientKey(name);
+    if (seen.has(key)) errors.push(`${owner}: duplicate ingredient "${name}"`);
+    seen.add(key);
+    if (!ingredient.amount.trim()) errors.push(`${owner}: missing amount for "${name}"`);
+  }
+}
+
+/**
+ * 手順。`position` は表示にもRecipe構造化データにも出るため、
+ * 1から始まる連番であることを配列の順序と合わせて求める。
+ */
+function validateRecipeSteps(owner: string, recipe: RecipeRecord, errors: string[]) {
+  if (recipe.steps.length === 0) {
+    errors.push(`${owner}: recipe requires at least one step`);
+    return;
+  }
+
+  recipe.steps.forEach((step, index) => {
+    const expected = index + 1;
+    if (step.position !== expected) {
+      errors.push(`${owner}: step position "${step.position}" must be ${expected}`);
+    }
+    if (!step.instruction.trim()) {
+      errors.push(`${owner}: step ${expected} has no instruction`);
+    }
+    validateRecipeImage(`${owner}: step ${expected}`, step.image, errors);
+  });
+}
+
+function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: string[]) {
+  const owner = `recipe:${recipe.id}`;
+
+  if (!recipe.title.trim()) errors.push(`${owner}: missing title`);
+  if (!recipe.description.trim()) errors.push(`${owner}: missing description`);
+  if (!recipeCategories.has(recipe.category)) {
+    errors.push(`${owner}: invalid category "${recipe.category}"`);
+  }
+
+  validateRecipeIngredients(owner, recipe, errors);
+  validateRecipeSteps(owner, recipe, errors);
+
+  // レシピは必ずどれかの商品に接続する。接続先のないレシピは購入導線を持たない。
+  if (recipe.relatedProductIds.length === 0) {
+    errors.push(`${owner}: recipe requires at least one relatedProductId`);
+  }
+  validateRelatedProducts(owner, recipe.relatedProductIds, productIds, errors);
+
+  validateRecipeImage(owner, recipe.mainImage, errors);
+  for (const image of recipe.stepImages ?? []) {
+    validateRecipeImage(owner, image, errors);
+  }
+
+  // 調理時間はHuman確認が取れた場合だけ設定する任意項目。設定するなら正の整数。
+  if (
+    recipe.cookingTimeMinutes !== undefined &&
+    (!Number.isInteger(recipe.cookingTimeMinutes) || recipe.cookingTimeMinutes <= 0)
+  ) {
+    errors.push(`${owner}: cookingTimeMinutes must be a positive integer`);
+  }
+
+  // canonicalPathは実際のルートと一致させる。ずれると自己参照canonicalが別URLを指す。
+  const canonicalPath = recipe.seo?.canonicalPath;
+  if (canonicalPath !== undefined && canonicalPath !== `/recipes/${recipe.slug}`) {
+    errors.push(`${owner}: canonicalPath must be "/recipes/${recipe.slug}"`);
+  }
+}
+
 export function validateContentModel(data: ContentModelData): string[] {
   const errors: string[] = [];
 
@@ -347,9 +458,7 @@ export function validateContentModel(data: ContentModelData): string[] {
   }
 
   for (const recipe of data.recipes) {
-    const owner = `recipe:${recipe.id}`;
-    if (!recipe.title.trim()) errors.push(`${owner}: missing title`);
-    validateRelatedProducts(owner, recipe.relatedProductIds, productIds, errors);
+    validateRecipe(recipe, productIds, errors);
   }
 
   for (const channel of data.salesChannels) {
