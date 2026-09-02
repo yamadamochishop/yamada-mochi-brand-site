@@ -240,6 +240,18 @@ function validateRecipeImage(owner: string, image: MediaAsset | undefined, error
 }
 
 /**
+ * 材料名の重複判定に使う比較キー。
+ *
+ * 前後の空白、全角・半角の違い（NFKC）、ASCIIの大文字小文字だけが異なる名前は、
+ * 同じ材料の書き分けとして重複扱いにする。内部の空白は残す。日本語の材料名では
+ * 空白が語の区切りとして意味を持つことがあり、詰めると別の材料まで同一視しかねない。
+ * ここで閉じたいのは明白な表記ゆれであって、材料名の意味解決ではない。
+ */
+function ingredientKey(name: string): string {
+  return name.trim().normalize('NFKC').toLowerCase();
+}
+
+/**
  * 材料。名前と分量のどちらが欠けても読者は作れないため、両方を必須にする。
  * 同じ材料名が二度現れるのは転記ミスなので弾く。
  */
@@ -256,8 +268,9 @@ function validateRecipeIngredients(owner: string, recipe: RecipeRecord, errors: 
       errors.push(`${owner}: missing ingredient name`);
       continue;
     }
-    if (seen.has(name)) errors.push(`${owner}: duplicate ingredient "${name}"`);
-    seen.add(name);
+    const key = ingredientKey(name);
+    if (seen.has(key)) errors.push(`${owner}: duplicate ingredient "${name}"`);
+    seen.add(key);
     if (!ingredient.amount.trim()) errors.push(`${owner}: missing amount for "${name}"`);
   }
 }

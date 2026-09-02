@@ -164,7 +164,9 @@ test('Recipe: required content fields fail validation when empty', () => {
   const cases: [Partial<RecipeRecord>, RegExp][] = [
     [{ description: '   ' }, /missing description/],
     [{ ingredients: [] }, /requires at least one ingredient/],
+    [{ ingredients: [{ name: '   ', amount: '1枚' }] }, /missing ingredient name/],
     [{ ingredients: [{ name: 'プレーン', amount: '  ' }] }, /missing amount for "プレーン"/],
+    [{ ingredients: [{ name: 'プレーン', amount: '' }] }, /missing amount for "プレーン"/],
     [
       {
         ingredients: [
@@ -259,7 +261,7 @@ test('Recipe: canonicalPath must match the published route', () => {
 });
 
 test('Recipe: cookingTimeMinutes must be a positive integer when present', () => {
-  for (const cookingTimeMinutes of [0, -5, 2.5]) {
+  for (const cookingTimeMinutes of [0, -5, 2.5, Number.NaN, Number.POSITIVE_INFINITY]) {
     const candidate = cloneContentModel();
     candidate.recipes.push({ ...recipeFixture(), cookingTimeMinutes });
     assert.match(
@@ -269,9 +271,82 @@ test('Recipe: cookingTimeMinutes must be a positive integer when present', () =>
   }
 });
 
-test('Recipe: every published recipe passes recipe validation', () => {
-  assert.equal(validateContentModel(contentModel).length, 0);
-  assert.ok(contentModel.recipes.length > 0, 'no recipe records to validate');
+test('Recipe: the seven existing recipe records stay valid', () => {
+  assert.equal(contentModel.recipes.length, 7, 'recipe count changed without updating this test');
+  assert.deepEqual(validateContentModel(contentModel), []);
+
+  // 1件だけを載せたモデルでも通ることを見て、他レコードに紛れた見逃しを防ぐ。
+  for (const recipe of contentModel.recipes) {
+    const isolated = cloneContentModel();
+    isolated.recipes = [recipe];
+    assert.deepEqual(validateContentModel(isolated), [], `recipe "${recipe.id}" is invalid`);
+  }
+});
+
+test('Recipe: duplicate ingredient detection survives whitespace and ASCII case differences', () => {
+  const duplicates: [string, string][] = [
+    ['プレーン', ' プレーン '],
+    ['Salt', 'salt'],
+    ['BUTTER', 'Butter'],
+    ['ﾊﾞﾀｰ', 'バター'],
+  ];
+
+  for (const [first, second] of duplicates) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({
+      ...recipeFixture(),
+      ingredients: [
+        { name: first, amount: '1枚' },
+        { name: second, amount: '2枚' },
+      ],
+    });
+    assert.match(
+      validateContentModel(candidate).join('\n'),
+      /duplicate ingredient/,
+      `"${first}" and "${second}" must be detected as the same ingredient`,
+    );
+  }
+});
+
+test('Recipe: ingredient names that only look similar stay distinct', () => {
+  // 内部空白は詰めない。日本語の材料名では区切りとして意味を持ちうる。
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    ingredients: [
+      { name: '黒ごま', amount: '適量' },
+      { name: '黒 ごま', amount: '適量' },
+      { name: '白ごま', amount: '適量' },
+    ],
+  });
+  assert.equal(validateContentModel(candidate).length, 0);
+});
+
+test('Recipe: stepImages entries require alt text', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    stepImages: [
+      { src: '/images/recipe-sample-step-1.webp', alt: 'お餅を焼く', role: 'recipe_step' },
+      { src: '/images/recipe-sample-step-2.webp', alt: '', role: 'recipe_step' },
+    ],
+  });
+  assert.match(validateContentModel(candidate).join('\n'), /missing image alt text/);
+});
+
+test('Recipe: a registered image without a src fails validation', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    mainImage: { src: '  ', alt: '検証用レシピの完成写真', role: 'primary' },
+  });
+  assert.match(validateContentModel(candidate).join('\n'), /missing image src/);
+});
+
+test('Recipe: a duplicate relatedProductId fails validation', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({ ...recipeFixture(), relatedProductIds: ['plain', 'plain'] });
+  assert.match(validateContentModel(candidate).join('\n'), /duplicate relatedProductId "plain"/);
 });
 
 test('SalesChannel: unknown references and duplicate channel IDs fail validation', () => {
