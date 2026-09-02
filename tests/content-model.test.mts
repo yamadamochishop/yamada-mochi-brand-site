@@ -160,6 +160,120 @@ test('Recipe: an unknown related product ID fails validation', () => {
   assert.match(validateContentModel(candidate).join('\n'), /unknown relatedProductId/);
 });
 
+test('Recipe: required content fields fail validation when empty', () => {
+  const cases: [Partial<RecipeRecord>, RegExp][] = [
+    [{ description: '   ' }, /missing description/],
+    [{ ingredients: [] }, /requires at least one ingredient/],
+    [{ ingredients: [{ name: 'プレーン', amount: '  ' }] }, /missing amount for "プレーン"/],
+    [
+      {
+        ingredients: [
+          { name: 'プレーン', amount: '1枚' },
+          { name: 'プレーン', amount: '2枚' },
+        ],
+      },
+      /duplicate ingredient "プレーン"/,
+    ],
+    [{ steps: [] }, /requires at least one step/],
+    [{ steps: [{ position: 1, instruction: '  ' }] }, /step 1 has no instruction/],
+    [{ relatedProductIds: [] }, /requires at least one relatedProductId/],
+    [{ category: 'dessert' as RecipeRecord['category'] }, /invalid category "dessert"/],
+  ];
+
+  for (const [override, expectedError] of cases) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({ ...recipeFixture(), ...override });
+    assert.match(validateContentModel(candidate).join('\n'), expectedError);
+  }
+});
+
+test('Recipe: step positions must be a 1-based sequence matching the array order', () => {
+  const outOfOrder = cloneContentModel();
+  outOfOrder.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      { position: 2, instruction: 'お餅を焼きます。' },
+      { position: 1, instruction: '海苔で包みます。' },
+    ],
+  });
+  assert.match(validateContentModel(outOfOrder).join('\n'), /step position "2" must be 1/);
+
+  const gap = cloneContentModel();
+  gap.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      { position: 1, instruction: 'お餅を焼きます。' },
+      { position: 3, instruction: '海苔で包みます。' },
+    ],
+  });
+  assert.match(validateContentModel(gap).join('\n'), /step position "3" must be 2/);
+});
+
+test('Recipe: a registered image without alt text fails validation', () => {
+  const mainImage = cloneContentModel();
+  mainImage.recipes.push({
+    ...recipeFixture(),
+    mainImage: { src: '/images/recipe-sample.webp', alt: '', role: 'primary' },
+  });
+  assert.match(validateContentModel(mainImage).join('\n'), /missing image alt text/);
+
+  const stepImage = cloneContentModel();
+  stepImage.recipes.push({
+    ...recipeFixture(),
+    steps: [
+      {
+        position: 1,
+        instruction: 'お餅を焼きます。',
+        image: { src: '/images/recipe-sample-step-1.webp', alt: '  ', role: 'recipe_step' },
+      },
+    ],
+  });
+  assert.match(validateContentModel(stepImage).join('\n'), /step 1: missing image alt text/);
+});
+
+test('Recipe: canonicalPath must match the published route', () => {
+  const mismatch = cloneContentModel();
+  mismatch.recipes.push({
+    ...recipeFixture(),
+    seo: {
+      title: '検証用レシピ',
+      description: '検証用レシピの説明です。',
+      canonicalPath: '/recipes/another-slug',
+    },
+  });
+  assert.match(
+    validateContentModel(mismatch).join('\n'),
+    /canonicalPath must be "\/recipes\/recipe-sample"/,
+  );
+
+  const matching = cloneContentModel();
+  matching.recipes.push({
+    ...recipeFixture(),
+    seo: {
+      title: '検証用レシピ',
+      description: '検証用レシピの説明です。',
+      canonicalPath: '/recipes/recipe-sample',
+    },
+  });
+  assert.equal(validateContentModel(matching).length, 0);
+});
+
+test('Recipe: cookingTimeMinutes must be a positive integer when present', () => {
+  for (const cookingTimeMinutes of [0, -5, 2.5]) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({ ...recipeFixture(), cookingTimeMinutes });
+    assert.match(
+      validateContentModel(candidate).join('\n'),
+      /cookingTimeMinutes must be a positive integer/,
+    );
+  }
+});
+
+test('Recipe: every published recipe passes recipe validation', () => {
+  assert.equal(validateContentModel(contentModel).length, 0);
+  assert.ok(contentModel.recipes.length > 0, 'no recipe records to validate');
+});
+
 test('SalesChannel: unknown references and duplicate channel IDs fail validation', () => {
   const unknownReference = cloneContentModel();
   unknownReference.products[0].salesChannelIds = ['missing-channel'];
