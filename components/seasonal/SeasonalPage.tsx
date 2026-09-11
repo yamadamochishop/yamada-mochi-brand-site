@@ -33,15 +33,30 @@ function StatusBadge({ label }: { label: SeasonalStatusLabel }) {
   );
 }
 
-function ProductImage({ image, name }: { image?: MediaAsset; name: string }) {
+/** 行レイアウトでは左に固定幅、カードでは器いっぱいに置く。 */
+function ProductImage({
+  image,
+  name,
+  layout = 'row',
+}: {
+  image?: MediaAsset;
+  name: string;
+  layout?: 'row' | 'card';
+}) {
   if (!image) return null;
   return (
-    <div className="relative aspect-[4/3] overflow-hidden lg:w-[280px] lg:shrink-0">
+    <div
+      className={`relative aspect-[4/3] overflow-hidden ${
+        layout === 'row' ? 'lg:w-[280px] lg:shrink-0' : ''
+      }`}
+    >
       <Image
         src={image.src}
         alt={image.alt || name}
         fill
-        sizes="(min-width: 1024px) 280px, 100vw"
+        sizes={
+          layout === 'row' ? '(min-width: 1024px) 280px, 100vw' : '(min-width: 1024px) 400px, 100vw'
+        }
         className="object-cover"
       />
     </div>
@@ -104,7 +119,7 @@ function ProductNotes({ product }: { product: SeasonalPageProduct }) {
 function SeasonalProductCard({ product }: { product: SeasonalPageProduct }) {
   return (
     <article className="flex h-full flex-col border border-sumi/15 bg-base p-6 md:p-7">
-      <ProductImage image={product.images[0]} name={product.name} />
+      <ProductImage image={product.images[0]} name={product.name} layout="card" />
       <div className={product.images[0] ? 'mt-6' : ''}>
         <div className="flex min-h-7 items-start justify-between gap-4">
           <p className="text-xs tracking-brand text-brown/85">{product.categoryLabel}</p>

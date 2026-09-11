@@ -36,6 +36,12 @@ const currentIndexablePaths = [
   '/recipes/age-mame-mochi',
   '/recipes/yomogi-mochi-zenzai',
   '/recipes/tamari-mochi-butter-pepper',
+  '/recipes/garlic-butter-mochi',
+  '/recipes/mentaiko-mayo-mochi',
+  '/recipes/yomogi-an-butter',
+  '/recipes/dashi-butter-mochi',
+  '/recipes/mochi-pizza',
+  '/recipes/mochi-ebi-ajillo',
   '/brand-story',
   '/craft',
   '/third-generation',
@@ -48,7 +54,17 @@ const currentIndexablePaths = [
 const expectedLegacyRedirects = new Map([
   ['/商品紹介', '/products'],
   ['/お問い合わせ', '/contact'],
+  ['/アレンジレシピ', '/recipes'],
+  ['/アレンジレシピ/餅のアレンジレシピ', '/recipes'],
+  ['/2020/06/11/ピザ餅', '/recipes/mochi-pizza'],
+  ['/2020/06/11/明太子マヨ餅', '/recipes/mentaiko-mayo-mochi'],
+  ['/2020/06/11/草もちあんこバター', '/recipes/yomogi-an-butter'],
+  ['/2020/06/11/餅アヒージョ', '/recipes/mochi-ebi-ajillo'],
+  ['/2020/09/23/ガーリックバター餅', '/recipes/garlic-butter-mochi'],
+  ['/2021/03/05/チーズゴマ海老餅', '/recipes/ebi-mochi-cheese-pizza'],
 ]);
+// 同等コンテンツが未作成の旧レシピURLは defer のまま残す。
+const deferredLegacyRecipePaths = ['/2020/06/05/カプレーゼ餅', '/2020/06/05/ゴルゴンゾーラ餅'];
 let server: ChildProcess | undefined;
 let localOrigin = '';
 let localPort = 0;
@@ -197,6 +213,16 @@ test('Inventory: confirmed and unverified legacy URLs remain disjoint and redire
   const confirmedPaths = new Set(confirmedLegacyUrls.map(({ path }) => path));
   assert.equal(confirmedPaths.size, confirmedLegacyUrls.length);
 
+  for (const path of deferredLegacyRecipePaths) {
+    const entry = confirmedLegacyUrls.find((candidate) => candidate.path === path);
+    assert.equal(entry?.disposition, 'defer', path);
+    assert.equal(
+      legacyRedirects.some(({ source }) => source === path),
+      false,
+      path,
+    );
+  }
+
   for (const redirect of legacyRedirects) {
     const inventoryEntry = confirmedLegacyUrls.find(({ path }) => path === redirect.source);
     assert.ok(inventoryEntry, `Missing evidence for redirect source ${redirect.source}`);
@@ -278,7 +304,7 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.equal(statusBadges('販売中'), 3);
   assert.equal(statusBadges('まもなく終了'), 0);
   assert.equal(statusBadges('販売予定'), 2);
-  assert.equal(statusBadges('販売終了'), 1);
+  assert.equal(statusBadges('販売終了'), 2);
   // 状態バッジと項目名で「販売予定」が二重の意味を持たないこと。
   assert.match(html, /<dt[^>]*>販売時期<\/dt>/);
   assert.doesNotMatch(html, /<dt[^>]*>販売予定<\/dt>/);
@@ -286,7 +312,20 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.match(html, /今季の販売を終えたもの/);
   assert.match(html, /2026年の販売は8月中旬で終了しました/);
   assert.equal((html.match(/data-seasonal-cta=/g) ?? []).length, 3);
-  assert.equal((html.match(/<img\b/g) ?? []).length, 0);
+
+  // シャインマスカット大福: 9月の店先に出るHuman確定の事実だけ。
+  assert.match(html, /9(<!-- -->)?月のお品書き/);
+  assert.match(html, /シャインマスカット大福/);
+  assert.match(html, /1個 300円（税込）/);
+  assert.match(html, /9月〜11月/);
+  assert.doesNotMatch(html, /シャインマスカット大福[\s\S]{0,600}?(賞味期限|アレルギー|産地)/u);
+  // 画像はシャインマスカット大福の実物写真だけ（今の商品カード＋商品ごとの販売時期の行）。
+  const images = html.match(/<img\b[^>]*>/g) ?? [];
+  assert.equal(images.length, 2);
+  assert.equal(
+    images.every((image) => image.includes('shine-muscat-daifuku-main')),
+    true,
+  );
   assert.doesNotMatch(html, /placeholder|写真が届いたら|写真なし|仮画像/u);
   assert.doesNotMatch(html, /data-seasonal-commerce-cta/);
   assert.match(html, /通販[^<]*準備中|<dd[^>]*>準備中<\/dd>/);
@@ -331,9 +370,18 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
     'カリッと揚げ豆餅',
     '焼き草餅のぜんざい',
     'たまり餅のバター黒胡椒',
+    'ガーリックバター餅',
+    '明太子マヨ餅',
+    '草餅のあんバター',
+    'レンジで簡単 だしバター餅',
+    'トースターで簡単 ピザ餅',
+    '餅と海老のアヒージョ',
   ]) {
     assert.match(hubHtml, new RegExp(title));
   }
+  const visibleHub = hubHtml.replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.match(visibleHub, /山田家で親しんできた食べ方から/u);
+  assert.doesNotMatch(visibleHub, /山田家で実際に食べている食べ方を、そのままご紹介します/u);
 
   const detail = await fetch(`${localOrigin}/recipes/isobeyaki`, { headers: productionHeaders() });
   assert.equal(detail.status, 200);
@@ -343,6 +391,11 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(detailHtml, /大さじ2/);
   // 商品詳細への内部リンク（Recipe → Product）。
   assert.match(detailHtml, /href="\/products\/plain"/);
+  // 購入導線: BASEが主CTA、食べチョク・ポケマルは副次リンク（URLは data/site の正本）。
+  assert.match(detailHtml, /BASEで購入する/u);
+  assert.match(detailHtml, /いつもの通販サイトからも購入できます/u);
+  assert.match(detailHtml, /href="https:\/\/www\.tabechoku\.com\/producers\/23313"/);
+  assert.match(detailHtml, /href="https:\/\/poke-m\.com\/producers\/297308"/);
 
   // 未確認の数値をSEO目的で生成していないこと。
   for (const html of [hubHtml, detailHtml]) {

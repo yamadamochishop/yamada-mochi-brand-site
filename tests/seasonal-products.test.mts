@@ -18,6 +18,7 @@ const includedIds = [
   'hida-peach-pie',
   'yonashi-pie',
   'strawberry-daifuku',
+  'shine-muscat-daifuku',
   'shin-yomogi-mochi',
   'ao-hoba-mochi',
 ];
@@ -32,8 +33,8 @@ function idsFor(month: number, group: 'yearRound' | 'seasonal') {
   return getSeasonalProductsForMonth(month)[group].map((entry) => entry.id);
 }
 
-test('seasonal data contains exactly the eleven human-confirmed records', () => {
-  assert.equal(seasonalProducts.length, 11);
+test('seasonal data contains exactly the twelve human-confirmed records', () => {
+  assert.equal(seasonalProducts.length, 12);
   assert.deepEqual(
     seasonalProducts.map((product) => product.id),
     includedIds,
@@ -50,9 +51,44 @@ test('seasonal data contains exactly the eleven human-confirmed records', () => 
     seasonalProducts.some((product) => product.id === 'tsubuan-pie'),
     false,
   );
+});
+
+test('シャインマスカット大福 carries only the human-confirmed product facts', () => {
+  const daifuku = seasonalProducts.find((product) => product.id === 'shine-muscat-daifuku')!;
+  assert.equal(daifuku.name, 'シャインマスカット大福');
+  assert.equal(daifuku.slug, 'shine-muscat-daifuku');
+  assert.equal(daifuku.category, 'wagashi');
+  assert.equal(daifuku.seasonality, 'seasonal');
+  assert.equal(daifuku.salesPeriod.display, '9月〜11月');
+  assert.deepEqual([daifuku.salesPeriod.startMonth, daifuku.salesPeriod.endMonth], [9, 11]);
+  assert.equal(daifuku.availabilityStatus, 'available');
+  assert.deepEqual(daifuku.price, {
+    amount: 300,
+    currency: 'JPY',
+    taxIncluded: true,
+    display: '1個 300円（税込）',
+  });
+  assert.deepEqual(daifuku.salesLocationIds, ['jinya-morning-market']);
+  assert.equal(daifuku.ingredients, 'シャインマスカット、白玉粉、砂糖、白あん、トレハロース');
+  assert.equal(daifuku.storage, '冷蔵庫（10℃以下）保存');
+  assert.match(daifuku.story!, /完熟シャインマスカットを丸ごと包みました/u);
+  assert.equal(daifuku.commerce.status, 'unavailable');
+  assert.equal(daifuku.status, 'draft');
+  // 賞味期限・アレルゲン・産地はHuman未確定なので設定してはいけない。
+  assert.equal(daifuku.shelfLife, undefined);
+  assert.equal(daifuku.allergens, undefined);
+  // 実物写真3枚。生成画像・外部写真は使わない。
+  assert.deepEqual(
+    daifuku.images.map((image) => [image.src, image.role, image.sourceType]),
+    [
+      ['/images/shine-muscat-daifuku-main.webp', 'primary', 'original_photo'],
+      ['/images/shine-muscat-daifuku-making.webp', 'gallery', 'original_photo'],
+      ['/images/shine-muscat-daifuku-sales.webp', 'gallery', 'original_photo'],
+    ],
+  );
   assert.equal(
-    seasonalProducts.some((product) => product.name.includes('シャインマスカット')),
-    false,
+    daifuku.images.every((image) => image.alt.trim().length > 0),
+    true,
   );
 });
 
@@ -72,9 +108,13 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-maruzuke',
     'akakabu-nagazuke',
     'konasu-pickles',
-    'hida-peach-pie',
+    'shine-muscat-daifuku',
   ]);
-  // 青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  // 飛騨桃パイ・青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  assert.equal(
+    seasonalProducts.find((product) => product.id === 'hida-peach-pie')?.availabilityStatus,
+    'ended',
+  );
   assert.equal(
     seasonalProducts.find((product) => product.id === 'ao-hoba-mochi')?.availabilityStatus,
     'ended',
@@ -123,9 +163,20 @@ test('calendar periods do not mutate human-managed availability', () => {
   );
 });
 
+/** 写真のある商品は実物写真（original_photo）だけ。それ以外の商品は空配列のまま。 */
+const productIdsWithPhotos = ['shine-muscat-daifuku'];
+
 test('empty image arrays are valid and no placeholder assets are invented', () => {
   assert.equal(
-    seasonalProducts.every((product) => product.images.length === 0),
+    seasonalProducts
+      .filter((product) => !productIdsWithPhotos.includes(product.id))
+      .every((product) => product.images.length === 0),
+    true,
+  );
+  assert.equal(
+    seasonalProducts.every((product) =>
+      product.images.every((image) => image.sourceType === 'original_photo'),
+    ),
     true,
   );
   assert.equal(

@@ -39,7 +39,10 @@ export function getRecipeProducts(recipe: RecipeRecord): Product[] {
     .filter((product): product is Product => Boolean(product));
 }
 
-/** 商品詳細ページに置くレシピ。商品固有のレシピを先に、基本の焼き方を後に。 */
+/**
+ * 商品詳細ページに置くレシピ。商品固有のレシピを先に、基本の焼き方を後に。
+ * 商品固有のレシピが増えても基本の焼き方の枠は残す（上限内で固有レシピ側を切り詰める）。
+ */
 export function getRecipesForProduct(productSlug: string): RecipeRecord[] {
   const matched = publishedRecipes.filter((recipe) =>
     recipe.relatedProductIds.includes(productSlug),
@@ -47,7 +50,7 @@ export function getRecipesForProduct(productSlug: string): RecipeRecord[] {
   const specific = matched.filter((recipe) => recipe.id !== BASE_TECHNIQUE_RECIPE_ID);
   const base = matched.filter((recipe) => recipe.id === BASE_TECHNIQUE_RECIPE_ID);
 
-  return [...specific, ...base].slice(0, MAX_RECIPES_PER_PRODUCT);
+  return [...specific.slice(0, MAX_RECIPES_PER_PRODUCT - base.length), ...base];
 }
 
 /** 同じ商品を使うレシピを優先し、足りなければ他のレシピで補う。 */
