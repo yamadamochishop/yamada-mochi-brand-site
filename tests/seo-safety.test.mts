@@ -304,7 +304,7 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.equal(statusBadges('販売中'), 3);
   assert.equal(statusBadges('まもなく終了'), 0);
   assert.equal(statusBadges('販売予定'), 2);
-  assert.equal(statusBadges('販売終了'), 1);
+  assert.equal(statusBadges('販売終了'), 2);
   // 状態バッジと項目名で「販売予定」が二重の意味を持たないこと。
   assert.match(html, /<dt[^>]*>販売時期<\/dt>/);
   assert.doesNotMatch(html, /<dt[^>]*>販売予定<\/dt>/);

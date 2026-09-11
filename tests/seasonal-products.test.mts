@@ -108,10 +108,13 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-maruzuke',
     'akakabu-nagazuke',
     'konasu-pickles',
-    'hida-peach-pie',
     'shine-muscat-daifuku',
   ]);
-  // 青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  // 飛騨桃パイ・青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  assert.equal(
+    seasonalProducts.find((product) => product.id === 'hida-peach-pie')?.availabilityStatus,
+    'ended',
+  );
   assert.equal(
     seasonalProducts.find((product) => product.id === 'ao-hoba-mochi')?.availabilityStatus,
     'ended',

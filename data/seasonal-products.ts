@@ -102,7 +102,8 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     category: 'pie',
     seasonality: 'seasonal',
     salesPeriod: { display: '8月〜9月上旬頃', startMonth: 8, endMonth: 9 },
-    availabilityStatus: 'available',
+    // Human確認済み（2026-09-11）: 2026年シーズンの販売は終了。
+    availabilityStatus: 'ended',
     catchcopy: '桃のみずみずしさを残して。',
     // Human確認済み（2026-08-28）: 1個 250円（税込）。表記は既存商品と同じ「◯◯円（税込）」に揃える。
     price: { amount: 250, currency: 'JPY', taxIncluded: true, display: '1個 250円（税込）' },
@@ -112,7 +113,11 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     commitment:
       '桃をさっと煮込み、果汁を濃縮し、レモンとバターで仕上げています。桃以外の果物や具材は加えていません。白桃・黄桃とも同じ基本製法です。',
     shelfLife: '当日',
-    notes: ['白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）', '黄桃：8月下旬〜9月上旬頃'],
+    notes: [
+      '白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）',
+      '黄桃：8月下旬〜9月上旬頃',
+      '2026年の販売は9月上旬で終了しました',
+    ],
     commerce: unavailableCommerce(),
     images: [],
     status: 'draft',

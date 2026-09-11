@@ -107,9 +107,12 @@ test('飛騨桃パイ renders only the human-confirmed product facts', () => {
   assert.equal(peach.price?.amount, 250);
   assert.equal(peach.shelfLife, '当日');
   assert.deepEqual(peach.salesLocationIds, ['jinya-morning-market']);
+  // Human確認済み（2026-09-11）: 2026年シーズンは終了。販売時期の目安はカレンダー情報として残す。
+  assert.equal(peach.availabilityStatus, 'ended');
   assert.deepEqual(peach.notes, [
     '白桃：8月上旬〜8月下旬（状況により9月上旬頃まで）',
     '黄桃：8月下旬〜9月上旬頃',
+    '2026年の販売は9月上旬で終了しました',
   ]);
   assert.match(peach.story!, /余計なものを加えずシンプルに仕上げました。$/u);
   assert.match(peach.commitment!, /レモンとバターで仕上げています/u);
@@ -163,9 +166,12 @@ test('青朴葉餅 is finished for 2026 and only appears in the ended group', ()
 
   assert.deepEqual(
     model.endedProducts.map((product) => product.id),
-    ['ao-hoba-mochi'],
+    ['hida-peach-pie', 'ao-hoba-mochi'],
   );
-  assert.equal(model.endedProducts[0].statusLabel, '販売終了');
+  assert.equal(
+    model.endedProducts.every((product) => product.statusLabel === '販売終了'),
+    true,
+  );
   // 「今、店先にあるもの」と「9月のお品書き」は同じ currentProducts を読む。
   assert.equal(
     model.currentProducts.some((product) => product.id === 'ao-hoba-mochi'),
@@ -378,10 +384,14 @@ test('Mutation A: reviving blue hoba as available breaks the finished-sales cont
   const mutation = cloneRecords();
   const product = mutation.find((candidate) => candidate.id === 'ao-hoba-mochi')!;
   product.availabilityStatus = 'available';
-  assert.deepEqual(buildSeasonalPageModel(mutation).endedProducts, []);
+  // 飛騨桃パイは引き続きendedなので、青朴葉餅だけが終えたものの枠から消える。
+  assert.deepEqual(
+    buildSeasonalPageModel(mutation).endedProducts.map((candidate) => candidate.id),
+    ['hida-peach-pie'],
+  );
   assert.deepEqual(
     buildSeasonalPageModel().endedProducts.map((candidate) => candidate.id),
-    ['ao-hoba-mochi'],
+    ['hida-peach-pie', 'ao-hoba-mochi'],
   );
 });
 
