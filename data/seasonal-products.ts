@@ -149,6 +149,45 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     status: 'draft',
   },
   {
+    id: 'shine-muscat-daifuku',
+    slug: 'shine-muscat-daifuku',
+    name: 'シャインマスカット大福',
+    category: 'wagashi',
+    seasonality: 'seasonal',
+    salesPeriod: { display: '9月〜11月', startMonth: 9, endMonth: 11 },
+    availabilityStatus: 'available',
+    // Human確認済み（2026-09-11）: 1個 300円（税込）。表記は既存商品と同じ「◯◯円（税込）」に揃える。
+    price: { amount: 300, currency: 'JPY', taxIncluded: true, display: '1個 300円（税込）' },
+    salesLocationIds: [JINYA_MARKET_ID],
+    story:
+      '特製のもちもち求肥と、やさしい甘さの白あんに、完熟シャインマスカットを丸ごと包みました。みずみずしい果実と、やわらかな求肥を一緒に楽しめる季節の大福です。',
+    // 原材料・保存方法はHuman確認済み。賞味期限・アレルゲン・産地はHuman未確定なので設定しない。
+    ingredients: 'シャインマスカット、白玉粉、砂糖、白あん、トレハロース',
+    storage: '冷蔵庫（10℃以下）保存',
+    commerce: unavailableCommerce(),
+    images: [
+      {
+        src: '/images/shine-muscat-daifuku-main.webp',
+        alt: 'シャインマスカットを丸ごと包んだ山田もち店のシャインマスカット大福の断面',
+        role: 'primary',
+        sourceType: 'original_photo',
+      },
+      {
+        src: '/images/shine-muscat-daifuku-making.webp',
+        alt: '山田もち店で仕上げたシャインマスカット大福',
+        role: 'gallery',
+        sourceType: 'original_photo',
+      },
+      {
+        src: '/images/shine-muscat-daifuku-sales.webp',
+        alt: '個包装した山田もち店のシャインマスカット大福',
+        role: 'gallery',
+        sourceType: 'original_photo',
+      },
+    ],
+    status: 'draft',
+  },
+  {
     id: 'shin-yomogi-mochi',
     slug: 'shin-yomogi-mochi',
     name: '新草餅',

@@ -1,14 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/data/catalog';
+import { site } from '@/data/site';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
+import { TrackedSalesChannelLink } from '@/components/TrackedSalesChannelLink';
 import { isNekoposEligible, nekoposHeadline } from '@/lib/shipping';
+
+const secondaryChannelLinkClass =
+  'underline underline-offset-4 transition hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi';
 
 /**
  * レシピ詳細の購入導線。
  * 記事共通の `ArticlePurchaseCTA` は食べ比べセット固定のため、レシピでは
  * そのレシピで実際に使うお餅を案内する。価格・送料・BASE URLは
  * カタログと `lib/shipping` の正本をそのまま参照する。
+ *
+ * 主CTAはBASE。食べチョク・ポケットマルシェは各生産者ページへの副次導線として、
+ * 商品カードの下に控えめなテキストリンクで置く（取扱商品は各サイトの掲載に従う）。
  */
 export function RecipeProductCta({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
@@ -69,6 +77,30 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
             </article>
           ))}
         </div>
+        <p className="mt-10 text-center text-sm leading-7 text-sumi/65">
+          いつもの通販サイトからも購入できます
+          <span className="mt-1 block text-xs tracking-[0.06em] text-sumi/60">
+            <TrackedSalesChannelLink
+              href={site.tabechokuUrl}
+              channel="tabechoku"
+              placement="recipe_product"
+              className={secondaryChannelLinkClass}
+            >
+              食べチョク
+            </TrackedSalesChannelLink>
+            <span aria-hidden="true" className="mx-3">
+              ｜
+            </span>
+            <TrackedSalesChannelLink
+              href={site.pokeMarcheUrl}
+              channel="pokemaru"
+              placement="recipe_product"
+              className={secondaryChannelLinkClass}
+            >
+              ポケットマルシェ
+            </TrackedSalesChannelLink>
+          </span>
+        </p>
       </div>
     </section>
   );

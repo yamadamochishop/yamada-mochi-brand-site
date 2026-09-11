@@ -8,7 +8,7 @@ import {
   giftSetRecords,
   productRecords,
 } from '../data/content-model.ts';
-import { productJsonLd } from '../lib/seo.ts';
+import { productJsonLd, recipeJsonLd } from '../lib/seo.ts';
 import { validateContentModel } from '../lib/content-model/validate.ts';
 import type { RecipeRecord, SeasonalProductRecord } from '../types/content-model.ts';
 
@@ -271,8 +271,57 @@ test('Recipe: cookingTimeMinutes must be a positive integer when present', () =>
   }
 });
 
-test('Recipe: the seven existing recipe records stay valid', () => {
-  assert.equal(contentModel.recipes.length, 7, 'recipe count changed without updating this test');
+const publishedRecipeIds = [
+  'mochi-yakikata',
+  'isobeyaki',
+  'ebi-mochi-cheese-pizza',
+  'kombu-mochi-ozoni-fu',
+  'age-mame-mochi',
+  'yomogi-mochi-zenzai',
+  'tamari-mochi-butter-pepper',
+  'garlic-butter-mochi',
+  'mentaiko-mayo-mochi',
+  'yomogi-an-butter',
+  'dashi-butter-mochi',
+  'mochi-pizza',
+  'mochi-ebi-ajillo',
+];
+
+test('Recipe: mochi-yakikata keeps the toaster method as the only structured-data instructions', () => {
+  const yakikata = contentModel.recipes.find((recipe) => recipe.id === 'mochi-yakikata');
+  assert.ok(yakikata);
+  // 主工程はトースターの3手順のみ。フライパン・レンジ・冷凍餅はvariationに置く。
+  assert.equal(yakikata.steps.length, 3);
+  assert.match(yakikata.steps[1].instruction, /トースター（1000W）で4〜5分/u);
+  assert.deepEqual(
+    yakikata.variations?.map((variation) => variation.title),
+    ['フライパンで焼く', '電子レンジでやわらかく', '冷凍したお餅'],
+  );
+  assert.equal(yakikata.cookingTimeMinutes, undefined);
+
+  // 写真が登録された時点でも、Recipe構造化データの手順にvariationは混ざらない。
+  const withImage = recipeJsonLd({
+    ...yakikata,
+    mainImage: { src: '/images/recipe-sample.webp', alt: 'sample', role: 'primary' },
+  });
+  assert.ok(withImage);
+  assert.equal(withImage.recipeInstructions.length, 3);
+  const instructionText = withImage.recipeInstructions.map((step) => step.text).join('\n');
+  assert.doesNotMatch(instructionText, /フライパン|電子レンジ|冷凍/u);
+  assert.equal(recipeJsonLd(yakikata), null);
+});
+
+test('Recipe: the thirteen existing recipe records stay valid', () => {
+  assert.equal(contentModel.recipes.length, 13, 'recipe count changed without updating this test');
+  assert.deepEqual(
+    contentModel.recipes.map((recipe) => recipe.id),
+    publishedRecipeIds,
+  );
+  for (const recipe of contentModel.recipes) {
+    assert.equal(recipe.slug, recipe.id, `recipe "${recipe.id}" slug must match id`);
+    assert.equal(recipe.status, 'published');
+    assert.equal(recipe.seo?.canonicalPath, `/recipes/${recipe.slug}`);
+  }
   assert.deepEqual(validateContentModel(contentModel), []);
 
   // 1件だけを載せたモデルでも通ることを見て、他レコードに紛れた見逃しを防ぐ。
