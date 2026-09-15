@@ -147,10 +147,35 @@ export function simpleItemListJsonLd(name: string, itemNames: string[]) {
 }
 
 /**
+ * Recipe Hubの ItemList。各項目に `url` を持たせ、Googleのレシピ一覧
+ * （ホストカルーセル）の要件に合わせる。個々の `Recipe` は詳細ページ側で出す。
+ */
+export function recipeItemListJsonLd(recipes: RecipeRecord[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: '山田もち店 お餅のレシピ',
+    itemListElement: recipes.map((recipe, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: recipe.title,
+      url: absoluteUrl(`/recipes/${recipe.slug}`),
+    })),
+  };
+}
+
+/** 分単位の調理時間を ISO 8601 duration に変換する（Recipe.cookTime 用）。 */
+function isoDuration(minutes: number) {
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return `PT${hours > 0 ? `${hours}H` : ''}${rest > 0 || hours === 0 ? `${rest}M` : ''}`;
+}
+
+/**
  * Recipe構造化データ。
  *
- * ページに表示されている事実だけを出力する。人数・調理時間・カロリーなどは
- * Human確認が取れていないため含めない。Googleのレシピリッチリザルトは画像を
+ * ページに表示されている事実だけを出力する。人数・調理時間は `data/recipes.ts` に
+ * Human確認済みの値がある場合だけ出力し、カロリー等は扱わない。Googleのレシピリッチリザルトは画像を
  * 必須とするため、写真が未登録のレシピでは `null` を返し、構造化データ自体を
  * 出力しない。`mainImage` を登録した時点で自動的に有効になる。
  */
@@ -168,6 +193,14 @@ export function recipeJsonLd(recipe: RecipeRecord) {
     author: { '@id': organizationId },
     publisher: { '@id': organizationId },
     recipeCategory: 'お餅',
+    ...(recipe.tags && recipe.tags.length > 0 ? { keywords: recipe.tags.join(', ') } : {}),
+    ...(recipe.publishedAt ? { datePublished: recipe.publishedAt } : {}),
+    ...(recipe.updatedAt ? { dateModified: recipe.updatedAt } : {}),
+    // 調理時間・人数はHumanが実測して `data/recipes.ts` に入れた場合にだけ出す。
+    ...(recipe.cookingTimeMinutes !== undefined
+      ? { totalTime: isoDuration(recipe.cookingTimeMinutes) }
+      : {}),
+    ...(recipe.servings ? { recipeYield: recipe.servings } : {}),
     recipeIngredient: recipe.ingredients.map((ingredient) =>
       `${ingredient.name} ${ingredient.amount}`.trim(),
     ),

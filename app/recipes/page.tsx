@@ -5,8 +5,16 @@ import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { SectionHeading } from '@/components/SectionHeading';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
-import { getProductRecipeGroups, publishedRecipes } from '@/lib/recipe-page';
-import { breadcrumbJsonLd, pageOpenGraph, simpleItemListJsonLd } from '@/lib/seo';
+import { RecipeExplorer } from '@/components/recipe/RecipeExplorer';
+import { RecipeProductLink } from '@/components/recipe/RecipeProductLink';
+import {
+  getFeaturedRecipes,
+  getProductRecipeGroups,
+  getRecipeFilterProducts,
+  publishedRecipes,
+  toRecipeListItem,
+} from '@/lib/recipe-page';
+import { breadcrumbJsonLd, pageOpenGraph, recipeItemListJsonLd } from '@/lib/seo';
 
 const heroImage = '/images/web-plain-yakimochi.webp';
 const heroImageAlt = '小皿の醤油とともに器に盛った山田もち店の切り餅';
@@ -29,6 +37,9 @@ export const metadata: Metadata = {
 
 export default function RecipesPage() {
   const productGroups = getProductRecipeGroups();
+  const featured = getFeaturedRecipes().map(toRecipeListItem);
+  const listItems = publishedRecipes.map(toRecipeListItem);
+  const filterProducts = getRecipeFilterProducts();
 
   return (
     <main className="ym-page">
@@ -38,16 +49,11 @@ export default function RecipesPage() {
           { name: 'お餅のレシピ', path: '/recipes' },
         ])}
       />
-      <JsonLd
-        data={simpleItemListJsonLd(
-          '山田もち店 お餅のレシピ',
-          publishedRecipes.map((recipe) => recipe.title),
-        )}
-      />
+      <JsonLd data={recipeItemListJsonLd(publishedRecipes)} />
 
-      <section className="ym-container py-24 md:py-32">
+      <section className="ym-container pt-20 md:pt-28">
         <SectionHeading eyebrow="RECIPES" title="お餅のレシピ" lead={description} as="h1" />
-        <div className="relative mb-16 aspect-[4/3] overflow-hidden bg-[#efe9dc] md:mb-20 md:aspect-[16/7]">
+        <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc] md:aspect-[16/7]">
           <Image
             src={heroImage}
             alt={heroImageAlt}
@@ -58,7 +64,7 @@ export default function RecipesPage() {
           />
         </div>
 
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto mt-14 max-w-3xl md:mt-20">
           <p className="text-xs tracking-brand text-brown/85">FROM OUR KITCHEN</p>
           <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
             山田もち店のお餅を楽しむ
@@ -67,11 +73,41 @@ export default function RecipesPage() {
             山田家で親しんできた食べ方から、毎日の食卓で気軽に楽しめる定番アレンジまで。山田もち店のお餅のおいしい食べ方をご紹介します。
           </p>
         </div>
+      </section>
 
-        <div className="mt-14 grid gap-8 md:mt-16 md:grid-cols-2 lg:grid-cols-3">
-          {publishedRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
+      {featured.length > 0 ? (
+        <section aria-labelledby="featured-recipes" className="ym-container mt-14 md:mt-20">
+          <p className="text-xs tracking-brand text-brown/85">FEATURED</p>
+          <h2
+            id="featured-recipes"
+            className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"
+          >
+            注目レシピ
+          </h2>
+          {/* スマホでは横スクロール、md以上では3列。人気指標が入るとこの並びが人気順に変わる。 */}
+          <div className="-mx-5 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
+            {featured.map((recipe, index) => (
+              <div
+                key={recipe.slug}
+                className="w-[82vw] max-w-sm shrink-0 snap-start md:w-auto md:max-w-none"
+              >
+                <RecipeCard recipe={recipe} priority={index === 0} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section aria-labelledby="all-recipes" className="ym-container mt-16 pb-24 md:mt-24 md:pb-32">
+        <p className="text-xs tracking-brand text-brown/85">ALL RECIPES</p>
+        <h2
+          id="all-recipes"
+          className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"
+        >
+          すべてのレシピ
+        </h2>
+        <div className="mt-8">
+          <RecipeExplorer recipes={listItems} products={filterProducts} />
         </div>
       </section>
 
@@ -87,7 +123,7 @@ export default function RecipesPage() {
             </p>
           </div>
 
-          <div className="mt-14 grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3 md:gap-y-10">
             {productGroups.map(({ product, recipes: productRecipes }) => (
               <section
                 key={product.slug}
@@ -98,12 +134,13 @@ export default function RecipesPage() {
                   id={`recipes-for-${product.slug}`}
                   className="font-serifjp text-xl tracking-[0.12em]"
                 >
-                  <Link
-                    href={`/products/${product.slug}`}
+                  <RecipeProductLink
+                    productSlug={product.slug}
+                    placement="recipe_hub_product_group"
                     className="underline underline-offset-8 transition hover:text-brown"
                   >
                     {product.cardName}
-                  </Link>
+                  </RecipeProductLink>
                 </h3>
                 <ul className="mt-5 space-y-1 text-sm leading-8 text-sumi/70">
                   {productRecipes.map((recipe) => (
