@@ -10,10 +10,16 @@ import type { RecipeRecord } from '../types/content-model.ts';
  * - `servings`（人数）
  * - `cookingTimeMinutes`（調理時間）
  * - `allergens`（アレルゲン表示は各商品ページの正本を参照する）
+ * - `difficulty`（難易度）
  * - `mainImage` / `stepImages`（レシピ写真は未撮影）
  *
  * 写真が用意でき次第 `mainImage` を追加すると、詳細ページのHEROと
  * Recipe構造化データが自動的に有効になる（`lib/recipe-page.ts` を参照）。
+ *
+ * `tags` は本文に書かれている調理法・味・食べる場面だけから付ける（検索・絞り込み用）。
+ * `publishedAt` は最初の成功したProduction公開日。事実を確認できない場合は省略する。
+ * `featured` / `popularity` は未設定。Search Console・GA4の実測が取れてから
+ * `docs/recipes/YM-009-recipe-hub-ver2.md` の手順で転記する。
  */
 export const recipes: RecipeRecord[] = [
   {
@@ -23,6 +29,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '山田もち店のお餅は、まず焼くところから。ご家庭のトースターでおいしく焼くための、いちばん基本の焼き方です。フライパン・電子レンジ・冷凍したお餅の焼き方もあわせてご紹介します。',
     category: 'mochi',
+    tags: ['トースター', 'フライパン', '電子レンジ', '基本の焼き方'],
     ingredients: [{ name: '山田もち店の切り餅', amount: '適量' }],
     steps: [
       { position: 1, instruction: 'お餅の表面を、さっと水で濡らします。' },
@@ -60,6 +67,7 @@ export const recipes: RecipeRecord[] = [
     },
     relatedProductIds: ['plain', 'yomogi', 'sansyokumame', 'kombu', 'tamari', 'ebi'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: 'お餅のおいしい焼き方｜トースター・フライパン・レンジ',
@@ -74,6 +82,7 @@ export const recipes: RecipeRecord[] = [
     title: '山田家の磯辺焼き',
     description: '焼いた白餅に砂糖醤油を絡めて、炙った焼き海苔で包みます。',
     category: 'mochi',
+    tags: ['トースター', '醤油', '海苔'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '適量' },
       { name: '上白糖', amount: '大さじ1' },
@@ -95,6 +104,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: '磯辺焼きの作り方｜砂糖醤油と焼き海苔で楽しむ山田家の味',
@@ -110,6 +120,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '焼いた海老餅に、とろけるチーズをのせるだけ。海老餅そのものに塩味があるので、ソースがなくても味が決まります。',
     category: 'mochi',
+    tags: ['トースター', 'チーズ', 'おつまみ'],
     ingredients: [
       { name: '黒ごま海老餅', amount: '適量' },
       { name: 'スライスのとろけるチーズ', amount: '適量' },
@@ -132,6 +143,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['ebi'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: '海老餅の簡単チーズピザ',
@@ -146,6 +158,7 @@ export const recipes: RecipeRecord[] = [
     title: '昆布餅のお雑煮風',
     description: '焼いた昆布餅をお椀に入れ、薄めに作った鰹だしを注ぎます。',
     category: 'mochi',
+    tags: ['トースター', 'だし', 'お雑煮'],
     ingredients: [
       { name: '昆布餅', amount: '適量' },
       { name: '鰹だし', amount: '約100ml', note: 'ほんだしでも可' },
@@ -159,6 +172,7 @@ export const recipes: RecipeRecord[] = [
     notes: ['焼いた昆布餅から昆布の旨みが出て、合わせだしのような味わいになります。'],
     relatedProductIds: ['kombu'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: '昆布餅のお雑煮風｜鰹だしで楽しむ簡単な食べ方',
@@ -173,6 +187,7 @@ export const recipes: RecipeRecord[] = [
     title: 'カリッと揚げ豆餅',
     description: '三色豆餅を約2cm角に切って揚げ、熱いうちに軽く塩をふる食べ方です。',
     category: 'mochi',
+    tags: ['フライパン', '揚げ餅', '塩'],
     ingredients: [
       { name: '三色豆餅', amount: '適量' },
       { name: 'サラダ油', amount: '適量', note: 'フライパンに少し多めに' },
@@ -200,6 +215,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['sansyokumame'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: 'カリッと揚げ豆餅',
@@ -214,6 +230,7 @@ export const recipes: RecipeRecord[] = [
     title: '焼き草餅のぜんざい',
     description: '市販のつぶあんをお湯で溶かし、焼いた草餅を加えるぜんざいです。',
     category: 'mochi',
+    tags: ['トースター', 'あんこ', 'おやつ'],
     ingredients: [
       { name: '草餅', amount: '適量' },
       { name: '市販のつぶあん', amount: '適量' },
@@ -237,6 +254,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['yomogi'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: '草餅のぜんざい｜焼いたよもぎ餅で作る簡単おやつ',
@@ -251,6 +269,7 @@ export const recipes: RecipeRecord[] = [
     title: 'たまり餅のバター黒胡椒',
     description: '焼いたたまり餅に無塩バターをのせ、ブラックペッパーを削りかけます。',
     category: 'mochi',
+    tags: ['トースター', 'バター', '黒胡椒'],
     ingredients: [
       { name: 'たまり餅', amount: '適量' },
       { name: '無塩バター', amount: '適量' },
@@ -263,6 +282,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['tamari'],
     author: '山田もち店',
+    publishedAt: '2026-08-28',
     status: 'published',
     seo: {
       title: 'たまり餅のバター黒胡椒',
@@ -278,6 +298,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '香ばしく焼いた白餅にガーリックバターをたっぷり塗り、もう一度トースターへ。にんにくとバターの香りが広がる簡単アレンジです。',
     category: 'mochi',
+    tags: ['トースター', 'バター', 'にんにく'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '2切れ' },
       { name: '市販のガーリックバター', amount: '大さじ1程度' },
@@ -295,6 +316,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: 'ガーリックバター餅の作り方｜トースターで簡単',
@@ -310,6 +332,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '香ばしく焼いた白餅に明太マヨをのせてもう一度トースターへ。明太子の塩気とマヨネーズのコクがよく合う簡単アレンジです。',
     category: 'mochi',
+    tags: ['トースター', '明太子', 'マヨネーズ'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '1切れ' },
       { name: '明太子', amount: '1/4本' },
@@ -325,6 +348,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: '明太子マヨ餅の作り方｜トースターで簡単アレンジ',
@@ -340,6 +364,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '香ばしく焼いた草餅につぶあんとバターを。よもぎの香り、あんこの甘み、バターのコクを一緒に楽しむ簡単なおやつです。',
     category: 'mochi',
+    tags: ['トースター', 'あんこ', 'バター', 'おやつ'],
     ingredients: [
       { name: '草餅', amount: '2切れ' },
       { name: 'つぶあん', amount: '適量' },
@@ -356,6 +381,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['yomogi'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: '草餅のあんバター｜よもぎ餅の簡単アレンジ',
@@ -371,6 +397,7 @@ export const recipes: RecipeRecord[] = [
     description:
       'やわらかくした白餅に、だしの効いためんつゆとバターを絡めるだけ。忙しい時にも作りやすい、シンプルなお餅アレンジです。',
     category: 'mochi',
+    tags: ['電子レンジ', 'だし', 'バター'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '2切れ' },
       { name: 'めんつゆ（4倍濃縮）', amount: '小さじ1' },
@@ -390,6 +417,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: 'だしバター餅｜電子レンジで簡単なお餅レシピ',
@@ -405,6 +433,7 @@ export const recipes: RecipeRecord[] = [
     description:
       '白餅にトマト、ソーセージまたはベーコン、チーズをのせて焼くだけ。朝食や軽食にも食べやすい、山田もち店の昔からのアレンジです。',
     category: 'mochi',
+    tags: ['トースター', 'チーズ', '朝食・軽食'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '1切れ' },
       { name: 'とろけるチーズ', amount: 'ひとつかみ', note: 'スライスチーズなら1枚' },
@@ -425,6 +454,7 @@ export const recipes: RecipeRecord[] = [
     ],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: '餅ピザの簡単レシピ｜トースターでチーズがとろける',
@@ -440,6 +470,7 @@ export const recipes: RecipeRecord[] = [
     description:
       'もちもちの白餅と海老を、にんにくの香るオリーブオイルで。おつまみにも食事にも楽しめる、山田もち店の旧レシピを整えたアレンジです。',
     category: 'mochi',
+    tags: ['フライパン', '海老', 'おつまみ'],
     ingredients: [
       { name: 'プレーン（白餅）', amount: '1切れ' },
       { name: 'むき海老', amount: '4尾' },
@@ -466,6 +497,7 @@ export const recipes: RecipeRecord[] = [
     notes: ['水分が残っていると油がはねやすいため、海老の水気をよく拭いてから加えてください。'],
     relatedProductIds: ['plain'],
     author: '山田もち店',
+    publishedAt: '2026-09-11',
     status: 'published',
     seo: {
       title: '餅と海老のアヒージョ｜切り餅のおつまみアレンジ',

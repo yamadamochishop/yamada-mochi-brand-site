@@ -383,6 +383,30 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(visibleHub, /山田家で親しんできた食べ方から/u);
   assert.doesNotMatch(visibleHub, /山田家で実際に食べている食べ方を、そのままご紹介します/u);
 
+  // YM-009: 検索/絞り込み・カードが初期HTML（SSR）に含まれること。
+  // Humanがfeaturedを選ぶまで注目レシピは出さず、人気順もPublic UIに出さない。
+  assert.doesNotMatch(visibleHub, /注目レシピ|人気順/u);
+  assert.match(visibleHub, /data-recipe-explorer/);
+  assert.match(visibleHub, /お餅で絞り込む/u);
+  assert.match(visibleHub, /13(<!-- -->)?件のレシピ/u);
+  // 写真が無い間は画像枠を出さないコンパクトなテキストカード。
+  assert.equal((visibleHub.match(/data-recipe-card=/g) ?? []).length, 13);
+  assert.doesNotMatch(visibleHub, /写真は準備中です|data-recipe-image="placeholder"/u);
+  assert.equal((visibleHub.match(/<img\b[^>]*>/g) ?? []).length, 1, 'only the hero image');
+  assert.match(visibleHub, /レシピを見る/u);
+  const hubJsonLd = [
+    ...hubHtml.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g),
+  ].map((match) => JSON.parse(match[1]));
+  const itemList = hubJsonLd.find((entry) => entry['@type'] === 'ItemList');
+  assert.ok(itemList);
+  assert.equal(itemList.itemListElement.length, 13);
+  assert.equal(
+    itemList.itemListElement.every((item: { url?: string }) =>
+      item.url?.startsWith(`${productionOrigin}/recipes/`),
+    ),
+    true,
+  );
+
   const detail = await fetch(`${localOrigin}/recipes/isobeyaki`, { headers: productionHeaders() });
   assert.equal(detail.status, 200);
   const detailHtml = await detail.text();
@@ -391,6 +415,12 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(detailHtml, /大さじ2/);
   // 商品詳細への内部リンク（Recipe → Product）。
   assert.match(detailHtml, /href="\/products\/plain"/);
+  // YM-009: 可視パンくず・基本情報・購入導線の見出し・商品一覧への導線。
+  assert.match(detailHtml, /aria-label="パンくずリスト"/u);
+  assert.match(detailHtml, /使うお餅/u);
+  assert.match(detailHtml, /このレシピに使ったお餅/u);
+  assert.match(detailHtml, /山田もち店のお餅をすべて見る/u);
+  assert.match(detailHtml, /href="\/products"/);
   // 購入導線: BASEが主CTA、食べチョク・ポケマルは副次リンク（URLは data/site の正本）。
   assert.match(detailHtml, /BASEで購入する/u);
   assert.match(detailHtml, /いつもの通販サイトからも購入できます/u);

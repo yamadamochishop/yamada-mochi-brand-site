@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/data/catalog';
 import { site } from '@/data/site';
+import { RecipeProductLink } from '@/components/recipe/RecipeProductLink';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { TrackedSalesChannelLink } from '@/components/TrackedSalesChannelLink';
 import { isNekoposEligible, nekoposHeadline } from '@/lib/shipping';
@@ -18,7 +19,13 @@ const secondaryChannelLinkClass =
  * 主CTAはBASE。食べチョク・ポケットマルシェは各生産者ページへの副次導線として、
  * 商品カードの下に控えめなテキストリンクで置く（取扱商品は各サイトの掲載に従う）。
  */
-export function RecipeProductCta({ products }: { products: Product[] }) {
+export function RecipeProductCta({
+  products,
+  recipeSlug,
+}: {
+  products: Product[];
+  recipeSlug?: string;
+}) {
   if (products.length === 0) return null;
 
   return (
@@ -33,14 +40,22 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
           id="recipe-product-title"
           className="mt-4 text-center font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"
         >
-          このレシピにおすすめのお餅
+          このレシピに使ったお餅
         </h2>
+        <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-7 text-sumi/65">
+          飛騨高山の家族で仕上げている切り餅です。商品ページで味の特徴や保存方法をご覧いただけます。
+        </p>
         <div
           className={`mt-12 grid gap-8 ${products.length > 1 ? 'sm:grid-cols-2 lg:grid-cols-3' : ''}`}
         >
           {products.map((product) => (
             <article key={product.slug} className="flex h-full flex-col bg-base p-6 md:p-7">
-              <Link href={`/products/${product.slug}`} className="block">
+              <RecipeProductLink
+                productSlug={product.slug}
+                recipeSlug={recipeSlug}
+                placement="recipe_product_cta"
+                className="block"
+              >
                 <div className="relative aspect-square overflow-hidden bg-[#efe9dc]">
                   <Image
                     src={product.cardImage || product.image}
@@ -50,7 +65,7 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
                     className="object-contain p-6"
                   />
                 </div>
-              </Link>
+              </RecipeProductLink>
               <h3 className="mt-6 font-serifjp text-2xl tracking-[0.12em]">{product.cardName}</h3>
               <p className="mt-4 text-sm leading-7 text-sumi/65">{product.short}</p>
               <p className="mt-4 text-sm tracking-[0.06em] text-sumi/80">
@@ -60,12 +75,14 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
                 <p className="mt-3 text-xs leading-6 text-green">{nekoposHeadline}</p>
               ) : null}
               <div className="mt-auto flex flex-col gap-3 pt-7 sm:flex-row">
-                <Link
-                  href={`/products/${product.slug}`}
+                <RecipeProductLink
+                  productSlug={product.slug}
+                  recipeSlug={recipeSlug}
+                  placement="recipe_product_cta"
                   className="inline-flex min-h-11 flex-1 items-center justify-center border border-sumi/20 px-5 text-sm tracking-[0.1em] transition hover:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
                 >
                   商品を見る
-                </Link>
+                </RecipeProductLink>
                 <TrackedBaseLink
                   href={product.baseUrl}
                   placement="recipe_product"
@@ -77,7 +94,15 @@ export function RecipeProductCta({ products }: { products: Product[] }) {
             </article>
           ))}
         </div>
-        <p className="mt-10 text-center text-sm leading-7 text-sumi/65">
+        <p className="mt-10 text-center">
+          <Link
+            href="/products"
+            className="inline-flex min-h-11 items-center text-sm tracking-[0.08em] underline underline-offset-8 transition hover:text-brown"
+          >
+            山田もち店のお餅をすべて見る
+          </Link>
+        </p>
+        <p className="mt-6 text-center text-sm leading-7 text-sumi/65">
           いつもの通販サイトからも購入できます
           <span className="mt-1 block text-xs tracking-[0.06em] text-sumi/60">
             <TrackedSalesChannelLink
