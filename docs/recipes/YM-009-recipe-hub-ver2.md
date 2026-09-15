@@ -8,7 +8,7 @@
 
 - 対象: `/recipes`、`/recipes/[slug]`、`data/recipes.ts`、`types/content-model.ts`、`lib/recipe-page.ts`、`lib/seo.ts`、`lib/analytics.ts`
 - 対象外: 本番デプロイ、merge、旧サイトの全面移植、Search Console 接続、価格・送料・EC変更
-- 正本は「現在のサイトに掲載されているレシピ」（`data/recipes.ts` の13件）。旧URLの扱いは YM-008A のまま（`lib/legacy-redirects.ts` に8本の301が既に実装済み、残りは `defer`）
+- 正本は「現在のサイトに掲載されているレシピ」（`data/recipes.ts` の13件）。旧URLは `lib/legacy-redirects.ts` に12本の301を実装済みで、残り12本は `defer` のまま維持する（2026-09-16同期前の「8本」は旧記載であり、このPRで追加する2本を含めて実体へ同期）。
 
 ## 2. データ項目の追加（`RecipeRecord`）
 

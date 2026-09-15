@@ -74,7 +74,8 @@ export const confirmedLegacyUrls = [
     status: 'confirmed',
     path: '/通販-https-yamadamochi-thebase-in',
     evidence: archive('20240225143515'),
-    disposition: 'defer',
+    disposition: 'redirect',
+    destination: '/products',
   },
   {
     status: 'confirmed',
@@ -170,7 +171,8 @@ export const confirmedLegacyUrls = [
     status: 'confirmed',
     path: '/about',
     evidence: archive('20240225151509'),
-    disposition: 'defer',
+    disposition: 'redirect',
+    destination: '/brand-story',
   },
   {
     status: 'confirmed',

@@ -54,6 +54,8 @@ const currentIndexablePaths = [
 const expectedLegacyRedirects = new Map([
   ['/商品紹介', '/products'],
   ['/お問い合わせ', '/contact'],
+  ['/通販-https-yamadamochi-thebase-in', '/products'],
+  ['/about', '/brand-story'],
   ['/アレンジレシピ', '/recipes'],
   ['/アレンジレシピ/餅のアレンジレシピ', '/recipes'],
   ['/2020/06/11/ピザ餅', '/recipes/mochi-pizza'],
@@ -63,8 +65,21 @@ const expectedLegacyRedirects = new Map([
   ['/2020/09/23/ガーリックバター餅', '/recipes/garlic-butter-mochi'],
   ['/2021/03/05/チーズゴマ海老餅', '/recipes/ebi-mochi-cheese-pizza'],
 ]);
-// 同等コンテンツが未作成の旧レシピURLは defer のまま残す。
-const deferredLegacyRecipePaths = ['/2020/06/05/カプレーゼ餅', '/2020/06/05/ゴルゴンゾーラ餅'];
+// Human判断で今回 redirect に移さない旧URLは、すべて defer のまま残す。
+const deferredLegacyPaths = [
+  '/アレンジレシピ/漬物のアレンジレシピ',
+  '/アレンジレシピ/お米-米粉のアレンジレシピ',
+  '/2020/06/05/カプレーゼ餅',
+  '/2020/06/05/ゴルゴンゾーラ餅',
+  '/2020/09/23/漬物ステーキ',
+  '/2020/10/09/たくあんクリームチーズ',
+  '/2020/10/09/米粉どらやき',
+  '/2021/01/05/もち玄米トマトリゾット風',
+  '/2021/01/10/もち玄米の豆乳クリームリゾット風',
+  '/2021/08/20/もち玄米チーズリゾット風',
+  '/j/privacy',
+  '/sitemap',
+] as const;
 let server: ChildProcess | undefined;
 let localOrigin = '';
 let localPort = 0;
@@ -213,7 +228,13 @@ test('Inventory: confirmed and unverified legacy URLs remain disjoint and redire
   const confirmedPaths = new Set(confirmedLegacyUrls.map(({ path }) => path));
   assert.equal(confirmedPaths.size, confirmedLegacyUrls.length);
 
-  for (const path of deferredLegacyRecipePaths) {
+  const deferredInventoryPaths = confirmedLegacyUrls
+    .filter(({ disposition }) => disposition === 'defer')
+    .map(({ path }) => path);
+  assert.equal(deferredInventoryPaths.length, 12);
+  assert.deepEqual(deferredInventoryPaths, deferredLegacyPaths);
+
+  for (const path of deferredLegacyPaths) {
     const entry = confirmedLegacyUrls.find((candidate) => candidate.path === path);
     assert.equal(entry?.disposition, 'defer', path);
     assert.equal(
