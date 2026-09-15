@@ -6,6 +6,8 @@ import type {
   Money,
   ProductCategory,
   RecipeCategory,
+  RecipeDifficulty,
+  RecipePopularity,
   RecipeRecord,
   SalesPeriod,
   SeasonalCommerce,
@@ -32,6 +34,10 @@ const productCategories = new Set<ProductCategory>([
 const seasonalities = new Set<Seasonality>(['year_round', 'seasonal']);
 
 const recipeCategories = new Set<RecipeCategory>(['mochi', 'pickles', 'seasonal']);
+
+const recipeDifficulties = new Set<RecipeDifficulty>(['easy', 'normal', 'hard']);
+
+const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 type Identified = {
   id: string;
@@ -297,6 +303,76 @@ function validateRecipeSteps(owner: string, recipe: RecipeRecord, errors: string
   });
 }
 
+/**
+ * タグ。検索・絞り込みのキーになるため、空文字と重複（表記ゆれ含む）を弾く。
+ */
+function validateRecipeTags(owner: string, tags: string[] | undefined, errors: string[]) {
+  if (!tags) return;
+  const seen = new Set<string>();
+  for (const tag of tags) {
+    const name = tag.trim();
+    if (!name) {
+      errors.push(`${owner}: empty tag`);
+      continue;
+    }
+    const key = ingredientKey(name);
+    if (seen.has(key)) errors.push(`${owner}: duplicate tag "${name}"`);
+    seen.add(key);
+  }
+}
+
+/**
+ * 人気指標。Search Console から転記した実測値だけを想定し、
+ * 負の値・比率の範囲外・日付形式のずれを転記ミスとして弾く。
+ * 数値を入れたら `measuredAt` を必須にし、「いつの値か」が分からない指標を残さない。
+ */
+function validateRecipePopularity(
+  owner: string,
+  popularity: RecipePopularity | undefined,
+  errors: string[],
+) {
+  if (!popularity) return;
+
+  const nonNegative = [
+    'score',
+    'searchConsoleClicks',
+    'searchConsoleImpressions',
+    'searchConsolePosition',
+  ] as const;
+  for (const field of nonNegative) {
+    const value = popularity[field];
+    if (value !== undefined && (!Number.isFinite(value) || value < 0)) {
+      errors.push(`${owner}: popularity.${field} must be zero or greater`);
+    }
+  }
+  for (const field of ['searchConsoleClicks', 'searchConsoleImpressions'] as const) {
+    const value = popularity[field];
+    if (value !== undefined && !Number.isInteger(value)) {
+      errors.push(`${owner}: popularity.${field} must be an integer`);
+    }
+  }
+
+  const ctr = popularity.searchConsoleCtr;
+  if (ctr !== undefined && (!Number.isFinite(ctr) || ctr < 0 || ctr > 1)) {
+    errors.push(`${owner}: popularity.searchConsoleCtr must be a ratio from 0 to 1`);
+  }
+
+  if (popularity.measuredAt !== undefined && !isoDatePattern.test(popularity.measuredAt)) {
+    errors.push(`${owner}: popularity.measuredAt must be YYYY-MM-DD`);
+  }
+
+  const hasMetric = [
+    popularity.score,
+    popularity.searchConsoleClicks,
+    popularity.searchConsoleImpressions,
+    popularity.searchConsoleCtr,
+    popularity.searchConsolePosition,
+  ].some((value) => value !== undefined);
+  if (hasMetric && !popularity.measuredAt) {
+    errors.push(`${owner}: popularity metrics require measuredAt`);
+  }
+}
+
 function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: string[]) {
   const owner = `recipe:${recipe.id}`;
 
@@ -326,6 +402,21 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
     (!Number.isInteger(recipe.cookingTimeMinutes) || recipe.cookingTimeMinutes <= 0)
   ) {
     errors.push(`${owner}: cookingTimeMinutes must be a positive integer`);
+  }
+
+  // 難易度も同じくHuman確認後の任意項目。
+  if (recipe.difficulty !== undefined && !recipeDifficulties.has(recipe.difficulty)) {
+    errors.push(`${owner}: invalid difficulty "${recipe.difficulty}"`);
+  }
+
+  validateRecipeTags(owner, recipe.tags, errors);
+  validateRecipePopularity(owner, recipe.popularity, errors);
+
+  for (const field of ['publishedAt', 'updatedAt'] as const) {
+    const value = recipe[field];
+    if (value !== undefined && !isoDatePattern.test(value)) {
+      errors.push(`${owner}: ${field} must be YYYY-MM-DD`);
+    }
   }
 
   // canonicalPathは実際のルートと一致させる。ずれると自己参照canonicalが別URLを指す。

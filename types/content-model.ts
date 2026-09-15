@@ -257,6 +257,28 @@ export type RecipeColumn = {
   body: string;
 };
 
+/** 難易度。Humanが実際に作って判断した場合にだけ設定する。 */
+export type RecipeDifficulty = 'easy' | 'normal' | 'hard';
+
+/**
+ * 人気指標。Search Console・GA4の実測値を後から転記する枠で、
+ * 表示・並び替えの根拠にする。未接続の間はすべて未設定のままにする。
+ * 値を入れるときは `measuredAt` と `period` で「いつの・どの期間の値か」を残す。
+ */
+export type RecipePopularity = {
+  /** 並び替え用の総合スコア。算出式は docs/recipes で決めてから入れる。 */
+  score?: number;
+  searchConsoleClicks?: number;
+  searchConsoleImpressions?: number;
+  /** 0〜1 の比率（%ではない）。 */
+  searchConsoleCtr?: number;
+  searchConsolePosition?: number;
+  /** 転記した日（YYYY-MM-DD）。 */
+  measuredAt?: string;
+  /** 集計期間の説明（例: "2026-08-01〜2026-08-28"）。 */
+  period?: string;
+};
+
 export type RecipeRecord = {
   id: string;
   slug: string;
@@ -264,13 +286,23 @@ export type RecipeRecord = {
   description: string;
   category: RecipeCategory;
   season?: string;
+  /**
+   * 検索・絞り込み用の分類語。本文（手順・説明・アレンジ）に書かれている
+   * 調理法や食べる場面だけを付け、本文にない特徴を付けない。
+   */
+  tags?: string[];
   ingredients: RecipeIngredient[];
   steps: RecipeStep[];
   /** 人数・分量はHuman確認が取れたレシピにだけ設定する（推測で埋めない）。 */
   servings?: string;
   /** 調理時間もHuman確認が取れた場合にだけ設定する。 */
   cookingTimeMinutes?: number;
+  /** 難易度もHuman確認が取れた場合にだけ設定する。 */
+  difficulty?: RecipeDifficulty;
   relatedProductIds: string[];
+  /** 一覧の「注目レシピ」に優先して出す。編集判断で付ける。 */
+  featured?: boolean;
+  popularity?: RecipePopularity;
   mainImage?: MediaAsset;
   stepImages?: MediaAsset[];
   author?: string;

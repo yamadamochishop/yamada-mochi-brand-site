@@ -523,3 +523,61 @@ test('Claude mutation: cross-year period with corrupt day boundaries is rejected
   assert.match(errors, /startDay/);
   assert.match(errors, /endDay/);
 });
+
+test('Recipe: popularity, difficulty, tags, and dates are validated (YM-009)', () => {
+  const valid = cloneContentModel();
+  valid.recipes.push({
+    ...recipeFixture(),
+    tags: ['トースター', 'おやつ'],
+    difficulty: 'easy',
+    featured: true,
+    publishedAt: '2026-09-15',
+    popularity: {
+      searchConsoleClicks: 12,
+      searchConsoleImpressions: 340,
+      searchConsoleCtr: 0.035,
+      searchConsolePosition: 8.4,
+      measuredAt: '2026-09-15',
+      period: '2026-08-18〜2026-09-14',
+    },
+  });
+  assert.deepEqual(validateContentModel(valid), []);
+
+  const cases: [Partial<RecipeRecord>, RegExp][] = [
+    [{ difficulty: 'expert' as RecipeRecord['difficulty'] }, /invalid difficulty "expert"/],
+    [{ tags: ['トースター', ' トースター '] }, /duplicate tag/],
+    [{ tags: ['   '] }, /empty tag/],
+    [{ publishedAt: '2026/09/15' }, /publishedAt must be YYYY-MM-DD/],
+    [
+      { popularity: { searchConsoleClicks: -1, measuredAt: '2026-09-15' } },
+      /searchConsoleClicks must be zero or greater/,
+    ],
+    [
+      { popularity: { searchConsoleClicks: 1.5, measuredAt: '2026-09-15' } },
+      /searchConsoleClicks must be an integer/,
+    ],
+    [
+      { popularity: { searchConsoleCtr: 3.5, measuredAt: '2026-09-15' } },
+      /searchConsoleCtr must be a ratio from 0 to 1/,
+    ],
+    [{ popularity: { score: 10 } }, /popularity metrics require measuredAt/],
+    [{ popularity: { score: 10, measuredAt: 'yesterday' } }, /measuredAt must be YYYY-MM-DD/],
+  ];
+
+  for (const [override, expectedError] of cases) {
+    const candidate = cloneContentModel();
+    candidate.recipes.push({ ...recipeFixture(), ...override });
+    assert.match(validateContentModel(candidate).join('\n'), expectedError);
+  }
+});
+
+test('Recipe: every published recipe carries tags and publishedAt for search and sorting', () => {
+  for (const recipe of contentModel.recipes) {
+    assert.ok(recipe.tags && recipe.tags.length > 0, `${recipe.slug}: tags`);
+    assert.ok(recipe.publishedAt, `${recipe.slug}: publishedAt`);
+    // 未確認の値は入れない（YM-007 / YM-008A の方針を維持）。
+    assert.equal(recipe.cookingTimeMinutes, undefined, `${recipe.slug}: cookingTimeMinutes`);
+    assert.equal(recipe.servings, undefined, `${recipe.slug}: servings`);
+    assert.equal(recipe.difficulty, undefined, `${recipe.slug}: difficulty`);
+  }
+});
