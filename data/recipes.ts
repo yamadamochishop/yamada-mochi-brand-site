@@ -297,6 +297,12 @@ export const recipes: RecipeRecord[] = [
     title: 'ガーリックバター餅',
     description:
       '香ばしく焼いた白餅にガーリックバターをたっぷり塗り、もう一度トースターへ。にんにくとバターの香りが広がる簡単アレンジです。',
+    mainImage: {
+      src: '/images/recipes/garlic-butter-mochi.webp',
+      alt: 'ガーリックバターをのせて香ばしく焼いた白餅の盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['トースター', 'バター', 'にんにく'],
     ingredients: [
@@ -331,6 +337,12 @@ export const recipes: RecipeRecord[] = [
     title: '明太子マヨ餅',
     description:
       '香ばしく焼いた白餅に明太マヨをのせてもう一度トースターへ。明太子の塩気とマヨネーズのコクがよく合う簡単アレンジです。',
+    mainImage: {
+      src: '/images/recipes/mentaiko-mayo-mochi.webp',
+      alt: '明太マヨと刻み海苔をのせた焼き餅の盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['トースター', '明太子', 'マヨネーズ'],
     ingredients: [
@@ -396,6 +408,12 @@ export const recipes: RecipeRecord[] = [
     title: 'レンジで簡単 だしバター餅',
     description:
       'やわらかくした白餅に、だしの効いためんつゆとバターを絡めるだけ。忙しい時にも作りやすい、シンプルなお餅アレンジです。',
+    mainImage: {
+      src: '/images/recipes/dashi-butter-mochi.webp',
+      alt: 'だしバターを絡めた白餅の盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['電子レンジ', 'だし', 'バター'],
     ingredients: [
@@ -432,6 +450,12 @@ export const recipes: RecipeRecord[] = [
     title: 'トースターで簡単 ピザ餅',
     description:
       '白餅にトマト、ソーセージまたはベーコン、チーズをのせて焼くだけ。朝食や軽食にも食べやすい、山田もち店の昔からのアレンジです。',
+    mainImage: {
+      src: '/images/recipes/mochi-pizza.webp',
+      alt: 'トマトとチーズをのせたピザ餅の盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['トースター', 'チーズ', '朝食・軽食'],
     ingredients: [
@@ -469,6 +493,12 @@ export const recipes: RecipeRecord[] = [
     title: '餅と海老のアヒージョ',
     description:
       'もちもちの白餅と海老を、にんにくの香るオリーブオイルで。おつまみにも食事にも楽しめる、山田もち店の旧レシピを整えたアレンジです。',
+    mainImage: {
+      src: '/images/recipes/mochi-ebi-ajillo.webp',
+      alt: '海老と白餅をにんにく香るオリーブオイルで仕上げたアヒージョの盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['フライパン', '海老', 'おつまみ'],
     ingredients: [

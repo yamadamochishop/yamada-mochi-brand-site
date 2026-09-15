@@ -198,8 +198,15 @@ test('filter options: products with recipes and unique tags in appearance order'
 test('getRecipeInventory: one row per recipe with image and popularity status', () => {
   const rows = getRecipeInventory();
   assert.equal(rows.length, 13);
+  const imageRecipeIds = new Set([
+    'garlic-butter-mochi',
+    'mentaiko-mayo-mochi',
+    'dashi-butter-mochi',
+    'mochi-pizza',
+    'mochi-ebi-ajillo',
+  ]);
   for (const row of rows) {
-    assert.equal(row.hasImage, false);
+    assert.equal(row.hasImage, imageRecipeIds.has(row.slug));
     assert.equal(row.featured, false);
     assert.equal(row.popularityScore, undefined);
     assert.ok(row.tags.length > 0);
