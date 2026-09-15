@@ -50,7 +50,12 @@ export function RecipeProductCta({
         >
           {products.map((product) => (
             <article key={product.slug} className="flex h-full flex-col bg-base p-6 md:p-7">
-              <Link href={`/products/${product.slug}`} className="block">
+              <RecipeProductLink
+                productSlug={product.slug}
+                recipeSlug={recipeSlug}
+                placement="recipe_product_cta"
+                className="block"
+              >
                 <div className="relative aspect-square overflow-hidden bg-[#efe9dc]">
                   <Image
                     src={product.cardImage || product.image}
@@ -60,7 +65,7 @@ export function RecipeProductCta({
                     className="object-contain p-6"
                   />
                 </div>
-              </Link>
+              </RecipeProductLink>
               <h3 className="mt-6 font-serifjp text-2xl tracking-[0.12em]">{product.cardName}</h3>
               <p className="mt-4 text-sm leading-7 text-sumi/65">{product.short}</p>
               <p className="mt-4 text-sm tracking-[0.06em] text-sumi/80">

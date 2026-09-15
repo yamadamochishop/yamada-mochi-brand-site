@@ -3,6 +3,7 @@ import type {
   Commerce,
   ContentModelData,
   MediaAsset,
+  MediaSourceType,
   Money,
   ProductCategory,
   RecipeCategory,
@@ -37,7 +38,22 @@ const recipeCategories = new Set<RecipeCategory>(['mochi', 'pickles', 'seasonal'
 
 const recipeDifficulties = new Set<RecipeDifficulty>(['easy', 'normal', 'hard']);
 
+const mediaSourceTypes = new Set<MediaSourceType>([
+  'original_photo',
+  'generated',
+  'edited',
+  'provided',
+]);
+
+const recipePopularityMethods = new Set<RecipePopularity['method']>(['search_console_clicks']);
+
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidIsoDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !isoDatePattern.test(value)) return false;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
+}
 
 type Identified = {
   id: string;
@@ -243,6 +259,10 @@ function validateRecipeImage(owner: string, image: MediaAsset | undefined, error
   if (!image) return;
   if (!image.src.trim()) errors.push(`${owner}: missing image src`);
   if (!image.alt.trim()) errors.push(`${owner}: missing image alt text`);
+  if (!image.sourceType) errors.push(`${owner}: missing image sourceType`);
+  else if (!mediaSourceTypes.has(image.sourceType)) {
+    errors.push(`${owner}: invalid image sourceType "${image.sourceType}"`);
+  }
 }
 
 /**
@@ -322,9 +342,8 @@ function validateRecipeTags(owner: string, tags: string[] | undefined, errors: s
 }
 
 /**
- * 人気指標。Search Console から転記した実測値だけを想定し、
+ * 人気指標。同じ method / version / 集計期間を持つsnapshotだけを比較する。
  * 負の値・比率の範囲外・日付形式のずれを転記ミスとして弾く。
- * 数値を入れたら `measuredAt` を必須にし、「いつの値か」が分からない指標を残さない。
  */
 function validateRecipePopularity(
   owner: string,
@@ -332,6 +351,28 @@ function validateRecipePopularity(
   errors: string[],
 ) {
   if (!popularity) return;
+
+  if (!recipePopularityMethods.has(popularity.method)) {
+    errors.push(`${owner}: invalid popularity.method "${popularity.method}"`);
+  }
+  if (typeof popularity.version !== 'string' || !popularity.version.trim()) {
+    errors.push(`${owner}: missing popularity.version`);
+  }
+
+  const periodDates = ['periodStart', 'periodEnd', 'measuredAt'] as const;
+  for (const field of periodDates) {
+    const value = popularity[field];
+    if (!isValidIsoDate(value)) {
+      errors.push(`${owner}: popularity.${field} must be YYYY-MM-DD`);
+    }
+  }
+  if (
+    isValidIsoDate(popularity.periodStart) &&
+    isValidIsoDate(popularity.periodEnd) &&
+    popularity.periodStart > popularity.periodEnd
+  ) {
+    errors.push(`${owner}: popularity.periodStart must be on or before periodEnd`);
+  }
 
   const nonNegative = [
     'score',
@@ -357,10 +398,6 @@ function validateRecipePopularity(
     errors.push(`${owner}: popularity.searchConsoleCtr must be a ratio from 0 to 1`);
   }
 
-  if (popularity.measuredAt !== undefined && !isoDatePattern.test(popularity.measuredAt)) {
-    errors.push(`${owner}: popularity.measuredAt must be YYYY-MM-DD`);
-  }
-
   const hasMetric = [
     popularity.score,
     popularity.searchConsoleClicks,
@@ -368,9 +405,7 @@ function validateRecipePopularity(
     popularity.searchConsoleCtr,
     popularity.searchConsolePosition,
   ].some((value) => value !== undefined);
-  if (hasMetric && !popularity.measuredAt) {
-    errors.push(`${owner}: popularity metrics require measuredAt`);
-  }
+  if (!hasMetric) errors.push(`${owner}: popularity requires at least one metric`);
 }
 
 function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: string[]) {

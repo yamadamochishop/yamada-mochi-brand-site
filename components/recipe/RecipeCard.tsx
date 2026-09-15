@@ -5,8 +5,8 @@ import { difficultyLabels, type RecipeListItem } from '@/lib/recipe-page';
 /**
  * レシピ一覧カード。
  *
- * 写真が未撮影のレシピは、写真の代わりに文字だけのプレースホルダ枠を出す
- * （画像を生成して埋めない）。`mainImage` を登録すれば写真に切り替わり、
+ * 写真が未撮影のレシピは画像枠を出さず、コンパクトなテキストカードにする。
+ * `mainImage` を登録すれば写真付きカードに切り替わり、
  * `sourceType: 'generated'` の画像には「盛り付けイメージ」の注記を添えて
  * 実写と区別する。
  *
@@ -30,8 +30,8 @@ export function RecipeCard({
       data-recipe-card={recipe.slug}
       className="flex h-full flex-col border border-sumi/15 bg-base"
     >
-      <Link href={href} tabIndex={-1} aria-hidden="true" className="block">
-        {recipe.mainImage ? (
+      {recipe.mainImage ? (
+        <Link href={href} aria-label={`${recipe.title}のレシピを見る`} className="block">
           <figure className="relative m-0">
             <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc]">
               <Image
@@ -43,24 +43,14 @@ export function RecipeCard({
                 className="object-cover"
               />
             </div>
-            {recipe.mainImage.generated ? (
+            {recipe.mainImage.imageNotice ? (
               <figcaption className="absolute bottom-2 right-2 bg-base/90 px-2 py-1 text-[11px] tracking-[0.08em] text-sumi/70">
-                盛り付けイメージ
+                {recipe.mainImage.imageNotice}
               </figcaption>
             ) : null}
           </figure>
-        ) : (
-          <div
-            data-recipe-image="placeholder"
-            className="flex aspect-[16/9] flex-col items-center justify-center gap-2 border-b border-sumi/10 bg-[#efe9dc] text-center md:aspect-[4/3]"
-          >
-            <span className="text-[10px] tracking-brand text-brown/70">RECIPE</span>
-            <span className="font-serifjp text-sm tracking-[0.12em] text-sumi/55">
-              写真は準備中です
-            </span>
-          </div>
-        )}
-      </Link>
+        </Link>
+      ) : null}
 
       <div className="flex flex-1 flex-col p-5 md:p-6">
         {recipe.productLabels.length > 0 ? (

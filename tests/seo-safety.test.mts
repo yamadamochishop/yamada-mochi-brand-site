@@ -383,14 +383,15 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(visibleHub, /山田家で親しんできた食べ方から/u);
   assert.doesNotMatch(visibleHub, /山田家で実際に食べている食べ方を、そのままご紹介します/u);
 
-  // YM-009: 注目レシピ・検索/絞り込み・カードが初期HTML（SSR）に含まれること。
-  assert.match(visibleHub, /注目レシピ/u);
+  // YM-009: 検索/絞り込み・カードが初期HTML（SSR）に含まれること。
+  // Humanがfeaturedを選ぶまで注目レシピは出さず、人気順もPublic UIに出さない。
+  assert.doesNotMatch(visibleHub, /注目レシピ|人気順/u);
   assert.match(visibleHub, /data-recipe-explorer/);
   assert.match(visibleHub, /お餅で絞り込む/u);
   assert.match(visibleHub, /13(<!-- -->)?件のレシピ/u);
-  // 注目3件 + 全件13件 = 16カード。写真が無い間は文字だけのプレースホルダ枠。
-  assert.equal((visibleHub.match(/data-recipe-card=/g) ?? []).length, 16);
-  assert.equal((visibleHub.match(/data-recipe-image="placeholder"/g) ?? []).length, 16);
+  // 写真が無い間は画像枠を出さないコンパクトなテキストカード。
+  assert.equal((visibleHub.match(/data-recipe-card=/g) ?? []).length, 13);
+  assert.doesNotMatch(visibleHub, /写真は準備中です|data-recipe-image="placeholder"/u);
   assert.equal((visibleHub.match(/<img\b[^>]*>/g) ?? []).length, 1, 'only the hero image');
   assert.match(visibleHub, /レシピを見る/u);
   const hubJsonLd = [

@@ -17,7 +17,7 @@ import type { RecipeRecord } from '../types/content-model.ts';
  * Recipe構造化データが自動的に有効になる（`lib/recipe-page.ts` を参照）。
  *
  * `tags` は本文に書かれている調理法・味・食べる場面だけから付ける（検索・絞り込み用）。
- * `publishedAt` はこのサイトで公開した日（PRのマージ日）。
+ * `publishedAt` は最初の成功したProduction公開日。事実を確認できない場合は省略する。
  * `featured` / `popularity` は未設定。Search Console・GA4の実測が取れてから
  * `docs/recipes/YM-009-recipe-hub-ver2.md` の手順で転記する。
  */

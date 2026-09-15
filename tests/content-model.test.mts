@@ -215,7 +215,12 @@ test('Recipe: a registered image without alt text fails validation', () => {
   const mainImage = cloneContentModel();
   mainImage.recipes.push({
     ...recipeFixture(),
-    mainImage: { src: '/images/recipe-sample.webp', alt: '', role: 'primary' },
+    mainImage: {
+      src: '/images/recipe-sample.webp',
+      alt: '',
+      role: 'primary',
+      sourceType: 'original_photo',
+    },
   });
   assert.match(validateContentModel(mainImage).join('\n'), /missing image alt text/);
 
@@ -226,7 +231,12 @@ test('Recipe: a registered image without alt text fails validation', () => {
       {
         position: 1,
         instruction: 'お餅を焼きます。',
-        image: { src: '/images/recipe-sample-step-1.webp', alt: '  ', role: 'recipe_step' },
+        image: {
+          src: '/images/recipe-sample-step-1.webp',
+          alt: '  ',
+          role: 'recipe_step',
+          sourceType: 'original_photo',
+        },
       },
     ],
   });
@@ -302,7 +312,12 @@ test('Recipe: mochi-yakikata keeps the toaster method as the only structured-dat
   // 写真が登録された時点でも、Recipe構造化データの手順にvariationは混ざらない。
   const withImage = recipeJsonLd({
     ...yakikata,
-    mainImage: { src: '/images/recipe-sample.webp', alt: 'sample', role: 'primary' },
+    mainImage: {
+      src: '/images/recipe-sample.webp',
+      alt: 'sample',
+      role: 'primary',
+      sourceType: 'original_photo',
+    },
   });
   assert.ok(withImage);
   assert.equal(withImage.recipeInstructions.length, 3);
@@ -376,8 +391,18 @@ test('Recipe: stepImages entries require alt text', () => {
   candidate.recipes.push({
     ...recipeFixture(),
     stepImages: [
-      { src: '/images/recipe-sample-step-1.webp', alt: 'お餅を焼く', role: 'recipe_step' },
-      { src: '/images/recipe-sample-step-2.webp', alt: '', role: 'recipe_step' },
+      {
+        src: '/images/recipe-sample-step-1.webp',
+        alt: 'お餅を焼く',
+        role: 'recipe_step',
+        sourceType: 'original_photo',
+      },
+      {
+        src: '/images/recipe-sample-step-2.webp',
+        alt: '',
+        role: 'recipe_step',
+        sourceType: 'original_photo',
+      },
     ],
   });
   assert.match(validateContentModel(candidate).join('\n'), /missing image alt text/);
@@ -387,9 +412,27 @@ test('Recipe: a registered image without a src fails validation', () => {
   const candidate = cloneContentModel();
   candidate.recipes.push({
     ...recipeFixture(),
-    mainImage: { src: '  ', alt: '検証用レシピの完成写真', role: 'primary' },
+    mainImage: {
+      src: '  ',
+      alt: '検証用レシピの完成写真',
+      role: 'primary',
+      sourceType: 'original_photo',
+    },
   });
   assert.match(validateContentModel(candidate).join('\n'), /missing image src/);
+});
+
+test('Recipe: a registered image requires its sourceType', () => {
+  const candidate = cloneContentModel();
+  candidate.recipes.push({
+    ...recipeFixture(),
+    mainImage: {
+      src: '/images/recipe-sample.webp',
+      alt: '検証用レシピの完成写真',
+      role: 'primary',
+    },
+  });
+  assert.match(validateContentModel(candidate).join('\n'), /missing image sourceType/);
 });
 
 test('Recipe: a duplicate relatedProductId fails validation', () => {
@@ -533,12 +576,15 @@ test('Recipe: popularity, difficulty, tags, and dates are validated (YM-009)', (
     featured: true,
     publishedAt: '2026-09-15',
     popularity: {
+      method: 'search_console_clicks',
+      version: 'v1',
+      periodStart: '2026-08-18',
+      periodEnd: '2026-09-14',
       searchConsoleClicks: 12,
       searchConsoleImpressions: 340,
       searchConsoleCtr: 0.035,
       searchConsolePosition: 8.4,
       measuredAt: '2026-09-15',
-      period: '2026-08-18〜2026-09-14',
     },
   });
   assert.deepEqual(validateContentModel(valid), []);
@@ -549,19 +595,87 @@ test('Recipe: popularity, difficulty, tags, and dates are validated (YM-009)', (
     [{ tags: ['   '] }, /empty tag/],
     [{ publishedAt: '2026/09/15' }, /publishedAt must be YYYY-MM-DD/],
     [
-      { popularity: { searchConsoleClicks: -1, measuredAt: '2026-09-15' } },
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: 'v1',
+          periodStart: '2026-08-18',
+          periodEnd: '2026-09-14',
+          measuredAt: '2026-09-15',
+          searchConsoleClicks: -1,
+        },
+      },
       /searchConsoleClicks must be zero or greater/,
     ],
     [
-      { popularity: { searchConsoleClicks: 1.5, measuredAt: '2026-09-15' } },
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: 'v1',
+          periodStart: '2026-08-18',
+          periodEnd: '2026-09-14',
+          measuredAt: '2026-09-15',
+          searchConsoleClicks: 1.5,
+        },
+      },
       /searchConsoleClicks must be an integer/,
     ],
     [
-      { popularity: { searchConsoleCtr: 3.5, measuredAt: '2026-09-15' } },
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: 'v1',
+          periodStart: '2026-08-18',
+          periodEnd: '2026-09-14',
+          measuredAt: '2026-09-15',
+          searchConsoleCtr: 3.5,
+        },
+      },
       /searchConsoleCtr must be a ratio from 0 to 1/,
     ],
-    [{ popularity: { score: 10 } }, /popularity metrics require measuredAt/],
-    [{ popularity: { score: 10, measuredAt: 'yesterday' } }, /measuredAt must be YYYY-MM-DD/],
+    [
+      { popularity: { score: 10 } as RecipeRecord['popularity'] },
+      /popularity\.periodStart must be YYYY-MM-DD/,
+    ],
+    [
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: 'v1',
+          periodStart: '2026-09-15',
+          periodEnd: '2026-09-14',
+          measuredAt: 'yesterday',
+          score: 10,
+        },
+      },
+      /periodStart must be on or before periodEnd/,
+    ],
+    [
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: ' ',
+          periodStart: '2026-08-18',
+          periodEnd: '2026-09-14',
+          measuredAt: '2026-09-15',
+          score: 10,
+        },
+      },
+      /missing popularity\.version/,
+    ],
+    [
+      {
+        popularity: {
+          method: 'search_console_clicks',
+          version: 'v1',
+          periodStart: '2026-02-30',
+          periodEnd: '2026-09-14',
+          measuredAt: '2026-09-15',
+          score: 10,
+        },
+      },
+      /periodStart must be YYYY-MM-DD/,
+    ],
   ];
 
   for (const [override, expectedError] of cases) {

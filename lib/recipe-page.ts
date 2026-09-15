@@ -1,6 +1,6 @@
 import { products, type Product } from '../data/catalog.ts';
 import { recipes } from '../data/recipes.ts';
-import type { RecipeDifficulty, RecipeRecord } from '../types/content-model.ts';
+import type { RecipeDifficulty, RecipePopularity, RecipeRecord } from '../types/content-model.ts';
 
 /**
  * Recipe Hubの表示モデル。
@@ -105,37 +105,81 @@ export function getRecipeProductLabels(recipe: RecipeRecord): string[] {
 // ---------------------------------------------------------------------------
 // 並び替え・注目レシピ・検索
 //
-// 人気指標（`popularity`）は Search Console / GA4 の実測を転記する枠で、
-// 現時点では全件未設定。未設定のレシピはデータ順（`data/recipes.ts`）に落ちる。
+// 人気指標（`popularity`）は画像制作・SEO改善の内部優先度に使う。
+// Public UIでは未使用。比較する場合も、同じsnapshotだけに限定する。
 // ---------------------------------------------------------------------------
 
 export type RecipeSortKey = 'default' | 'popular' | 'newest';
+export type PublicRecipeSortKey = Exclude<RecipeSortKey, 'popular'>;
 
-export const recipeSortOptions: { value: RecipeSortKey; label: string }[] = [
+export const recipeSortOptions: { value: PublicRecipeSortKey; label: string }[] = [
   { value: 'default', label: 'おすすめ順' },
-  { value: 'popular', label: '人気順' },
   { value: 'newest', label: '新着順' },
 ];
 
-function popularityScore(recipe: RecipeRecord): number {
-  const popularity = recipe.popularity;
-  if (!popularity) return -1;
-  if (popularity.score !== undefined) return popularity.score;
-  // scoreが未算出でもクリック数があればそれを暫定スコアにする。
-  if (popularity.searchConsoleClicks !== undefined) return popularity.searchConsoleClicks;
-  return -1;
+export type ComparablePopularitySnapshot = {
+  key: string;
+  basis: 'score' | 'searchConsoleClicks';
+};
+
+function popularitySnapshotKey(popularity: RecipePopularity): string {
+  return [
+    popularity.method,
+    popularity.version,
+    popularity.periodStart,
+    popularity.periodEnd,
+    popularity.measuredAt,
+  ].join(':');
+}
+
+/**
+ * 全件が同一snapshotで同じ基準値を持つ場合だけ、人気値を比較できる。
+ * scoreとraw clicksを混在させず、部分的・異期間の転記をランキングに使わない。
+ */
+export function getComparablePopularitySnapshot(
+  list: RecipeRecord[],
+): ComparablePopularitySnapshot | null {
+  if (list.length === 0 || list.some((recipe) => !recipe.popularity)) return null;
+
+  const popularities = list.map((recipe) => recipe.popularity!);
+  const snapshotKey = popularitySnapshotKey(popularities[0]);
+  if (popularities.some((popularity) => popularitySnapshotKey(popularity) !== snapshotKey)) {
+    return null;
+  }
+  if (popularities.every((popularity) => popularity.score !== undefined)) {
+    return { key: snapshotKey, basis: 'score' };
+  }
+  if (
+    popularities.every((popularity) => popularity.score === undefined) &&
+    popularities.every((popularity) => popularity.searchConsoleClicks !== undefined)
+  ) {
+    return { key: snapshotKey, basis: 'searchConsoleClicks' };
+  }
+  return null;
+}
+
+function popularityScore(
+  recipe: RecipeRecord,
+  basis: ComparablePopularitySnapshot['basis'],
+): number {
+  if (basis === 'score') return recipe.popularity!.score!;
+  return recipe.popularity!.searchConsoleClicks!;
 }
 
 /**
  * 並び替え。`sort` は安定ソートなので、同点はデータ順のまま残る。
- * - popular: popularity.score（無ければclicks）降順。未設定は末尾。
+ * - popular: 比較可能な同一snapshotがある場合だけ score または clicks 降順。
  * - newest: publishedAt 降順。未設定は末尾。
  * - default: データ順（編集順）。
  */
 export function sortRecipes(list: RecipeRecord[], key: RecipeSortKey): RecipeRecord[] {
   const copy = [...list];
   if (key === 'popular') {
-    return copy.sort((a, b) => popularityScore(b) - popularityScore(a));
+    const snapshot = getComparablePopularitySnapshot(copy);
+    if (!snapshot) return copy;
+    return copy.sort(
+      (a, b) => popularityScore(b, snapshot.basis) - popularityScore(a, snapshot.basis),
+    );
   }
   if (key === 'newest') {
     return copy.sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
@@ -145,20 +189,14 @@ export function sortRecipes(list: RecipeRecord[], key: RecipeSortKey): RecipeRec
 
 /**
  * 一覧の「注目レシピ」。
- * 1. `featured: true` のレシピをデータ順で
- * 2. 足りなければ人気指標が高い順で補う
- * 3. それでも足りなければデータ順で補う（実測が無い間はこの仮の並びになる）
+ * Humanが `featured: true` と明示したレシピだけを表示する。
+ * 仮のデータ順や人気値で補完しない。
  */
-export function getFeaturedRecipes(limit = FEATURED_RECIPE_COUNT): RecipeRecord[] {
-  const featured = publishedRecipes.filter((recipe) => recipe.featured);
-  const measured = sortRecipes(
-    publishedRecipes.filter((recipe) => !recipe.featured && popularityScore(recipe) >= 0),
-    'popular',
-  );
-  const rest = publishedRecipes.filter(
-    (recipe) => !featured.includes(recipe) && !measured.includes(recipe),
-  );
-  return [...featured, ...measured, ...rest].slice(0, limit);
+export function getFeaturedRecipes(
+  limit = FEATURED_RECIPE_COUNT,
+  list: RecipeRecord[] = publishedRecipes,
+): RecipeRecord[] {
+  return list.filter((recipe) => recipe.featured).slice(0, limit);
 }
 
 /** 検索・絞り込みで使う商品の選択肢。レシピが参照している商品だけ。 */
@@ -193,8 +231,7 @@ export type RecipeListItem = {
   cookingTimeMinutes?: number;
   difficulty?: RecipeDifficulty;
   publishedAt?: string;
-  popularityScore: number;
-  mainImage?: { src: string; alt: string; generated: boolean };
+  mainImage?: { src: string; alt: string; imageNotice?: string };
   /** 検索照合用。タイトル・説明・材料名・タグ・商品名を正規化して連結したもの。 */
   searchText: string;
 };
@@ -204,10 +241,18 @@ export function normalizeSearchText(text: string): string {
   return text.normalize('NFKC').toLowerCase().replace(/\s+/g, '');
 }
 
+export const generatedRecipeImageNotice = '盛り付けイメージ';
+
+/** AI生成画像には、実写と誤認させないための注記を返す。 */
+export function recipeImageNotice(image: RecipeRecord['mainImage']): string | undefined {
+  return image?.sourceType === 'generated' ? generatedRecipeImageNotice : undefined;
+}
+
 export function toRecipeListItem(recipe: RecipeRecord): RecipeListItem {
   const recipeProducts = getRecipeProducts(recipe);
   const productLabels = getRecipeProductLabels(recipe);
   const tags = recipe.tags ?? [];
+  const imageNotice = recipeImageNotice(recipe.mainImage);
   const searchSource = [
     recipe.title,
     recipe.description,
@@ -227,13 +272,12 @@ export function toRecipeListItem(recipe: RecipeRecord): RecipeListItem {
     cookingTimeMinutes: recipe.cookingTimeMinutes,
     difficulty: recipe.difficulty,
     publishedAt: recipe.publishedAt,
-    popularityScore: popularityScore(recipe),
     ...(recipe.mainImage
       ? {
           mainImage: {
             src: recipe.mainImage.src,
             alt: recipe.mainImage.alt,
-            generated: recipe.mainImage.sourceType === 'generated',
+            ...(imageNotice ? { imageNotice } : {}),
           },
         }
       : {}),
@@ -245,7 +289,7 @@ export type RecipeFilter = {
   query?: string;
   productSlug?: string;
   tag?: string;
-  sort?: RecipeSortKey;
+  sort?: PublicRecipeSortKey;
 };
 
 /**
@@ -262,9 +306,6 @@ export function filterRecipeList(items: RecipeListItem[], filter: RecipeFilter):
   });
 
   const sort = filter.sort ?? 'default';
-  if (sort === 'popular') {
-    return [...matched].sort((a, b) => b.popularityScore - a.popularityScore);
-  }
   if (sort === 'newest') {
     return [...matched].sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
   }

@@ -3,11 +3,12 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
 import { trackRecipeFilterUse, trackRecipeSearch } from '@/lib/analytics';
+import { createRecipeSearchDebouncer } from '@/lib/recipe-search';
 import {
   filterRecipeList,
   recipeSortOptions,
   type RecipeListItem,
-  type RecipeSortKey,
+  type PublicRecipeSortKey,
 } from '@/lib/recipe-page';
 
 const chipBase =
@@ -24,7 +25,7 @@ const chipActive = `${chipBase} border-sumi bg-sumi text-base`;
  *
  * 将来の拡張点:
  * - タグ絞り込み: `tags` を受け取って `filter.tag` に渡すだけ。
- * - 人気順: `popularityScore` が入れば `sort: 'popular'` がそのまま効く。
+ * - 人気順: 比較可能なsnapshotを整えた上で、Public UIの方針が決まった時だけ追加する。
  */
 export function RecipeExplorer({
   recipes,
@@ -35,7 +36,7 @@ export function RecipeExplorer({
 }) {
   const [query, setQuery] = useState('');
   const [productSlug, setProductSlug] = useState<string | undefined>(undefined);
-  const [sort, setSort] = useState<RecipeSortKey>('default');
+  const [sort, setSort] = useState<PublicRecipeSortKey>('default');
   const inputId = useId();
   const sortId = useId();
   const statusId = useId();
@@ -45,18 +46,19 @@ export function RecipeExplorer({
     [recipes, query, productSlug, sort],
   );
 
-  // 検索イベントは入力が落ち着いてから1回だけ送る（検索語そのものは送らない）。
-  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 検索イベントは検索語の変更だけを起点にする。filter/sortでは再送しない。
+  const resultCountRef = useRef(results.length);
+  resultCountRef.current = results.length;
+  const searchDebouncer = useRef<ReturnType<typeof createRecipeSearchDebouncer> | null>(null);
+  if (!searchDebouncer.current) {
+    searchDebouncer.current = createRecipeSearchDebouncer(trackRecipeSearch);
+  }
+
   useEffect(() => {
-    if (!query.trim()) return;
-    if (searchTimer.current) clearTimeout(searchTimer.current);
-    searchTimer.current = setTimeout(() => {
-      trackRecipeSearch({ queryLength: query.trim().length, resultCount: results.length });
-    }, 800);
-    return () => {
-      if (searchTimer.current) clearTimeout(searchTimer.current);
-    };
-  }, [query, results.length]);
+    searchDebouncer.current?.onQueryChange(query, () => resultCountRef.current);
+  }, [query]);
+
+  useEffect(() => () => searchDebouncer.current?.dispose(), []);
 
   const isFiltered = Boolean(query.trim()) || Boolean(productSlug) || sort !== 'default';
 
@@ -70,7 +72,7 @@ export function RecipeExplorer({
     });
   }
 
-  function selectSort(key: RecipeSortKey) {
+  function selectSort(key: PublicRecipeSortKey) {
     setSort(key);
     const next = filterRecipeList(recipes, { query, productSlug, sort: key });
     trackRecipeFilterUse({ filterType: 'sort', value: key, resultCount: next.length });
@@ -98,7 +100,7 @@ export function RecipeExplorer({
               placeholder="レシピ名・材料・お餅の名前で探す"
               autoComplete="off"
               aria-describedby={statusId}
-              className="mt-3 block min-h-12 w-full border border-sumi/20 bg-base px-4 text-base text-sumi placeholder:text-sumi/40 focus:border-sumi focus:outline-none"
+              className="mt-3 block min-h-12 w-full border border-sumi/20 bg-base px-4 text-base text-sumi placeholder:text-sumi/40 focus-visible:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sumi"
             />
           </div>
           <div>
@@ -108,8 +110,8 @@ export function RecipeExplorer({
             <select
               id={sortId}
               value={sort}
-              onChange={(event) => selectSort(event.target.value as RecipeSortKey)}
-              className="mt-3 block min-h-12 w-full border border-sumi/20 bg-base px-4 text-base text-sumi focus:border-sumi focus:outline-none md:w-44"
+              onChange={(event) => selectSort(event.target.value as PublicRecipeSortKey)}
+              className="mt-3 block min-h-12 w-full border border-sumi/20 bg-base px-4 text-base text-sumi focus-visible:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sumi md:w-44"
             >
               {recipeSortOptions.map((option) => (
                 <option key={option.value} value={option.value}>

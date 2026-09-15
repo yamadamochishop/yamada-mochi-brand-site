@@ -16,6 +16,7 @@ import {
   getRecipeProducts,
   getRelatedRecipes,
   publishedRecipes,
+  recipeImageNotice,
   toRecipeListItem,
 } from '@/lib/recipe-page';
 import { breadcrumbJsonLd, pageOpenGraph, recipeJsonLd } from '@/lib/seo';
@@ -60,6 +61,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
   const recipeProducts = getRecipeProducts(recipe);
   const relatedRecipes = getRelatedRecipes(recipe).map(toRecipeListItem);
   const structuredData = recipeJsonLd(recipe);
+  const imageNotice = recipeImageNotice(recipe.mainImage);
   // 全商品に共通する基本レシピは、特定の商品ではなく商品一覧へ案内する。
   const forEveryProduct = appliesToEveryProduct(recipe);
 
@@ -149,9 +151,9 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   className="object-cover"
                 />
               </div>
-              {recipe.mainImage.sourceType === 'generated' ? (
+              {imageNotice ? (
                 <figcaption className="mt-2 text-right text-xs tracking-[0.06em] text-sumi/60">
-                  ※盛り付けイメージです
+                  ※{imageNotice}です
                 </figcaption>
               ) : null}
             </figure>

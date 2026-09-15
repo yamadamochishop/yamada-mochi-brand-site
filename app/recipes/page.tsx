@@ -84,7 +84,7 @@ export default function RecipesPage() {
           >
             注目レシピ
           </h2>
-          {/* スマホでは横スクロール、md以上では3列。人気指標が入るとこの並びが人気順に変わる。 */}
+          {/* Humanが選んだfeaturedだけを表示。スマホでは横スクロール、md以上では3列。 */}
           <div className="-mx-5 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
             {featured.map((recipe, index) => (
               <div

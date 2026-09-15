@@ -261,22 +261,31 @@ export type RecipeColumn = {
 export type RecipeDifficulty = 'easy' | 'normal' | 'hard';
 
 /**
- * 人気指標。Search Console・GA4の実測値を後から転記する枠で、
- * 表示・並び替えの根拠にする。未接続の間はすべて未設定のままにする。
- * 値を入れるときは `measuredAt` と `period` で「いつの・どの期間の値か」を残す。
+ * 内部のSEO・画像制作優先度に使う人気指標のsnapshot。
+ *
+ * UIのランキングに使う場合は、同じ method / version / 集計期間を持つ値だけを
+ * 比較する。未接続の間はすべて未設定のままにする。
  */
+export type RecipePopularityMethod = 'search_console_clicks';
+
 export type RecipePopularity = {
-  /** 並び替え用の総合スコア。算出式は docs/recipes で決めてから入れる。 */
+  /** このsnapshotの集計方法。 */
+  method: RecipePopularityMethod;
+  /** 算出方法の版。ルール変更時に更新する。 */
+  version: string;
+  /** 集計開始日（YYYY-MM-DD）。 */
+  periodStart: string;
+  /** 集計終了日（YYYY-MM-DD）。 */
+  periodEnd: string;
+  /** 転記した日（YYYY-MM-DD）。 */
+  measuredAt: string;
+  /** 同一snapshot内で比較する総合スコア。 */
   score?: number;
   searchConsoleClicks?: number;
   searchConsoleImpressions?: number;
   /** 0〜1 の比率（%ではない）。 */
   searchConsoleCtr?: number;
   searchConsolePosition?: number;
-  /** 転記した日（YYYY-MM-DD）。 */
-  measuredAt?: string;
-  /** 集計期間の説明（例: "2026-08-01〜2026-08-28"）。 */
-  period?: string;
 };
 
 export type RecipeRecord = {
