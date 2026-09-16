@@ -54,7 +54,7 @@ timestamps below identify archived HTTP 200 records.
 | `/アレンジレシピ/餅のアレンジレシピ/`           | CDX `20240225143849`, HTTP 200  | Defer                              |
 | `/アレンジレシピ/漬物のアレンジレシピ/`         | CDX `20240225135752`, HTTP 200  | Defer                              |
 | `/アレンジレシピ/お米-米粉のアレンジレシピ/`    | CDX `20240225153146`, HTTP 200  | Defer                              |
-| `/通販-https-yamadamochi-thebase-in/`           | CDX `20240225143515`, HTTP 200  | Defer; external destination review |
+| `/通販-https-yamadamochi-thebase-in/`           | CDX `20240225143515`, HTTP 200  | 301 to `/products`                 |
 | `/2020/06/05/カプレーゼ餅/`                     | CDX `20240225152052`, HTTP 200  | Defer                              |
 | `/2020/06/05/ゴルゴンゾーラ餅/`                 | CDX `20240225160959`, HTTP 200  | Defer                              |
 | `/2020/06/11/ピザ餅/`                           | CDX `20240225150436`, HTTP 200  | Defer                              |
@@ -69,11 +69,19 @@ timestamps below identify archived HTTP 200 records.
 | `/2021/01/10/もち玄米の豆乳クリームリゾット風/` | CDX `20240225162423`, HTTP 200  | Defer                              |
 | `/2021/03/05/チーズゴマ海老餅/`                 | CDX `20240225150835`, HTTP 200  | Defer                              |
 | `/2021/08/20/もち玄米チーズリゾット風/`         | CDX `20240225153539`, HTTP 200  | Defer                              |
-| `/about/`                                       | CDX `20240225151509`, HTTP 200  | Defer                              |
+| `/about/`                                       | CDX `20240225151509`, HTTP 200  | 301 to `/brand-story`              |
 | `/j/privacy`                                    | Former Jimdo footer link target | Defer                              |
 | `/sitemap/`                                     | CDX `20240416082319`, HTTP 200  | Defer                              |
 
-Confirmed: **24**. Implemented redirects: **2**. Deferred confirmed URLs: **22**.
+Confirmed: **24**. Implemented redirects: **12**. Deferred confirmed URLs: **12**.
+
+### 2026-09-16 audit synchronization
+
+The original document totals (2 implemented / 22 deferred) were stale. Before
+this change, the executable manifest and inventory already recorded 10 redirects
+and 14 deferred URLs. This change adds the two Human-approved routes above, so
+the totals in this document and the executable inventory are now 12 implemented
+redirects and 12 deferred URLs. No other deferred URL changes disposition.
 
 ## Unverified legacy URLs
 
@@ -91,6 +99,8 @@ The authoritative implementation is `lib/legacy-redirects.ts`.
 | ---------------- | ----------- | ---: | --------------------------------------------- | ---------- |
 | `/商品紹介/`     | `/products` |  301 | Former product index to current product index | High       |
 | `/お問い合わせ/` | `/contact`  |  301 | Former contact page to current contact page   | High       |
+| `/通販-https-yamadamochi-thebase-in/` | `/products` | 301 | Former online-shop page to current product index | High |
+| `/about/` | `/brand-story` | 301 | Former about page to current brand story | High |
 
 Middleware accepts encoded or decoded Japanese paths and either trailing-slash
 form, preserves the query string, and emits one 301 response. It does not redirect
@@ -100,7 +110,7 @@ are normalized to their canonical no-slash form with one 301 response.
 
 ## Production domain architecture
 
-Read-only production HTTP checks on 2026-08-08 established this ownership:
+Read-only production HTTP checks on 2026-09-16 established this ownership:
 
 - Vercel Domain Redirect owns clean `https://yamadamochi.com/*` to
   `https://www.yamadamochi.com/*` with one HTTP 308.
@@ -115,18 +125,20 @@ Read-only production HTTP checks on 2026-08-08 established this ownership:
 
 ### Read-only production HTTP evidence
 
-| Request                                | First response | Hop count | Final URL                              | Final status |
-| -------------------------------------- | -------------: | --------: | -------------------------------------- | -----------: |
-| `https://yamadamochi.com/`             |            308 |         1 | `https://www.yamadamochi.com/`         |          200 |
-| `https://yamadamochi.com/products`     |            308 |         1 | `https://www.yamadamochi.com/products` |          200 |
-| `https://www.yamadamochi.com/`         |            200 |         0 | Same                                   |          200 |
-| `https://www.yamadamochi.com/products` |            200 |         0 | Same                                   |          200 |
-| `http://yamadamochi.com/products`      |            308 |         2 | `https://www.yamadamochi.com/products` |          200 |
+| Request | First response | Hop count | Final URL | Final status |
+| --- | ---: | ---: | --- | ---: |
+| `https://www.yamadamochi.com/商品紹介` | 301 | 1 | `/products` | 200 |
+| `https://www.yamadamochi.com/2020/06/11/ピザ餅` | 301 | 1 | `/recipes/mochi-pizza` | 200 |
+| `https://www.yamadamochi.com/通販-https-yamadamochi-thebase-in/` | 301 | 1 | same path without trailing slash | 404 |
+| `https://www.yamadamochi.com/about/` | 301 | 1 | same path without trailing slash | 404 |
+| `https://www.yamadamochi.com/アレンジレシピ/漬物のアレンジレシピ/` | 301 | 1 | same path without trailing slash | 404 |
 
-The uncommitted YM-001 redirects are not deployed. Production legacy checks still
-end in 404 after the existing edge/trailing-slash redirects, as expected before the
-future PR is deployed. Preview verification requires PR and remains a human review
-step; no preview was created during YM-001 Review Fix.
+The first two rows confirm the already deployed legacy redirects. The final three
+rows are the 2026-09-16 pre-PR production baseline: the two Human-approved routes
+and one deferred route still only receive trailing-slash normalization and end in
+404. This PR changes the approved two routes to direct one-hop 301 redirects; it
+does not change the deferred route behavior. Preview verification remains a human
+review step; this document does not claim a production deployment.
 
 ## Known minor limitation
 

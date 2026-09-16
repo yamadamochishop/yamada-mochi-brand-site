@@ -28,6 +28,20 @@ export const legacyRedirects: readonly LegacyRedirect[] = [
     confidence: 'high',
   },
   {
+    source: '/通販-https-yamadamochi-thebase-in',
+    destination: '/products',
+    statusCode: 301,
+    reason: '旧通販ページから現行商品一覧への完全対応',
+    confidence: 'high',
+  },
+  {
+    source: '/about',
+    destination: '/brand-story',
+    statusCode: 301,
+    reason: '旧店舗紹介ページから現行ブランドストーリーへの完全対応',
+    confidence: 'high',
+  },
+  {
     source: '/アレンジレシピ',
     destination: '/recipes',
     statusCode: 301,
