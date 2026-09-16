@@ -122,7 +122,11 @@ test('toRecipeListItem: carries only card fields and a normalized search text', 
   assert.equal(item.slug, 'isobeyaki');
   assert.deepEqual(item.productSlugs, ['plain']);
   assert.deepEqual(item.productLabels, ['プレーン']);
-  assert.equal(item.mainImage, undefined);
+  assert.deepEqual(item.mainImage, {
+    src: '/images/recipes/isobeyaki.webp',
+    alt: '醤油を絡めて海苔を巻いた磯辺焼きの盛り付けイメージ',
+    imageNotice: '盛り付けイメージ',
+  });
   assert.match(item.searchText, /磯辺焼き/);
   assert.match(item.searchText, /焼き海苔/);
   assert.match(item.searchText, /プレーン/);
@@ -199,6 +203,8 @@ test('getRecipeInventory: one row per recipe with image and popularity status', 
   const rows = getRecipeInventory();
   assert.equal(rows.length, 13);
   const imageRecipeIds = new Set([
+    'mochi-yakikata',
+    'isobeyaki',
     'garlic-butter-mochi',
     'mentaiko-mayo-mochi',
     'dashi-butter-mochi',

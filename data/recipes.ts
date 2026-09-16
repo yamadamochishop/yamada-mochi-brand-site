@@ -28,6 +28,12 @@ export const recipes: RecipeRecord[] = [
     title: 'お餅のおいしい焼き方',
     description:
       '山田もち店のお餅は、まず焼くところから。ご家庭のトースターでおいしく焼くための、いちばん基本の焼き方です。フライパン・電子レンジ・冷凍したお餅の焼き方もあわせてご紹介します。',
+    mainImage: {
+      src: '/images/recipes/mochi-yakikata.webp',
+      alt: '香ばしく焼き色をつけた切り餅の盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['トースター', 'フライパン', '電子レンジ', '基本の焼き方'],
     ingredients: [{ name: '山田もち店の切り餅', amount: '適量' }],
@@ -81,6 +87,12 @@ export const recipes: RecipeRecord[] = [
     slug: 'isobeyaki',
     title: '山田家の磯辺焼き',
     description: '焼いた白餅に砂糖醤油を絡めて、炙った焼き海苔で包みます。',
+    mainImage: {
+      src: '/images/recipes/isobeyaki.webp',
+      alt: '醤油を絡めて海苔を巻いた磯辺焼きの盛り付けイメージ',
+      role: 'primary',
+      sourceType: 'generated',
+    },
     category: 'mochi',
     tags: ['トースター', '醤油', '海苔'],
     ingredients: [

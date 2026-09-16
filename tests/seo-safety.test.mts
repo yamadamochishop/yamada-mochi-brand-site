@@ -410,13 +410,13 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(visibleHub, /data-recipe-explorer/);
   assert.match(visibleHub, /お餅で絞り込む/u);
   assert.match(visibleHub, /13(<!-- -->)?件のレシピ/u);
-  // 画像のある5件は写真付き、残る8件は画像枠なしのコンパクトなテキストカード。
+  // 画像のある7件は写真付き、残る6件は画像枠なしのコンパクトなテキストカード。
   assert.equal((visibleHub.match(/data-recipe-card=/g) ?? []).length, 13);
   assert.doesNotMatch(visibleHub, /写真は準備中です|data-recipe-image="placeholder"/u);
-  assert.equal((visibleHub.match(/<img\b[^>]*>/g) ?? []).length, 6, 'hero image and five recipe cards');
+  assert.equal((visibleHub.match(/<img\b[^>]*>/g) ?? []).length, 8, 'hero image and seven recipe cards');
   assert.equal(
     (visibleHub.match(/<figcaption[^>]*>盛り付けイメージ<\/figcaption>/g) ?? []).length,
-    5,
+    7,
     'generated image notices',
   );
   assert.match(visibleHub, /レシピを見る/u);
@@ -491,11 +491,9 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
     detailJsonLd.some((entry) => entry['@type'] === 'BreadcrumbList'),
     true,
   );
-  // レシピ写真が未撮影の間はRecipe構造化データを出力しない。
-  assert.equal(
-    detailJsonLd.some((entry) => entry['@type'] === 'Recipe'),
-    false,
-  );
+  // mainImageを登録したレシピはRecipe構造化データに画像を出力する。
+  const recipeJsonLd = detailJsonLd.find((entry) => entry['@type'] === 'Recipe');
+  assert.equal(recipeJsonLd?.image, 'https://www.yamadamochi.com/images/recipes/isobeyaki.webp');
   for (const entry of detailJsonLd) {
     for (const forbidden of ['prepTime', 'cookTime', 'totalTime', 'nutrition', 'recipeYield']) {
       assert.equal(forbidden in entry, false, `${forbidden} must not be published`);
