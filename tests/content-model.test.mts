@@ -323,7 +323,10 @@ test('Recipe: mochi-yakikata keeps the toaster method as the only structured-dat
   assert.equal(withImage.recipeInstructions.length, 3);
   const instructionText = withImage.recipeInstructions.map((step) => step.text).join('\n');
   assert.doesNotMatch(instructionText, /フライパン|電子レンジ|冷凍/u);
-  assert.equal(recipeJsonLd(yakikata), null);
+  assert.equal(
+    recipeJsonLd(yakikata)?.image,
+    'https://www.yamadamochi.com/images/recipes/mochi-yakikata.webp',
+  );
 });
 
 test('Recipe: the thirteen existing recipe records stay valid', () => {
