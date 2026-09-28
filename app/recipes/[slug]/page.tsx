@@ -11,12 +11,20 @@ import { RecipeProductLink } from '@/components/recipe/RecipeProductLink';
 import { RecipeViewTracker } from '@/components/recipe/RecipeViewTracker';
 import {
   appliesToEveryProduct,
+  baseTechniqueRecipePath,
+  DEFAULT_PRODUCT_VARIATIONS_TITLE,
+  DEFAULT_STEPS_TITLE,
+  DEFAULT_VARIATIONS_TITLE,
   difficultyLabels,
   getRecipe,
+  getRecipeMethodLinks,
   getRecipeProducts,
   getRelatedRecipes,
+  linksToBaseTechnique,
   publishedRecipes,
   recipeImageNotice,
+  recipeVariationAnchor,
+  splitRecipeVariations,
   toRecipeListItem,
 } from '@/lib/recipe-page';
 import { breadcrumbJsonLd, pageOpenGraph, recipeJsonLd } from '@/lib/seo';
@@ -64,6 +72,9 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
   const imageNotice = recipeImageNotice(recipe.mainImage);
   // 全商品に共通する基本レシピは、特定の商品ではなく商品一覧へ案内する。
   const forEveryProduct = appliesToEveryProduct(recipe);
+  const { general: generalVariations, byProduct: productVariations } =
+    splitRecipeVariations(recipe);
+  const methodLinks = getRecipeMethodLinks(recipe);
 
   // 基本情報。値があるものだけ行にする（人数・時間・難易度はHuman確認後にだけ入る）。
   const facts: { label: string; value: ReactNode }[] = [];
@@ -139,6 +150,29 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           </h1>
           <p className="mt-8 leading-9 text-sumi/70">{recipe.description}</p>
 
+          {methodLinks.length > 0 ? (
+            <nav aria-labelledby="recipe-method-links" className="mt-10">
+              <p id="recipe-method-links" className="text-xs tracking-brand text-brown/85">
+                このページで紹介する方法
+              </p>
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {methodLinks.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={`#${link.id}`}
+                      className="flex min-h-12 items-center justify-between gap-3 border border-sumi/15 bg-white/40 px-4 py-2 text-sm leading-6 tracking-[0.06em] text-sumi/80 transition hover:border-sumi/40 hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+                    >
+                      {link.label}
+                      <span aria-hidden="true" className="text-brown/70">
+                        ↓
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
+
           {recipe.mainImage ? (
             <figure className="mt-12">
               <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc] md:aspect-[16/10]">
@@ -194,9 +228,11 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
             </dl>
           </section>
 
-          <section className="mt-14 md:mt-20">
+          <section id="recipe-steps" className="mt-14 scroll-mt-28 md:mt-20">
             <p className="text-xs tracking-brand text-brown/85">STEPS</p>
-            <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">作り方</h2>
+            <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+              {recipe.stepsTitle ?? DEFAULT_STEPS_TITLE}
+            </h2>
             <ol className="mt-8 space-y-6">
               {recipe.steps.map((step) => (
                 <li key={step.position} className="grid grid-cols-[2.5rem_1fr] gap-4">
@@ -210,6 +246,15 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                 </li>
               ))}
             </ol>
+            {linksToBaseTechnique(recipe) ? (
+              <p className="mt-8 border-t border-sumi/10 pt-5 text-sm leading-7 text-sumi/65">
+                お餅をおいしく焼くコツは、
+                <Link href={baseTechniqueRecipePath} className={productLinkClass}>
+                  お餅のおいしい焼き方・解凍方法
+                </Link>
+                でご紹介しています。
+              </p>
+            ) : null}
           </section>
 
           {recipe.notes && recipe.notes.length > 0 ? (
@@ -226,18 +271,71 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
             </section>
           ) : null}
 
-          {recipe.variations && recipe.variations.length > 0 ? (
+          {generalVariations.length > 0 ? (
             <section className="mt-14 md:mt-20">
               <p className="text-xs tracking-brand text-brown/85">VARIATION</p>
-              <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">アレンジ</h2>
+              <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+                {recipe.variationsTitle ?? DEFAULT_VARIATIONS_TITLE}
+              </h2>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {recipe.variations.map((variation) => (
-                  <div key={variation.title} className="border border-sumi/10 bg-white/25 p-5">
+                {generalVariations.map((variation, index) => (
+                  <div
+                    key={variation.title}
+                    id={recipeVariationAnchor(index)}
+                    className="scroll-mt-28 border border-sumi/10 bg-white/25 p-5"
+                  >
                     <h3 className="font-serifjp text-lg tracking-[0.1em]">{variation.title}</h3>
                     <p className="mt-3 text-sm leading-7 text-sumi/65">{variation.text}</p>
                   </div>
                 ))}
               </div>
+            </section>
+          ) : null}
+
+          {productVariations.length > 0 ? (
+            <section aria-labelledby="product-variations" className="mt-14 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/85">WITH OTHER FLAVORS</p>
+              <h2
+                id="product-variations"
+                className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"
+              >
+                {recipe.productVariationsTitle ?? DEFAULT_PRODUCT_VARIATIONS_TITLE}
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-sumi/65">
+                山田もち店の味付きのお餅でも楽しめます。どれも各商品ページでおすすめしている食べ方です。
+              </p>
+              <ul className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
+                {productVariations.map(({ variation, product }) => (
+                  <li
+                    key={variation.title}
+                    className="grid grid-cols-[4.5rem_1fr] gap-4 py-6 sm:grid-cols-[6rem_1fr] sm:gap-6"
+                  >
+                    <div className="relative aspect-square overflow-hidden bg-[#efe9dc]">
+                      <Image
+                        src={product.cardImage || product.image}
+                        alt={
+                          product.cardImageAlt || product.imageAlt || `${product.name}の商品写真`
+                        }
+                        fill
+                        sizes="96px"
+                        className="object-contain p-2"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-serifjp text-lg tracking-[0.1em]">{variation.title}</h3>
+                      <p className="mt-2 text-sm leading-7 text-sumi/65">{variation.text}</p>
+                      <RecipeProductLink
+                        productSlug={product.slug}
+                        recipeSlug={recipe.slug}
+                        placement="recipe_variation"
+                        className="mt-2 inline-flex min-h-11 items-center text-sm tracking-[0.08em] text-green underline underline-offset-8 transition hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+                      >
+                        {product.name}を見る
+                      </RecipeProductLink>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </section>
           ) : null}
 

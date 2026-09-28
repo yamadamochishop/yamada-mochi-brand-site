@@ -1,6 +1,11 @@
 import { products, type Product } from '../data/catalog.ts';
 import { recipes } from '../data/recipes.ts';
-import type { RecipeDifficulty, RecipePopularity, RecipeRecord } from '../types/content-model.ts';
+import type {
+  RecipeDifficulty,
+  RecipePopularity,
+  RecipeRecord,
+  RecipeVariation,
+} from '../types/content-model.ts';
 
 /**
  * Recipe Hubの表示モデル。
@@ -310,6 +315,118 @@ export function filterRecipeList(items: RecipeListItem[], filter: RecipeFilter):
     return [...matched].sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''));
   }
   return matched;
+}
+
+// ---------------------------------------------------------------------------
+// 詳細ページのアレンジ・目次
+// ---------------------------------------------------------------------------
+
+export const DEFAULT_STEPS_TITLE = '作り方';
+export const DEFAULT_VARIATIONS_TITLE = 'アレンジ';
+export const DEFAULT_PRODUCT_VARIATIONS_TITLE = 'ほかのお餅で楽しむ';
+
+/** 商品指定のないアレンジと、別の商品で楽しむアレンジを分ける。 */
+export function splitRecipeVariations(recipe: RecipeRecord): {
+  general: RecipeVariation[];
+  byProduct: { variation: RecipeVariation; product: Product }[];
+} {
+  const general: RecipeVariation[] = [];
+  const byProduct: { variation: RecipeVariation; product: Product }[] = [];
+  for (const variation of recipe.variations ?? []) {
+    if (!variation.productId) {
+      general.push(variation);
+      continue;
+    }
+    const product = products.find((candidate) => candidate.slug === variation.productId);
+    if (product) byProduct.push({ variation, product });
+  }
+  return { general, byProduct };
+}
+
+export type RecipeSectionLink = { id: string; label: string };
+
+/**
+ * 複数の方法を並べるレシピ（焼き方など）にだけ出す、ページ内の目次。
+ * 商品指定のないアレンジが2件以上ある場合に、作り方と各アレンジへのリンクを返す。
+ */
+export function getRecipeMethodLinks(recipe: RecipeRecord): RecipeSectionLink[] {
+  const { general } = splitRecipeVariations(recipe);
+  if (general.length < 2) return [];
+  return [
+    { id: 'recipe-steps', label: recipe.stepsTitle ?? DEFAULT_STEPS_TITLE },
+    ...general.map((variation, index) => ({
+      id: recipeVariationAnchor(index),
+      label: variation.title,
+    })),
+  ];
+}
+
+export function recipeVariationAnchor(index: number): string {
+  return `variation-${index + 1}`;
+}
+
+/** 焼き方の基本ページへ案内するか。トースターで焼くレシピにだけ、焼き方ページ自身は除く。 */
+export function linksToBaseTechnique(recipe: RecipeRecord): boolean {
+  return recipe.id !== BASE_TECHNIQUE_RECIPE_ID && (recipe.tags ?? []).includes('トースター');
+}
+
+export const baseTechniqueRecipePath = `/recipes/${BASE_TECHNIQUE_RECIPE_ID}`;
+
+// ---------------------------------------------------------------------------
+// 焼き方・磯辺焼きへの入口（トップページ・Recipe Hub）
+//
+// Search Consoleで表示回数の多い「磯辺焼き」「餅 焼き方」の受け皿を、
+// 既存の2ページだけに集約する（類似ページを増やさない）。
+// ---------------------------------------------------------------------------
+
+export type RecipeGuide = {
+  slug: string;
+  href: string;
+  label: string;
+  text: string;
+  cta: string;
+  image?: { src: string; alt: string; imageNotice?: string };
+};
+
+const recipeGuideEntries = [
+  {
+    recipeId: 'isobeyaki',
+    label: '磯辺焼きの作り方',
+    text: '焼いた白餅に砂糖醤油を絡め、炙った焼き海苔で包みます。三色豆餅や昆布餅など、味を変えて楽しむ食べ方もご紹介します。',
+    cta: '作り方を見る',
+  },
+  {
+    recipeId: BASE_TECHNIQUE_RECIPE_ID,
+    label: 'お餅のおいしい焼き方・解凍方法',
+    text: 'トースターで焼く基本の方法に加え、フライパンや電子レンジを使う方法、冷凍したお餅の解凍・焼き方までご紹介します。',
+    cta: '焼き方を見る',
+  },
+] as const;
+
+export function getRecipeGuides(): RecipeGuide[] {
+  return recipeGuideEntries.flatMap((entry) => {
+    const recipe = getRecipe(entry.recipeId);
+    if (!recipe) return [];
+    const imageNotice = recipeImageNotice(recipe.mainImage);
+    return [
+      {
+        slug: recipe.slug,
+        href: `/recipes/${recipe.slug}`,
+        label: entry.label,
+        text: entry.text,
+        cta: entry.cta,
+        ...(recipe.mainImage
+          ? {
+              image: {
+                src: recipe.mainImage.src,
+                alt: recipe.mainImage.alt,
+                ...(imageNotice ? { imageNotice } : {}),
+              },
+            }
+          : {}),
+      },
+    ];
+  });
 }
 
 // ---------------------------------------------------------------------------

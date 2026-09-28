@@ -413,12 +413,26 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   // 画像のある7件は写真付き、残る6件は画像枠なしのコンパクトなテキストカード。
   assert.equal((visibleHub.match(/data-recipe-card=/g) ?? []).length, 13);
   assert.doesNotMatch(visibleHub, /写真は準備中です|data-recipe-image="placeholder"/u);
-  assert.equal((visibleHub.match(/<img\b[^>]*>/g) ?? []).length, 8, 'hero image and seven recipe cards');
+  assert.equal(
+    (visibleHub.match(/<img\b[^>]*>/g) ?? []).length,
+    10,
+    'kitchen photo, two guide entrances, and seven recipe cards',
+  );
   assert.equal(
     (visibleHub.match(/<figcaption[^>]*>盛り付けイメージ<\/figcaption>/g) ?? []).length,
-    7,
-    'generated image notices',
+    9,
+    'generated image notices on guide entrances and recipe cards',
   );
+  // 磯辺焼き・焼き方への大きな入口は「すべてのレシピ」より前に置く。
+  assert.equal((visibleHub.match(/<h1\b/g) ?? []).length, 1);
+  const allRecipesIndex = visibleHub.indexOf('id="all-recipes"');
+  for (const slug of ['isobeyaki', 'mochi-yakikata']) {
+    const guideIndex = visibleHub.indexOf(`data-recipe-guide="${slug}"`);
+    assert.ok(guideIndex > 0 && guideIndex < allRecipesIndex, slug);
+  }
+  assert.match(visibleHub, /磯辺焼きの作り方/u);
+  assert.match(visibleHub, /お餅のおいしい焼き方・解凍方法/u);
+  assert.match(hubHtml, /<title>お餅の焼き方・解凍方法とレシピ｜山田もち店<\/title>/u);
   assert.match(visibleHub, /レシピを見る/u);
   const hubJsonLd = [
     ...hubHtml.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g),
@@ -476,6 +490,31 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   assert.match(visible(detailHtml), /九州地方の甘い醤油/u);
   assert.doesNotMatch(visible(detailHtml), /九州地方などの甘い醤油/u);
 
+  // 味別の磯辺焼きは商品ページの確定済み「おすすめの食べ方」の範囲だけ。草餅は未確定なので出さない。
+  assert.match(visible(detailHtml), /味を変えて楽しむ磯辺焼き/u);
+  for (const productSlug of ['sansyokumame', 'kombu', 'tamari', 'ebi']) {
+    assert.match(detailHtml, new RegExp(`href="/products/${productSlug}"`), productSlug);
+  }
+  assert.doesNotMatch(detailHtml, /href="\/products\/yomogi"/);
+  assert.doesNotMatch(visible(detailHtml), /草餅で/u);
+  assert.match(
+    detailHtml,
+    /<title>磯辺焼きの作り方｜砂糖1：醤油2と焼き海苔の基本｜山田もち店<\/title>/u,
+  );
+  // 焼き方ページへの文脈リンク。
+  assert.match(detailHtml, /href="\/recipes\/mochi-yakikata"/);
+
+  const yakikata = await fetch(`${localOrigin}/recipes/mochi-yakikata`, {
+    headers: productionHeaders(),
+  });
+  assert.equal(yakikata.status, 200);
+  const yakikataHtml = await yakikata.text();
+  assert.match(visible(yakikataHtml), /冷凍したお餅の解凍・焼き方/u);
+  assert.match(visible(yakikataHtml), /トースターで焼く（基本）/u);
+  assert.match(visible(yakikataHtml), /href="#variation-3"/);
+  assert.match(visible(yakikataHtml), /id="variation-3"/);
+  assert.equal((visible(yakikataHtml).match(/<h1\b/g) ?? []).length, 1);
+
   const zenzai = await fetch(`${localOrigin}/recipes/yomogi-mochi-zenzai`, {
     headers: productionHeaders(),
   });
@@ -499,6 +538,52 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
       assert.equal(forbidden in entry, false, `${forbidden} must not be published`);
     }
   }
+});
+
+test('Home: recipe guides, shipping copy, and metadata are rendered', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+
+  const home = await fetch(`${localOrigin}/`, { headers: productionHeaders() });
+  assert.equal(home.status, 200);
+  const html = await home.text();
+  const visible = html.replace(/<script[\s\S]*?<\/script>/g, '');
+  assert.match(html, /<title>山田もち店｜飛騨高山・陣屋前朝市の切り餅と通販<\/title>/u);
+  assert.doesNotMatch(html, /<title>[^<]*山田もち店[^<]*山田もち店[^<]*<\/title>/u);
+  assert.equal((visible.match(/<h1\b/g) ?? []).length, 1);
+  assert.match(visible, /思い出に残る/u);
+  // トップ → 焼き方・磯辺焼き・レシピ一覧。
+  for (const href of ['/recipes', '/recipes/isobeyaki', '/recipes/mochi-yakikata']) {
+    assert.match(visible, new RegExp(`href="${href}"`), href);
+  }
+  // 生成画像には実写と区別する注記を付ける。
+  assert.equal((visible.match(/<figcaption[^>]*>盛り付けイメージ<\/figcaption>/g) ?? []).length, 2);
+});
+
+test('Shipping: FAQ and product pages use the 800g-equivalent Nekopos rule', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+
+  for (const path of ['/faq', '/products', '/products/plain', '/recipes/isobeyaki', '/gift']) {
+    const response = await fetch(`${localOrigin}${path}`, { headers: productionHeaders() });
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.doesNotMatch(html, /4袋まで|5袋以上/u, path);
+    // 非公開の6枚入り（300g）を案内しない。
+    assert.doesNotMatch(html, /6枚入り|300g/u, path);
+  }
+
+  const faq = await (await fetch(`${localOrigin}/faq`, { headers: productionHeaders() })).text();
+  assert.match(faq, /お餅の送料を教えてください。/u);
+  assert.match(faq, /800g相当まで、全国一律380円のネコポス/u);
+  assert.match(faq, /ヤマト宅急便（地域別送料）/u);
+  assert.match(faq, /href="\/recipes\/mochi-yakikata"/);
+
+  const plain = await (
+    await fetch(`${localOrigin}/products/plain`, { headers: productionHeaders() })
+  ).text();
+  assert.match(plain, /単品のお餅は800g相当まで、全国一律送料380円/u);
+
+  const gift = await (await fetch(`${localOrigin}/gift`, { headers: productionHeaders() })).text();
+  assert.match(gift, /セット商品はヤマト宅急便（地域別送料）/u);
 });
 
 test('StickyPurchaseBar: every purchase area stays observable on the pages it guards', async (context) => {
