@@ -1,6 +1,8 @@
+@AGENTS.md
+
 # CLAUDE.md — Claude Code 補足
 
-[AGENTS.md](AGENTS.md) がこのリポジトリのAIエージェント共通の規則です。先に読み、それに従います。このファイルはClaude Code固有の事項だけを足します。両者が食い違う場合は `AGENTS.md` が優先します。
+上の行で読み込む `AGENTS.md` がこのリポジトリのAIエージェント共通の規則です。Claude Code は `CLAUDE.md` があると `AGENTS.md` を自動では読まないため、この import を先頭行から外しません。このファイルはClaude Code固有の事項だけを足します。両者が食い違う場合は `AGENTS.md` が優先します。
 
 `AGENTS.md` の内容はここで再記述・要約・言い換えしません。正本、独立レビュー、Skillsの構成、検証コマンド、停止条件はすべて `AGENTS.md` にあります。
 
