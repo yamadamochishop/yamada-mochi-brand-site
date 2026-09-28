@@ -124,7 +124,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <TrackedBaseLink
                   href={product.baseUrl}
                   placement="product_hero"
-                  className="ym-btn ym-btn-primary min-h-14 px-10 text-base"
+                  className="ym-btn ym-btn-lg ym-btn-primary min-h-14 px-10"
                 >
                   BASEで購入する
                 </TrackedBaseLink>
@@ -166,7 +166,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <TrackedBaseLink
                 href={product.baseUrl}
                 placement="product_detail"
-                className="ym-btn ym-btn-primary mt-6 w-full px-8 text-base tracking-[0.12em] md:w-auto"
+                className="ym-btn ym-btn-lg ym-btn-primary mt-6 w-full px-8 tracking-[0.12em] md:w-auto"
               >
                 BASEで購入する
               </TrackedBaseLink>

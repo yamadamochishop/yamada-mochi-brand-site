@@ -115,7 +115,7 @@ export function SiteHeader() {
           ))}
           <Link
             href="/products"
-            className="whitespace-nowrap border border-sumi px-4 py-3 text-sumi transition-colors hover:bg-sumi hover:text-base xl:px-5"
+            className="whitespace-nowrap border border-sumi px-4 py-3 text-sumi transition-colors hover:bg-sumi hover:text-[#f8f6f2] xl:px-5"
           >
             商品を選ぶ
           </Link>

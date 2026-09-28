@@ -77,7 +77,7 @@ export default function GiftPage() {
           <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
             placement="gift_hero"
-            className="ym-btn ym-btn-primary mt-9 min-h-14 px-10 text-base tracking-[0.12em]"
+            className="ym-btn ym-btn-lg ym-btn-primary mt-9 min-h-14 px-10 tracking-[0.12em]"
           >
             BASEで購入する
           </TrackedBaseLink>
@@ -205,7 +205,7 @@ export default function GiftPage() {
           <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
             placement="gift_details"
-            className="ym-btn ym-btn-primary mt-8 min-h-14 w-full px-10 text-base tracking-[0.12em] md:w-auto"
+            className="ym-btn ym-btn-lg ym-btn-primary mt-8 min-h-14 w-full px-10 tracking-[0.12em] md:w-auto"
           >
             BASEで購入する
           </TrackedBaseLink>

@@ -52,13 +52,13 @@ export default function HomePage() {
               <TrackedLink
                 href="#popular"
                 event="hero_cta_click"
-                className="ym-btn ym-btn-on-dark min-w-60 bg-base/10 text-base tracking-[0.12em]"
+                className="ym-btn ym-btn-lg ym-btn-on-dark min-w-60 bg-base/10 tracking-[0.12em]"
               >
                 人気商品を見る
               </TrackedLink>
               <Link
                 href="/brand-story"
-                className="ym-btn ym-btn-on-dark min-w-60 text-base tracking-[0.12em]"
+                className="ym-btn ym-btn-lg ym-btn-on-dark min-w-60 tracking-[0.12em]"
               >
                 山田もち店について
               </Link>
@@ -239,7 +239,7 @@ export default function HomePage() {
             <TrackedLink
               href="/products"
               event="top_cta_click"
-              className="ym-btn ym-btn-on-dark min-w-52 text-base"
+              className="ym-btn ym-btn-lg ym-btn-on-dark min-w-52"
             >
               商品一覧
             </TrackedLink>
@@ -247,7 +247,7 @@ export default function HomePage() {
               href={site.baseUrl}
               event="top_cta_click"
               external
-              className="ym-btn ym-btn-on-dark-solid min-w-52 text-base"
+              className="ym-btn ym-btn-lg ym-btn-on-dark-solid min-w-52"
             >
               オンラインショップ
             </TrackedLink>

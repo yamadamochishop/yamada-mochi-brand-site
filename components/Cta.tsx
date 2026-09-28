@@ -15,7 +15,7 @@ export function Cta({
         <p className="mx-auto mt-6 max-w-2xl leading-8 text-base/75">{text}</p>
         <Link
           href="/products"
-          className="ym-btn ym-btn-on-dark mt-10 min-h-14 w-full px-8 text-base tracking-[0.12em] sm:w-auto sm:min-w-72"
+          className="ym-btn ym-btn-lg ym-btn-on-dark mt-10 min-h-14 w-full px-8 tracking-[0.12em] sm:w-auto sm:min-w-72"
         >
           商品を選んで購入する
         </Link>

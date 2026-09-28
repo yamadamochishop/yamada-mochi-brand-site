@@ -770,6 +770,28 @@ test('Design system: Japanese headings keep a readable line-height at every brea
   );
   assert.match(css, /scroll-padding-top/);
 
+  // text-base は文字サイズと同時に文字色（base）も指定する。ボタンに付けると
+  // 修飾クラスの文字色を上書きし、明るい塗りボタンの文字が背景と同色で消える。
+  const { readdir } = await import('node:fs/promises');
+  const sourceFiles: URL[] = [];
+  for (const dir of [
+    '../app/',
+    '../components/',
+    '../components/recipe/',
+    '../components/seasonal/',
+  ]) {
+    const base = new URL(dir, import.meta.url);
+    for (const entry of await readdir(base, { recursive: true })) {
+      if (String(entry).endsWith('.tsx')) sourceFiles.push(new URL(String(entry), base));
+    }
+  }
+  for (const file of sourceFiles) {
+    const source = await readFile(file, 'utf8');
+    for (const className of source.match(/className="[^"]*\bym-btn\b[^"]*"/g) ?? []) {
+      assert.doesNotMatch(className, /(^|\s|")text-base(\s|")/, `${file.pathname}: ${className}`);
+    }
+  }
+
   // 商品カードはサーバーコンポーネントのまま（BASEリンクだけがクライアント部品）。
   const card = await readFile(new URL('../components/ProductCard.tsx', import.meta.url), 'utf8');
   assert.doesNotMatch(card, /['"]use client['"]/);

@@ -73,6 +73,15 @@ summary {
     @apply inline-flex min-h-12 items-center justify-center px-7 text-center text-sm tracking-[0.1em] transition-colors duration-200;
   }
 
+  /*
+   * 大きめの文字のボタン。text-base は文字サイズと同時に色（base）も指定してしまい、
+   * 修飾クラスの文字色を上書きするため、ボタンでは使わずにこちらを使う。
+   */
+  .ym-btn-lg {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
   /* 主ボタン（BASEなど購入に直結する導線）。 */
   .ym-btn-primary {
     @apply bg-green text-white hover:bg-sumi;
