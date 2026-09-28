@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Cta } from '@/components/Cta';
 import { SectionHeading } from '@/components/SectionHeading';
 import { JsonLd } from '@/components/JsonLd';
-import { sixFlavorGift } from '@/data/catalog';
 import { faqs } from '@/data/faqs';
 import { faqPageJsonLd, pageOpenGraph } from '@/lib/seo';
 
+const description =
+  '山田もち店の切り餅とギフトセットについて、内容・価格・送料・賞味期限、冷凍したお餅の焼き方をご案内します。';
+
 export const metadata: Metadata = {
   title: 'よくある質問',
-  description: `山田もち店の${sixFlavorGift.name}について、内容・価格・賞味期限をご案内します。`,
+  description,
   openGraph: pageOpenGraph({
     title: 'よくある質問｜山田もち店',
-    description: `山田もち店の${sixFlavorGift.name}について、内容・価格・賞味期限をご案内します。`,
+    description,
     path: '/faq',
   }),
   alternates: {
@@ -32,6 +35,16 @@ export default function FaqPage() {
                 {faq.q}
               </summary>
               <p className="mt-5 leading-8 text-sumi/65">{faq.a}</p>
+              {faq.link ? (
+                <p className="mt-4">
+                  <Link
+                    href={faq.link.href}
+                    className="inline-flex min-h-11 items-center text-sm tracking-[0.08em] text-green underline underline-offset-8 transition hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+                  >
+                    {faq.link.label}
+                  </Link>
+                </p>
+              ) : null}
             </details>
           ))}
         </div>

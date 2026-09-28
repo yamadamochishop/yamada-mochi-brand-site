@@ -41,7 +41,8 @@ export type TopPageEvent = 'top_cta_click' | 'hero_cta_click' | 'gift_cta_click'
 export type RecipeProductClickPlacement =
   | 'recipe_hero' // 詳細ページ冒頭「使うお餅」
   | 'recipe_product_cta' // 詳細ページ末尾「このレシピにおすすめのお餅」の「商品を見る」
-  | 'recipe_hub_product_group'; // 一覧ページ「お餅から探す」の商品名
+  | 'recipe_hub_product_group' // 一覧ページ「お餅から探す」の商品名
+  | 'recipe_variation'; // 詳細ページ「ほかのお餅で楽しむ」アレンジの商品リンク
 
 export function trackRecipeView(recipeSlug: string) {
   if (typeof window === 'undefined') return;

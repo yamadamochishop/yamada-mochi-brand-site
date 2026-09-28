@@ -6,11 +6,13 @@ import { JsonLd } from '@/components/JsonLd';
 import { SectionHeading } from '@/components/SectionHeading';
 import { RecipeCard } from '@/components/recipe/RecipeCard';
 import { RecipeExplorer } from '@/components/recipe/RecipeExplorer';
+import { RecipeGuideLinks } from '@/components/recipe/RecipeGuideLinks';
 import { RecipeProductLink } from '@/components/recipe/RecipeProductLink';
 import {
   getFeaturedRecipes,
   getProductRecipeGroups,
   getRecipeFilterProducts,
+  getRecipeGuides,
   publishedRecipes,
   toRecipeListItem,
 } from '@/lib/recipe-page';
@@ -19,15 +21,20 @@ import { breadcrumbJsonLd, pageOpenGraph, recipeItemListJsonLd } from '@/lib/seo
 const heroImage = '/images/web-plain-yakimochi.webp';
 const heroImageAlt = '小皿の醤油とともに器に盛った山田もち店の切り餅';
 
+const pageTitle = 'お餅の焼き方・解凍方法とレシピ';
+
 const description =
-  '焼くだけでもおいしいお餅を、毎日の食卓でもっと楽しめるように。定番の食べ方から、食事になるアレンジ、甘いおやつまで、山田もち店のお餅を使ったレシピをご紹介します。';
+  '切り餅のおいしい焼き方（トースター・フライパン・電子レンジ）や冷凍したお餅の解凍方法、磯辺焼きの作り方から、食事やおやつのアレンジまで。飛騨高山・山田もち店のお餅のレシピをご紹介します。';
+
+const lead =
+  '焼くだけでもおいしいお餅を、毎日の食卓でもっと楽しめるように。基本の焼き方や冷凍したお餅の解凍方法、定番の磯辺焼きから、食事になるアレンジ、甘いおやつまでご紹介します。';
 
 export const metadata: Metadata = {
-  title: 'お餅のレシピ',
+  title: pageTitle,
   description,
   alternates: { canonical: '/recipes' },
   openGraph: pageOpenGraph({
-    title: 'お餅のレシピ｜山田もち店',
+    title: `${pageTitle}｜山田もち店`,
     description,
     path: '/recipes',
     image: heroImage,
@@ -40,6 +47,7 @@ export default function RecipesPage() {
   const featured = getFeaturedRecipes().map(toRecipeListItem);
   const listItems = publishedRecipes.map(toRecipeListItem);
   const filterProducts = getRecipeFilterProducts();
+  const guides = getRecipeGuides();
 
   return (
     <main className="ym-page">
@@ -52,26 +60,47 @@ export default function RecipesPage() {
       <JsonLd data={recipeItemListJsonLd(publishedRecipes)} />
 
       <section className="ym-container pt-20 md:pt-28">
-        <SectionHeading eyebrow="RECIPES" title="お餅のレシピ" lead={description} as="h1" />
-        <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc] md:aspect-[16/7]">
-          <Image
-            src={heroImage}
-            alt={heroImageAlt}
-            fill
-            priority
-            sizes="(min-width: 768px) 1200px, 100vw"
-            className="object-cover object-center"
-          />
-        </div>
+        <SectionHeading eyebrow="RECIPES" title="お餅の焼き方とレシピ" lead={lead} as="h1" />
+      </section>
 
-        <div className="mx-auto mt-14 max-w-3xl md:mt-20">
-          <p className="text-xs tracking-brand text-brown/85">FROM OUR KITCHEN</p>
-          <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
-            山田もち店のお餅を楽しむ
-          </h2>
-          <p className="mt-6 leading-8 text-sumi/70">
-            山田家で親しんできた食べ方から、毎日の食卓で気軽に楽しめる定番アレンジまで。山田もち店のお餅のおいしい食べ方をご紹介します。
+      <section aria-labelledby="recipe-guides" className="ym-container">
+        <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs tracking-brand text-brown/85">START HERE</p>
+            <h2
+              id="recipe-guides"
+              className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl"
+            >
+              まずは、この二つから
+            </h2>
+          </div>
+          <p className="text-sm leading-7 text-sumi/65 md:max-w-sm md:text-right">
+            おいしい焼き方と、定番の磯辺焼き。どちらも山田もち店の切り餅で作れます。
           </p>
+        </div>
+        <RecipeGuideLinks guides={guides} priority />
+      </section>
+
+      <section className="ym-container mt-16 md:mt-24">
+        <div className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr] md:gap-14">
+          <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc]">
+            <Image
+              src={heroImage}
+              alt={heroImageAlt}
+              fill
+              sizes="(min-width: 768px) 55vw, 100vw"
+              className="object-cover object-center"
+            />
+          </div>
+          <div>
+            <p className="text-xs tracking-brand text-brown/85">FROM OUR KITCHEN</p>
+            <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
+              山田もち店のお餅を楽しむ
+            </h2>
+            <p className="mt-6 leading-8 text-sumi/70">
+              山田家で親しんできた食べ方から、毎日の食卓で気軽に楽しめる定番アレンジまで。山田もち店のお餅のおいしい食べ方をご紹介します。
+            </p>
+          </div>
         </div>
       </section>
 

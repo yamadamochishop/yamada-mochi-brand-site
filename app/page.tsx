@@ -4,11 +4,19 @@ import Link from 'next/link';
 import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { SectionHeading } from '@/components/SectionHeading';
 import { TrackedLink } from '@/components/TrackedLink';
+import { RecipeGuideLinks } from '@/components/recipe/RecipeGuideLinks';
 import { sixFlavorGift } from '@/data/catalog';
 import { site } from '@/data/site';
 import { voices } from '@/data/voices';
+import { getRecipeGuides } from '@/lib/recipe-page';
 
-export const metadata: Metadata = { alternates: { canonical: '/' } };
+// layoutのtitle templateを通すと「｜山田もち店」が二重になるため、absoluteで指定する。
+export const metadata: Metadata = {
+  title: { absolute: '山田もち店｜飛騨高山・陣屋前朝市の切り餅と通販' },
+  description:
+    '飛騨高山で自家栽培したもち米「たかやまもち」100％の切り餅。陣屋前朝市と通販でお届けしています。お餅のおいしい焼き方や磯辺焼きなどのレシピもご紹介します。',
+  alternates: { canonical: '/' },
+};
 
 const primaryCta =
   'inline-flex min-h-12 items-center justify-center bg-green px-7 text-sm tracking-[0.1em] text-white transition hover:bg-sumi';
@@ -16,6 +24,8 @@ const quietCta =
   'inline-flex min-h-12 items-center justify-center border border-sumi/20 px-7 text-sm tracking-[0.1em] transition hover:border-green hover:text-green';
 
 export default function HomePage() {
+  const recipeGuides = getRecipeGuides();
+
   return (
     <main className="ym-page">
       <section className="relative min-h-[78vh] overflow-hidden bg-green text-base md:min-h-[88vh]">
@@ -34,9 +44,9 @@ export default function HomePage() {
               お餅を。
             </h1>
             <p className="mt-7 max-w-2xl leading-9 text-base/90">
-              飛騨高山の田んぼで育てたもち米を使い、
+              飛騨高山で自家栽培したもち米「たかやまもち」でつくる切り餅。
               <br className="hidden md:block" />
-              陣屋前朝市から届ける切り餅です。
+              陣屋前朝市と通販で、ご家庭へお届けしています。
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <TrackedLink
@@ -108,6 +118,35 @@ export default function HomePage() {
         <Link href="/brand-story" className={`${quietCta} mt-8`}>
           ブランドストーリー
         </Link>
+      </section>
+
+      <section aria-labelledby="home-recipes" className="bg-[#f1ece3] py-20 md:py-28">
+        <div className="ym-container">
+          <div className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs tracking-brand text-brown/85">HOW TO ENJOY</p>
+              <h2
+                id="home-recipes"
+                className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl"
+              >
+                お餅を、
+                <br className="md:hidden" />
+                もっとおいしく。
+              </h2>
+              <p className="mt-6 leading-8 text-sumi/70">
+                焼き方を少し変えるだけで、お餅の香ばしさもやわらかさも変わります。まずは基本の焼き方と、定番の磯辺焼きから。
+              </p>
+            </div>
+            <Link
+              href="/recipes"
+              className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start text-sm tracking-[0.1em] text-green underline underline-offset-8 transition hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi md:self-auto"
+            >
+              レシピをすべて見る
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <RecipeGuideLinks guides={recipeGuides} />
+        </div>
       </section>
 
       <section className="bg-green py-20 text-base md:py-28">

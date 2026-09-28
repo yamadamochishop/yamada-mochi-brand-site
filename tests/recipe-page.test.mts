@@ -7,14 +7,20 @@ import {
   getFeaturedRecipes,
   getRecipeFilterProducts,
   getRecipeFilterTags,
+  getRecipeGuides,
   getRecipeInventory,
+  getRecipeMethodLinks,
   getRecipeProductLabels,
+  getRecipesForProduct,
+  linksToBaseTechnique,
   publishedRecipes,
   recipeImageNotice,
   recipeSortOptions,
   sortRecipes,
+  splitRecipeVariations,
   toRecipeListItem,
 } from '../lib/recipe-page.ts';
+import { products } from '../data/catalog.ts';
 import { recipeItemListJsonLd, recipeJsonLd } from '../lib/seo.ts';
 import type { RecipeRecord } from '../types/content-model.ts';
 
@@ -257,4 +263,83 @@ test('recipeJsonLd: optional Human-confirmed fields appear only when set', () =>
 
   // 画像が無ければ従来どおり出力しない。
   assert.equal(recipeJsonLd(fixture({ cookingTimeMinutes: 5 })), null);
+});
+
+test('getRecipeGuides: isobeyaki first, then the base technique, with generated-image notices', () => {
+  const guides = getRecipeGuides();
+  assert.deepEqual(
+    guides.map((guide) => [guide.href, guide.label]),
+    [
+      ['/recipes/isobeyaki', '磯辺焼きの作り方'],
+      ['/recipes/mochi-yakikata', 'お餅のおいしい焼き方・解凍方法'],
+    ],
+  );
+  for (const guide of guides) {
+    assert.equal(guide.image?.imageNotice, '盛り付けイメージ', guide.slug);
+  }
+});
+
+test('isobeyaki: flavor variations link products without displacing product-page recipes', () => {
+  const isobeyaki = publishedRecipes.find((recipe) => recipe.id === 'isobeyaki')!;
+  const { general, byProduct } = splitRecipeVariations(isobeyaki);
+  assert.deepEqual(
+    general.map((variation) => variation.title),
+    ['九州地方の甘い醤油で'],
+  );
+  assert.equal(
+    general[0].text,
+    '砂糖を入れずに、九州地方の甘い醤油で絡めて食べるのもおすすめです。',
+  );
+  assert.deepEqual(
+    byProduct.map(({ product }) => product.slug),
+    ['sansyokumame', 'kombu', 'tamari', 'ebi'],
+  );
+  // 草餅は海苔・醤油の食べ方がHuman未確定。
+  assert.equal(
+    byProduct.some(({ product }) => product.slug === 'yomogi'),
+    false,
+  );
+  // 各アレンジは、商品正本の「おすすめの食べ方」に海苔を使う食べ方がある商品だけ。
+  for (const { product } of byProduct) {
+    assert.ok(
+      product.ways.some((way) => way.title.includes('海苔')),
+      product.slug,
+    );
+  }
+  // 商品ページのレシピ枠は従来どおり（relatedProductIdsは白餅のまま）。
+  assert.deepEqual(isobeyaki.relatedProductIds, ['plain']);
+  const expectedSpecific = new Map([
+    ['plain', 'isobeyaki'],
+    ['yomogi', 'yomogi-mochi-zenzai'],
+    ['sansyokumame', 'age-mame-mochi'],
+    ['kombu', 'kombu-mochi-ozoni-fu'],
+    ['tamari', 'tamari-mochi-butter-pepper'],
+    ['ebi', 'ebi-mochi-cheese-pizza'],
+  ]);
+  for (const product of products) {
+    assert.deepEqual(
+      getRecipesForProduct(product.slug).map((recipe) => recipe.id),
+      [expectedSpecific.get(product.slug), 'mochi-yakikata'],
+      product.slug,
+    );
+  }
+  // 未確認の値を足していない。
+  assert.equal(isobeyaki.cookingTimeMinutes, undefined);
+  assert.equal(isobeyaki.servings, undefined);
+  assert.equal(isobeyaki.difficulty, undefined);
+  assert.doesNotMatch(JSON.stringify(isobeyaki), /水で濡ら/u);
+});
+
+test('mochi-yakikata: method links cover the toaster steps and every alternative method', () => {
+  const yakikata = publishedRecipes.find((recipe) => recipe.id === 'mochi-yakikata')!;
+  assert.deepEqual(getRecipeMethodLinks(yakikata), [
+    { id: 'recipe-steps', label: 'トースターで焼く（基本）' },
+    { id: 'variation-1', label: 'フライパンで焼く' },
+    { id: 'variation-2', label: '電子レンジでやわらかく' },
+    { id: 'variation-3', label: '冷凍したお餅の解凍・焼き方' },
+  ]);
+  const isobeyaki = publishedRecipes.find((recipe) => recipe.id === 'isobeyaki')!;
+  assert.deepEqual(getRecipeMethodLinks(isobeyaki), []);
+  assert.equal(linksToBaseTechnique(isobeyaki), true);
+  assert.equal(linksToBaseTechnique(yakikata), false);
 });
