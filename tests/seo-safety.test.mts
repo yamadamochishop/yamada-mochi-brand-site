@@ -595,7 +595,7 @@ test('StickyPurchaseBar: every purchase area stays observable on the pages it gu
     ['/recipes', 2], // ページ末尾のCta + footer
     ['/recipes/isobeyaki', 2], // RecipeProductCta + footer
     ['/recipes/mochi-yakikata', 2], // 全商品向けCta + footer
-    ['/products/kombu', 2], // 商品末尾のCta + footer
+    ['/products/kombu', 3], // 冒頭の購入情報 + 商品末尾のCta + footer
     ['/gift', 2],
     ['/seasonal', 1], // footerのみ
   ]);
@@ -655,6 +655,125 @@ test('Product → Recipe: every product detail page links to its recipes', async
     const recipeLinks = html.match(/href="\/recipes\/[a-z-]+"/g) ?? [];
     assert.equal(new Set(recipeLinks).size, 2, productSlug);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Site quality Phase 2 — 見た目・導線の回帰を防ぐ契約
+// ---------------------------------------------------------------------------
+
+function withoutScripts(html: string) {
+  return html.replace(/<script[\s\S]*?<\/script>/g, '');
+}
+
+test('Product hero: name, price, and the BASE CTA come before the long description', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const { products } = await import('../data/catalog.ts');
+
+  for (const product of products) {
+    const response = await fetch(`${localOrigin}/products/${product.slug}`, {
+      headers: productionHeaders(),
+    });
+    assert.equal(response.status, 200, product.slug);
+    const html = withoutScripts(await response.text());
+
+    const h1s = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g) ?? [];
+    assert.equal(h1s.length, 1, product.slug);
+    assert.match(h1s[0], new RegExp(product.name), product.slug);
+
+    const about = html.indexOf('このお餅について');
+    const heroCta = html.indexOf(`href="${product.baseUrl}"`);
+    const price = html.indexOf(product.price);
+    assert.ok(about > 0, product.slug);
+    assert.ok(heroCta > 0 && heroCta < about, `${product.slug}: BASE CTA is above the story`);
+    assert.ok(price > 0 && price < about, `${product.slug}: price is above the story`);
+
+    // 見えるパンくずで商品一覧へ戻れる。
+    assert.match(html, /<nav aria-label="パンくずリスト"[\s\S]*?href="\/products"/, product.slug);
+    // 送料の詳細へのページ内リンクと、その着地点がある。
+    assert.match(html, /href="#purchase-info"/, product.slug);
+    assert.match(html, /id="purchase-info"/, product.slug);
+  }
+});
+
+test('Images: only above-the-fold images are preloaded on key pages', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  // priority を付けた画像は <link rel="preload" as="image"> になる。
+  // 画面の下にある画像まで先読みすると、LCP画像の帯域を奪う。
+  const expectedPreloads = new Map([
+    ['/', 1], // ヒーローの1枚目だけ
+    ['/recipes', 1], // 冒頭のガイド1枚目だけ
+    ['/products/plain', 1],
+    ['/brand-story', 1],
+  ]);
+  for (const [path, expected] of expectedPreloads) {
+    const response = await fetch(`${localOrigin}${path}`, { headers: productionHeaders() });
+    const html = await response.text();
+    const preloads = (html.match(/<link\b[^>]*rel="preload"[^>]*>/g) ?? []).filter((tag) =>
+      /as="image"/.test(tag),
+    );
+    assert.equal(preloads.length, expected, path);
+  }
+});
+
+test('Recipe → Product: a single recipe product is laid out beside its photo, not full width', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const response = await fetch(`${localOrigin}/recipes/isobeyaki`, {
+    headers: productionHeaders(),
+  });
+  const html = withoutScripts(await response.text());
+  const section = html.slice(html.indexOf('id="recipe-product-title"'));
+  // 1商品のときは写真を最大380pxで出す（全幅の正方形にしない）。
+  assert.match(section, /sizes="\(min-width: 1024px\) 380px/);
+  assert.match(section, /href="\/products\/plain"/);
+});
+
+test('Navigation: the current section is exposed to assistive technology', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const hub = withoutScripts(
+    await (await fetch(`${localOrigin}/recipes`, { headers: productionHeaders() })).text(),
+  );
+  assert.match(
+    hub,
+    /<a[^>]*aria-current="page"[^>]*href="\/recipes"|<a[^>]*href="\/recipes"[^>]*aria-current="page"/,
+  );
+
+  const detail = withoutScripts(
+    await (
+      await fetch(`${localOrigin}/recipes/isobeyaki`, { headers: productionHeaders() })
+    ).text(),
+  );
+  assert.match(
+    detail,
+    /<a[^>]*aria-current="true"[^>]*href="\/recipes"|<a[^>]*href="\/recipes"[^>]*aria-current="true"/,
+  );
+  assert.match(detail, /aria-label="メインナビゲーション"/);
+});
+
+test('Design system: Japanese headings keep a readable line-height at every breakpoint', async () => {
+  // Tailwind既定では text-5xl 以上の行間が 1 になり、md:text-5xl が leading-* を
+  // 打ち消して複数行の見出しが詰まる。和文向けの行間を既定値として固定する。
+  const { default: config } = await import('../tailwind.config.ts');
+  const fontSize = config.theme?.extend?.fontSize as Record<
+    string,
+    [string, { lineHeight: string }]
+  >;
+  for (const size of ['2xl', '3xl', '4xl', '5xl', '6xl', '7xl']) {
+    const lineHeight = Number(fontSize?.[size]?.[1]?.lineHeight);
+    assert.ok(lineHeight >= 1.35, `${size} line-height ${lineHeight}`);
+  }
+
+  const css = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
+  // smooth scroll は動きを減らす設定のときに無効になる。
+  assert.doesNotMatch(
+    css.replace(/@media \(prefers-reduced-motion: no-preference\)\s*\{[\s\S]*?\}\s*\}/, ''),
+    /scroll-behavior:\s*smooth/,
+  );
+  assert.match(css, /scroll-padding-top/);
+
+  // 商品カードはサーバーコンポーネントのまま（BASEリンクだけがクライアント部品）。
+  const card = await readFile(new URL('../components/ProductCard.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(card, /['"]use client['"]/);
+  assert.match(card, /TrackedBaseLink/);
 });
 
 test('F: sitemap contains every current URL once and no legacy URL', async () => {
