@@ -1,4 +1,8 @@
-import { nekoposShippingDetail } from '../lib/shipping.ts';
+import {
+  nekoposShippingDetail,
+  setShippingDetail,
+  takkyubinShippingDetail,
+} from '../lib/shipping.ts';
 
 type PurchaseGuideProps = {
   shelfLife: string;
@@ -23,8 +27,10 @@ export function PurchaseGuide({
           [
             '送料',
             nekopos
-              ? nekoposShippingDetail
-              : '地域別送料はBASEの商品ページ・購入画面でご確認ください。',
+              ? `${nekoposShippingDetail}${takkyubinShippingDetail}`
+              : isGift
+                ? setShippingDetail
+                : '地域別送料はBASEの商品ページ・購入画面でご確認ください。',
           ],
           [
             'ギフト対応',

@@ -447,6 +447,23 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
   validateRecipeTags(owner, recipe.tags, errors);
   validateRecipePopularity(owner, recipe.popularity, errors);
 
+  for (const field of ['stepsTitle', 'variationsTitle', 'productVariationsTitle'] as const) {
+    const value = recipe[field];
+    if (value !== undefined && !value.trim()) errors.push(`${owner}: ${field} must not be blank`);
+  }
+
+  // アレンジで案内する商品はカタログに存在すること。リンク切れの商品ページを作らない。
+  for (const variation of recipe.variations ?? []) {
+    if (!variation.title.trim() || !variation.text.trim()) {
+      errors.push(`${owner}: variation requires a title and text`);
+    }
+    if (variation.productId !== undefined && !productIds.has(variation.productId)) {
+      errors.push(
+        `${owner}: variation "${variation.title}" references unknown product "${variation.productId}"`,
+      );
+    }
+  }
+
   for (const field of ['publishedAt', 'updatedAt'] as const) {
     const value = recipe[field];
     if (value !== undefined && !isoDatePattern.test(value)) {

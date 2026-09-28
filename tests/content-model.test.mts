@@ -305,7 +305,7 @@ test('Recipe: mochi-yakikata keeps the toaster method as the only structured-dat
   assert.match(yakikata.steps[1].instruction, /トースター（1000W）で4〜5分/u);
   assert.deepEqual(
     yakikata.variations?.map((variation) => variation.title),
-    ['フライパンで焼く', '電子レンジでやわらかく', '冷凍したお餅'],
+    ['フライパンで焼く', '電子レンジでやわらかく', '冷凍したお餅の解凍・焼き方'],
   );
   assert.equal(yakikata.cookingTimeMinutes, undefined);
 

@@ -246,6 +246,12 @@ export type RecipeStep = {
 export type RecipeVariation = {
   title: string;
   text: string;
+  /**
+   * 別の商品で楽しむアレンジの場合、その商品のID。
+   * 商品ページへの内部リンクに使うだけで、`relatedProductIds` には加えない
+   * （商品ページ側のレシピ枠を押し出さないため）。文言はその商品のHuman確定情報の範囲で書く。
+   */
+  productId?: string;
 };
 
 /**
@@ -319,7 +325,13 @@ export type RecipeRecord = {
   updatedAt?: string;
   /** 「おいしく作るポイント」として表示する補足。 */
   notes?: string[];
+  /** 作り方の見出し。未設定なら「作り方」。本文の手順と一致する語だけを使う。 */
+  stepsTitle?: string;
   variations?: RecipeVariation[];
+  /** 商品指定のないアレンジの見出し。未設定なら「アレンジ」。 */
+  variationsTitle?: string;
+  /** `productId` 付きアレンジの見出し。未設定なら「ほかのお餅で楽しむ」。 */
+  productVariationsTitle?: string;
   column?: RecipeColumn;
   allergens?: AllergenInfo;
   storageNotes?: string;

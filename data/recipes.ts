@@ -27,7 +27,7 @@ export const recipes: RecipeRecord[] = [
     slug: 'mochi-yakikata',
     title: 'お餅のおいしい焼き方',
     description:
-      '山田もち店のお餅は、まず焼くところから。ご家庭のトースターでおいしく焼くための、いちばん基本の焼き方です。フライパン・電子レンジ・冷凍したお餅の焼き方もあわせてご紹介します。',
+      '山田もち店のお餅は、まず焼くところから。ご家庭のトースターでおいしく焼くための、いちばん基本の焼き方です。フライパンや電子レンジを使う方法、冷凍したお餅の解凍・焼き方もあわせてご紹介します。',
     mainImage: {
       src: '/images/recipes/mochi-yakikata.webp',
       alt: '香ばしく焼き色をつけた切り餅の盛り付けイメージ',
@@ -37,6 +37,7 @@ export const recipes: RecipeRecord[] = [
     category: 'mochi',
     tags: ['トースター', 'フライパン', '電子レンジ', '基本の焼き方'],
     ingredients: [{ name: '山田もち店の切り餅', amount: '適量' }],
+    stepsTitle: 'トースターで焼く（基本）',
     steps: [
       { position: 1, instruction: 'お餅の表面を、さっと水で濡らします。' },
       { position: 2, instruction: 'トースター（1000W）で4〜5分を目安に焼きます。' },
@@ -53,6 +54,7 @@ export const recipes: RecipeRecord[] = [
     ],
     // Recipe構造化データの手順（recipeInstructions）は上の主工程だけ。
     // ここに並べる別の焼き方はvariationとして表示のみに使い、構造化データへは混ぜない。
+    variationsTitle: 'ほかの焼き方・解凍方法',
     variations: [
       {
         title: 'フライパンで焼く',
@@ -63,7 +65,7 @@ export const recipes: RecipeRecord[] = [
         text: '切り餅2個を耐熱容器に重ならないように置き、水約50mlを加えて上下を濡らします。ラップをせず600Wで1〜1分30秒を目安に加熱し、水気を切ります。焼き目はつかないため、きなこ餅・あんこ餅などに向きます。',
       },
       {
-        title: '冷凍したお餅',
+        title: '冷凍したお餅の解凍・焼き方',
         text: '冷凍餅を香ばしく焼きたい場合は、ラップを外す前に500Wの電子レンジで約30秒加熱して半解凍し、その後トースターで焼き色がつくまで焼きます。餅の大きさによって加熱時間を調整してください。',
       },
     ],
@@ -76,9 +78,9 @@ export const recipes: RecipeRecord[] = [
     publishedAt: '2026-08-28',
     status: 'published',
     seo: {
-      title: 'お餅のおいしい焼き方｜トースター・フライパン・レンジ',
+      title: 'お餅のおいしい焼き方と解凍方法｜トースター・フライパン',
       description:
-        '切り餅のおいしい焼き方を餅屋が紹介。山田もち店おすすめのトースター1000Wで4〜5分を基本に、フライパン、電子レンジ、冷凍餅の焼き方もまとめました。',
+        '切り餅のおいしい焼き方を餅屋が紹介。トースター1000Wで4〜5分を基本に、フライパンでの焼き方、電子レンジでやわらかくする方法、冷凍したお餅の解凍・焼き方までまとめました。',
       canonicalPath: '/recipes/mochi-yakikata',
     },
   },
@@ -86,7 +88,8 @@ export const recipes: RecipeRecord[] = [
     id: 'isobeyaki',
     slug: 'isobeyaki',
     title: '山田家の磯辺焼き',
-    description: '焼いた白餅に砂糖醤油を絡めて、炙った焼き海苔で包みます。',
+    description:
+      '焼いた白餅に砂糖醤油を絡めて、炙った焼き海苔で包みます。三色豆餅や昆布餅など、味の違うお餅で楽しむ磯辺焼きもご紹介します。',
     mainImage: {
       src: '/images/recipes/isobeyaki.webp',
       alt: '醤油を絡めて海苔を巻いた磯辺焼きの盛り付けイメージ',
@@ -113,15 +116,38 @@ export const recipes: RecipeRecord[] = [
         title: '九州地方の甘い醤油で',
         text: '砂糖を入れずに、九州地方の甘い醤油で絡めて食べるのもおすすめです。',
       },
+      // 以下は各商品ページの「おすすめの食べ方」（data/catalog.ts）でHuman確定済みの範囲だけを書く。
+      // 商品ページのレシピ枠を押し出さないよう、relatedProductIdsには加えない。
+      {
+        title: '三色豆餅で',
+        text: '三色豆餅には、海苔と醤油を。豆の風味を生かした、食事にも合う食べ方です。',
+        productId: 'sansyokumame',
+      },
+      {
+        title: '昆布餅で',
+        text: '昆布餅には、海苔と少量の醤油を。甘い味付けより醤油を少しだけにすると、昆布の旨みともち米の甘みが引き立ちます。',
+        productId: 'kombu',
+      },
+      {
+        title: 'たまり餅で',
+        text: 'たまり餅は、海苔巻きで。醤油の香ばしさに、海苔の風味を重ねる定番の食べ方です。',
+        productId: 'tamari',
+      },
+      {
+        title: '黒ごま海老餅で',
+        text: '黒ごま海老餅には、海苔と醤油を。味付けは控えめにして、海老とごまの香りを生かします。',
+        productId: 'ebi',
+      },
     ],
+    productVariationsTitle: '味を変えて楽しむ磯辺焼き',
     relatedProductIds: ['plain'],
     author: '山田もち店',
     publishedAt: '2026-08-28',
     status: 'published',
     seo: {
-      title: '磯辺焼きの作り方｜砂糖醤油と焼き海苔で楽しむ山田家の味',
+      title: '磯辺焼きの作り方｜砂糖1：醤油2と焼き海苔の基本',
       description:
-        '焼いた白餅に砂糖醤油を絡め、炙った焼き海苔で包む磯辺焼きの作り方。飛騨高山・山田もち店の山田家で親しんできた食べ方です。',
+        '焼いた白餅に上白糖大さじ1・濃口醤油大さじ2の砂糖醤油を絡め、炙った焼き海苔で包む磯辺焼きの作り方。九州地方の甘い醤油や、三色豆餅・昆布餅・たまり餅・黒ごま海老餅で楽しむ食べ方も、飛騨高山の山田もち店がご紹介します。',
       canonicalPath: '/recipes/isobeyaki',
     },
   },
