@@ -3,6 +3,7 @@ export type BaseClickPlacement =
   | 'product_card'
   | 'article_cta'
   | 'footer_cta'
+  | 'product_hero'
   | 'product_detail'
   | 'gift_hero'
   | 'gift_set_card'

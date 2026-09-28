@@ -115,12 +115,13 @@ export default function RecipesPage() {
           </h2>
           {/* Humanが選んだfeaturedだけを表示。スマホでは横スクロール、md以上では3列。 */}
           <div className="-mx-5 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
-            {featured.map((recipe, index) => (
+            {/* 注目レシピは画面の下の方にあるため、LCP候補の先読み（priority）はしない。 */}
+            {featured.map((recipe) => (
               <div
                 key={recipe.slug}
                 className="w-[82vw] max-w-sm shrink-0 snap-start md:w-auto md:max-w-none"
               >
-                <RecipeCard recipe={recipe} priority={index === 0} />
+                <RecipeCard recipe={recipe} />
               </div>
             ))}
           </div>

@@ -12,7 +12,7 @@ import { site } from '@/data/site';
 const model = buildSeasonalPageModel();
 
 const buttonClass =
-  'inline-flex min-h-11 items-center justify-center border border-sumi px-6 py-3 text-sm tracking-[0.1em] transition hover:bg-sumi hover:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi';
+  'inline-flex min-h-11 items-center justify-center border border-sumi px-6 py-3 text-sm tracking-[0.1em] transition hover:bg-sumi hover:text-[#f8f6f2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi';
 
 const statusBadgeClasses: Record<SeasonalStatusLabel, string> = {
   販売中: 'bg-green/10 text-green',

@@ -8,10 +8,7 @@ export default function NotFound() {
       <p className="mx-auto mt-8 max-w-xl leading-8 text-sumi/65">
         お探しのページは移動したか、削除された可能性があります。山田もち店のトップページからご覧ください。
       </p>
-      <Link
-        href="/"
-        className="mt-10 inline-flex border border-sumi/20 px-8 py-4 text-sm tracking-[0.12em]"
-      >
+      <Link href="/" className="ym-btn ym-btn-quiet mt-10 min-h-14 px-8 tracking-[0.12em]">
         トップページへ戻る
       </Link>
     </main>

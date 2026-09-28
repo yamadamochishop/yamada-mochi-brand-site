@@ -65,10 +65,11 @@ export default function GiftPage() {
       <section className="ym-container grid gap-12 py-24 md:grid-cols-2 md:py-32">
         <div className="self-center">
           <p className="mb-6 text-xs tracking-brand text-brown/85">GIFT</p>
-          <h1 className="font-serifjp text-4xl leading-relaxed tracking-[0.14em] md:text-6xl">
-            飛騨高山の思い出を、
+          <h1 className="font-serifjp text-4xl tracking-[0.14em] md:text-5xl xl:text-6xl">
+            <span className="ym-phrase">飛騨高山の</span>
+            <span className="ym-phrase">思い出を、</span>
             <br />
-            大切な人へ。
+            <span className="ym-phrase">大切な人へ。</span>
           </h1>
           <p className="mt-8 leading-9 text-sumi/70">
             飛騨高山・陣屋前朝市で長く親しまれてきた、山田もち店の切り餅を六種類詰め合わせました。
@@ -76,7 +77,7 @@ export default function GiftPage() {
           <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
             placement="gift_hero"
-            className="mt-9 inline-flex bg-green px-8 py-4 text-base tracking-[0.12em]"
+            className="ym-btn ym-btn-lg ym-btn-primary mt-9 min-h-14 px-10 tracking-[0.12em]"
           >
             BASEで購入する
           </TrackedBaseLink>
@@ -116,16 +117,21 @@ export default function GiftPage() {
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {catalogSets.map((product) => (
-            <article key={product.slug} className="border border-sumi/10 bg-white/35 p-7">
+            <article
+              key={product.slug}
+              className="flex flex-col border border-sumi/10 bg-white/35 p-7"
+            >
               <h3 className="font-serifjp text-xl tracking-[0.1em]">{product.cardName}</h3>
               <p className="mt-4 text-sm leading-7 text-sumi/65">
                 {product.content} / {product.price}
               </p>
-              <p className="mt-3 text-sm leading-7 text-sumi/65">アレルゲン：{product.allergy}</p>
+              <p className="mb-7 mt-3 text-sm leading-7 text-sumi/65">
+                アレルゲン：{product.allergy}
+              </p>
               <TrackedBaseLink
                 href={product.baseUrl}
                 placement="gift_set_card"
-                className="mt-7 inline-flex bg-green px-5 py-3 text-sm tracking-[0.1em] text-white transition hover:bg-sumi"
+                className="ym-btn ym-btn-primary mt-auto min-h-11 self-start px-5"
               >
                 BASEの商品ページへ
               </TrackedBaseLink>
@@ -199,7 +205,7 @@ export default function GiftPage() {
           <TrackedBaseLink
             href={sixFlavorGift.baseUrl}
             placement="gift_details"
-            className="mt-8 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] md:w-auto"
+            className="ym-btn ym-btn-lg ym-btn-primary mt-8 min-h-14 w-full px-10 tracking-[0.12em] md:w-auto"
           >
             BASEで購入する
           </TrackedBaseLink>

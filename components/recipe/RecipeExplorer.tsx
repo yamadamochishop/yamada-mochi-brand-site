@@ -14,7 +14,7 @@ import {
 const chipBase =
   'inline-flex min-h-10 items-center rounded-full border px-4 text-sm tracking-[0.06em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi';
 const chipIdle = `${chipBase} border-sumi/20 bg-base text-sumi/70 hover:border-sumi`;
-const chipActive = `${chipBase} border-sumi bg-sumi text-base`;
+const chipActive = `${chipBase} border-sumi bg-sumi text-[#f8f6f2]`;
 
 /**
  * レシピ一覧の検索・絞り込み・並び替え。

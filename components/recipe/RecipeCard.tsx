@@ -28,7 +28,7 @@ export function RecipeCard({
   return (
     <article
       data-recipe-card={recipe.slug}
-      className="flex h-full flex-col border border-sumi/15 bg-base"
+      className="group flex h-full flex-col border border-sumi/15 bg-base transition-colors hover:border-sumi/35"
     >
       {recipe.mainImage ? (
         <Link href={href} aria-label={`${recipe.title}のレシピを見る`} className="block">
@@ -40,7 +40,7 @@ export function RecipeCard({
                 fill
                 priority={priority}
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                className="object-cover"
+                className="object-cover transition duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               />
             </div>
             {recipe.mainImage.imageNotice ? (

@@ -30,13 +30,13 @@ export default function FaqPage() {
         <SectionHeading eyebrow="FAQ" title="よくあるご質問" as="h1" />
         <div className="mx-auto mt-16 max-w-3xl space-y-4">
           {faqs.map((faq) => (
-            <details key={faq.q} className="border border-sumi/10 bg-white/30 p-6">
-              <summary className="cursor-pointer font-serifjp text-xl tracking-[0.08em]">
+            <details key={faq.q} className="border border-sumi/10 bg-white/30">
+              <summary className="cursor-pointer p-6 font-serifjp text-lg leading-relaxed md:text-xl tracking-[0.08em]">
                 {faq.q}
               </summary>
-              <p className="mt-5 leading-8 text-sumi/65">{faq.a}</p>
+              <p className="px-6 pb-6 leading-8 text-sumi/70">{faq.a}</p>
               {faq.link ? (
-                <p className="mt-4">
+                <p className="-mt-2 px-6 pb-6">
                   <Link
                     href={faq.link.href}
                     className="inline-flex min-h-11 items-center text-sm tracking-[0.08em] text-green underline underline-offset-8 transition hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"

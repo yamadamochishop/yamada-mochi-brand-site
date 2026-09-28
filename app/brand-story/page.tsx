@@ -29,6 +29,8 @@ export default function BrandStoryPage() {
             src="/images/morning-market-real.webp"
             alt="飛騨高山の陣屋前朝市に並ぶ店々"
             fill
+            priority
+            sizes="(min-width: 1280px) 540px, (min-width: 768px) 45vw, 100vw"
             className="object-cover object-top"
           />
         </div>
