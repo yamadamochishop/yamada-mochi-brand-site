@@ -66,6 +66,8 @@ export default function ThirdGenerationPage() {
               src="/images/yamada-yuki-portrait.jpg"
               alt="山田もち店三代目 山田裕紀"
               fill
+              priority
+              sizes="(min-width: 1280px) 640px, (min-width: 768px) 52vw, 100vw"
               className="object-cover"
             />
           </div>
@@ -100,6 +102,7 @@ export default function ThirdGenerationPage() {
               src="/images/chef-era-yamada-yuki.jpg"
               alt="料理人時代の山田裕紀"
               fill
+              sizes="(min-width: 768px) 33vw, 100vw"
               className="object-cover"
             />
           </div>
@@ -108,6 +111,7 @@ export default function ThirdGenerationPage() {
               src="/images/latest-craft-rolling.webp"
               alt="山田もち店で餅を均一に伸ばして整える手仕事"
               fill
+              sizes="(min-width: 768px) 33vw, 100vw"
               className="object-cover object-[58%_center]"
             />
           </div>
@@ -116,6 +120,7 @@ export default function ThirdGenerationPage() {
               src="/images/yamada-yuki-working-applepie.jpg"
               alt="アップルパイを作る山田裕紀"
               fill
+              sizes="(min-width: 768px) 33vw, 100vw"
               className="object-cover"
             />
           </div>
