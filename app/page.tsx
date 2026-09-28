@@ -18,10 +18,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
-const primaryCta =
-  'inline-flex min-h-12 items-center justify-center bg-green px-7 text-sm tracking-[0.1em] text-white transition hover:bg-sumi';
-const quietCta =
-  'inline-flex min-h-12 items-center justify-center border border-sumi/20 px-7 text-sm tracking-[0.1em] transition hover:border-green hover:text-green';
+const primaryCta = 'ym-btn ym-btn-primary';
+const quietCta = 'ym-btn ym-btn-quiet';
 
 export default function HomePage() {
   const recipeGuides = getRecipeGuides();
@@ -31,6 +29,8 @@ export default function HomePage() {
       <section className="relative min-h-[78vh] overflow-hidden bg-green text-base md:min-h-[88vh]">
         <div className="absolute inset-0">
           <HeroSlideshow />
+          {/* スマホでは本文が画面幅いっぱいに重なるため、全体を少し沈めて読みやすくする。 */}
+          <div className="absolute inset-0 bg-green/35 md:bg-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5" />
         </div>
         <div className="relative mx-auto flex min-h-[78vh] max-w-7xl items-center px-5 py-24 md:min-h-[88vh] md:px-8">
@@ -38,7 +38,7 @@ export default function HomePage() {
             <p className="mb-7 text-xs font-semibold tracking-brand text-base/80">
               FROM HIDA TAKAYAMA
             </p>
-            <h1 className="font-serifjp text-4xl leading-[1.5] tracking-[0.14em] sm:text-5xl md:text-7xl">
+            <h1 className="font-serifjp text-4xl tracking-[0.14em] sm:text-5xl md:text-7xl">
               思い出に残る
               <br />
               お餅を。
@@ -52,13 +52,13 @@ export default function HomePage() {
               <TrackedLink
                 href="#popular"
                 event="hero_cta_click"
-                className="inline-flex min-h-12 min-w-60 items-center justify-center border border-base bg-base/10 px-7 tracking-[0.12em] transition hover:bg-base hover:text-green"
+                className="ym-btn ym-btn-on-dark min-w-60 bg-base/10 text-base tracking-[0.12em]"
               >
                 人気商品を見る
               </TrackedLink>
               <Link
                 href="/brand-story"
-                className="inline-flex min-h-12 min-w-60 items-center justify-center border border-base/50 px-7 tracking-[0.12em]"
+                className="ym-btn ym-btn-on-dark min-w-60 text-base tracking-[0.12em]"
               >
                 山田もち店について
               </Link>
@@ -74,8 +74,7 @@ export default function HomePage() {
               src={sixFlavorGift.image}
               alt={sixFlavorGift.name}
               fill
-              priority
-              sizes="(min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
               className="object-cover"
             />
           </div>
@@ -110,7 +109,8 @@ export default function HomePage() {
       <section className="ym-container py-20 text-center md:py-28">
         <p className="text-xs tracking-brand text-brown/85">OUR STORY</p>
         <h2 className="mt-5 font-serifjp text-4xl tracking-[0.14em] md:text-6xl">
-          思い出に残るお餅を。
+          <span className="ym-phrase">思い出に残る</span>
+          <span className="ym-phrase">お餅を。</span>
         </h2>
         <p className="mx-auto mt-8 max-w-3xl leading-9 text-sumi/70">
           飛騨高山で自家栽培したもち米を使い、家族でつくる山田もち店。陣屋前朝市で生まれる出会いとともに、お餅を届けています。
@@ -170,10 +170,7 @@ export default function HomePage() {
             <p className="mt-6 leading-8 text-base/80">
               旅の朝に交わす言葉や、手から手へ渡す時間。山田もち店の原点は、陣屋前朝市にあります。
             </p>
-            <Link
-              href="/market"
-              className="mt-8 inline-flex min-h-12 items-center justify-center border border-base px-7 text-sm tracking-[0.1em]"
-            >
+            <Link href="/market" className="ym-btn ym-btn-on-dark mt-8">
               朝市について見る
             </Link>
           </div>
@@ -242,7 +239,7 @@ export default function HomePage() {
             <TrackedLink
               href="/products"
               event="top_cta_click"
-              className="inline-flex min-h-12 items-center justify-center border border-base px-8 tracking-[0.1em]"
+              className="ym-btn ym-btn-on-dark min-w-52 text-base"
             >
               商品一覧
             </TrackedLink>
@@ -250,7 +247,7 @@ export default function HomePage() {
               href={site.baseUrl}
               event="top_cta_click"
               external
-              className="inline-flex min-h-12 items-center justify-center bg-base px-8 tracking-[0.1em] text-green"
+              className="ym-btn ym-btn-on-dark-solid min-w-52 text-base"
             >
               オンラインショップ
             </TrackedLink>

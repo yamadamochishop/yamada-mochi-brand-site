@@ -11,13 +11,11 @@ export function Cta({
     <section data-purchase-area className="bg-green px-5 py-20 text-base md:px-8">
       <div className="mx-auto max-w-5xl text-center">
         <p className="mb-5 text-xs tracking-brand text-base/60">ONLINE SHOP</p>
-        <h2 className="font-serifjp text-3xl leading-relaxed tracking-[0.12em] md:text-5xl">
-          {title}
-        </h2>
+        <h2 className="font-serifjp text-2xl tracking-[0.12em] sm:text-3xl md:text-5xl">{title}</h2>
         <p className="mx-auto mt-6 max-w-2xl leading-8 text-base/75">{text}</p>
         <Link
           href="/products"
-          className="mt-10 inline-flex min-w-72 items-center justify-center border border-base px-8 py-4 tracking-[0.12em] transition hover:bg-base hover:text-green"
+          className="ym-btn ym-btn-on-dark mt-10 min-h-14 w-full px-8 text-base tracking-[0.12em] sm:w-auto sm:min-w-72"
         >
           商品を選んで購入する
         </Link>

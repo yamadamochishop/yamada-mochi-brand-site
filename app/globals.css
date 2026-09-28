@@ -9,14 +9,32 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* 固定ヘッダーの下にアンカー先の見出しが隠れないようにする。 */
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   margin: 0;
   background: #f8f6f2;
   color: #1a1a1a;
-  font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-family: 'Yu Gothic', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+/*
+ * 和文見出しを文節で折り返す（対応ブラウザのみ。未対応では従来どおり）。
+ * 「お餅を。」の「を。」だけが次の行に残るような折り返しを減らす。
+ */
+h1,
+h2,
+h3,
+summary {
+  word-break: auto-phrase;
 }
 
 ::selection {
@@ -39,4 +57,50 @@ body {
 
 .ym-serif {
   @apply font-serifjp;
+}
+
+/* 文節のかたまり。見出しの途中で改行させたくない語句を囲む（全ブラウザ有効）。 */
+.ym-phrase {
+  display: inline-block;
+}
+
+@layer components {
+  /*
+   * ボタンの共通形。色・枠の組み合わせは修飾クラスで選ぶ。
+   * ページごとに hover の有無や高さがばらついていたのを揃える。
+   */
+  .ym-btn {
+    @apply inline-flex min-h-12 items-center justify-center px-7 text-center text-sm tracking-[0.1em] transition-colors duration-200;
+  }
+
+  /* 主ボタン（BASEなど購入に直結する導線）。 */
+  .ym-btn-primary {
+    @apply bg-green text-white hover:bg-sumi;
+  }
+
+  /* 明るい背景の上の控えめなボタン。 */
+  .ym-btn-quiet {
+    @apply border border-sumi/20 text-sumi hover:border-sumi;
+  }
+
+  /* 緑・写真の上の枠線ボタン。text-base は font-size と衝突するため色を直接指定する。 */
+  .ym-btn-on-dark {
+    border: 1px solid rgb(248 246 242 / 0.8);
+    color: theme('colors.base');
+  }
+
+  .ym-btn-on-dark:hover {
+    background-color: theme('colors.base');
+    color: theme('colors.green');
+  }
+
+  /* 緑の上の塗りボタン。 */
+  .ym-btn-on-dark-solid {
+    background-color: theme('colors.base');
+    color: theme('colors.green');
+  }
+
+  .ym-btn-on-dark-solid:hover {
+    background-color: theme('colors.kinari');
+  }
 }
