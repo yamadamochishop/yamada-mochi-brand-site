@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { Cta } from '@/components/Cta';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
 import { JsonLd } from '@/components/JsonLd';
+import { PhraseText } from '@/components/PhraseText';
 import { ProductCard } from '@/components/ProductCard';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
 import { breadcrumbJsonLd, pageOpenGraph, productJsonLd } from '@/lib/seo';
@@ -60,28 +61,84 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           { name: product.name, path: `/products/${product.slug}` },
         ])}
       />
-      <section className="ym-container py-20 md:py-28">
-        <article className="mx-auto max-w-5xl">
-          <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc] md:aspect-[16/10]">
-            <Image
-              src={product.image}
-              alt={product.imageAlt || `${product.name}の商品写真`}
-              fill
-              priority
-              sizes="(min-width: 768px) 672px, 100vw"
-              className="object-contain p-8 md:p-16"
-            />
+      <section className="ym-container pb-20 pt-8 md:pb-28 md:pt-12">
+        <article className="mx-auto max-w-6xl">
+          <nav aria-label="パンくずリスト" className="text-xs tracking-[0.06em] text-sumi/60">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <li>
+                <Link
+                  href="/"
+                  className="inline-flex min-h-8 items-center transition hover:text-sumi"
+                >
+                  ホーム
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link
+                  href="/products"
+                  className="inline-flex min-h-8 items-center transition hover:text-sumi"
+                >
+                  商品一覧
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="text-sumi/80">
+                {product.name}
+              </li>
+            </ol>
+          </nav>
+
+          {/* 最初の画面で「何の商品か・いくらか・どこで買えるか」が分かるよう、写真と購入情報を並べる。 */}
+          <div className="mt-6 grid gap-10 md:mt-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16">
+            <div className="relative mx-auto aspect-square w-full max-w-lg overflow-hidden bg-[#f4efe9] lg:max-w-none">
+              <Image
+                src={product.image}
+                alt={product.imageAlt || `${product.name}の商品写真`}
+                fill
+                priority
+                sizes="(min-width: 1280px) 620px, (min-width: 1024px) 52vw, (min-width: 640px) 512px, 100vw"
+                className="object-cover"
+              />
+            </div>
+
+            <div data-purchase-area className="text-center lg:text-left">
+              <p className="text-xs tracking-brand text-brown/85">{product.english}</p>
+              <h1 className="mt-4 font-serifjp text-4xl tracking-[0.16em] md:text-5xl xl:text-6xl">
+                {product.name}
+              </h1>
+              <p className="mt-6 font-serifjp text-2xl tracking-[0.1em] text-sumi/85 md:text-3xl">
+                <PhraseText text={product.catchcopy} />
+              </p>
+              <p className="mt-8 border-t border-sumi/10 pt-6 text-xl tracking-[0.06em]">
+                {product.content}
+                <span aria-hidden="true" className="mx-3 text-sumi/40">
+                  ／
+                </span>
+                {product.price}
+              </p>
+              {nekopos ? (
+                <p className="mt-3 text-sm leading-7 text-green">{nekoposHeadline}</p>
+              ) : null}
+              <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3 lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:gap-6">
+                <TrackedBaseLink
+                  href={product.baseUrl}
+                  placement="product_hero"
+                  className="ym-btn ym-btn-primary min-h-14 px-10 text-base"
+                >
+                  BASEで購入する
+                </TrackedBaseLink>
+                <a
+                  href="#purchase-info"
+                  className="inline-flex min-h-11 items-center justify-center text-sm tracking-[0.08em] text-sumi/70 underline underline-offset-8 transition hover:text-sumi"
+                >
+                  送料・お届けについて
+                </a>
+              </div>
+            </div>
           </div>
 
-          <div className="mx-auto mt-14 max-w-3xl text-center md:mt-20">
-            <p className="mb-5 text-xs tracking-brand text-brown/85">{product.english}</p>
-            <h1 className="font-serifjp text-4xl tracking-[0.16em] md:text-6xl">{product.name}</h1>
-            <p className="mt-8 font-serifjp text-3xl leading-relaxed tracking-[0.1em] md:text-5xl">
-              {product.catchcopy}
-            </p>
-          </div>
-
-          <section className="mx-auto mt-14 max-w-3xl md:mt-20">
+          <section className="mx-auto mt-16 max-w-3xl md:mt-24">
             <p className="text-xs tracking-brand text-brown/85">ABOUT THIS MOCHI</p>
             <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
               このお餅について
@@ -90,7 +147,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p className="mt-6 leading-9 text-sumi/70">
               家族で育てたもち米を使い、状態を見ながら一つひとつ丁寧に仕上げています。素材ごとの味わいを生かし、日々の食卓でも楽しんでいただける切り餅です。
             </p>
-            <div className="mt-10 border-y border-sumi/10 py-8">
+            <div id="purchase-info" className="mt-10 border-y border-sumi/10 py-8">
               <p className="text-sm tracking-brand text-sumi/65">PRICE</p>
               <p className="mt-3 text-2xl">{product.price}</p>
               {nekopos ? (
@@ -109,7 +166,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <TrackedBaseLink
                 href={product.baseUrl}
                 placement="product_detail"
-                className="mt-6 inline-flex w-full justify-center bg-green px-8 py-4 text-base tracking-[0.12em] transition hover:bg-sumi md:w-auto"
+                className="ym-btn ym-btn-primary mt-6 w-full px-8 text-base tracking-[0.12em] md:w-auto"
               >
                 BASEで購入する
               </TrackedBaseLink>
@@ -174,7 +231,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 src="/images/mochi-stretch-texture.webp"
                 alt="焼き上げて柔らかく伸びる白切り餅"
                 fill
-                sizes="(min-width: 768px) 1024px, 100vw"
+                sizes="(min-width: 1280px) 1152px, 100vw"
                 className="object-cover object-[52%_center] sm:object-center"
               />
             </div>
@@ -215,7 +272,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </ul>
               <Link
                 href="/recipes"
-                className="mt-6 inline-flex text-sm text-sumi/70 underline underline-offset-8"
+                className="mt-4 inline-flex min-h-11 items-center text-sm text-sumi/70 underline underline-offset-8 transition hover:text-sumi"
               >
                 お餅のレシピ一覧を見る
               </Link>
@@ -263,11 +320,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <h2 className="font-serifjp text-2xl tracking-[0.12em]">よくある質問</h2>
             <div className="mt-6 space-y-4">
               {faqs.map((faq) => (
-                <details key={faq.q} className="border border-sumi/10 bg-white/25 p-5">
-                  <summary className="cursor-pointer font-serifjp tracking-[0.08em]">
+                <details key={faq.q} className="border border-sumi/10 bg-white/25">
+                  <summary className="cursor-pointer p-5 font-serifjp tracking-[0.08em]">
                     {faq.q}
                   </summary>
-                  <p className="mt-4 leading-8 text-sumi/65">{faq.a}</p>
+                  <p className="px-5 pb-5 leading-8 text-sumi/70">{faq.a}</p>
                 </details>
               ))}
             </div>
@@ -285,7 +342,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           ))}
         </div>
         <div className="mt-14 text-center">
-          <Link href="/products" className="underline underline-offset-8">
+          <Link
+            href="/products"
+            className="inline-flex min-h-11 items-center underline underline-offset-8 transition hover:text-brown"
+          >
             商品一覧へ戻る
           </Link>
         </div>
