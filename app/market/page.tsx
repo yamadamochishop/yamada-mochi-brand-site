@@ -64,7 +64,7 @@ export default function MarketPage() {
           href={mapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-block underline underline-offset-8"
+          className="mt-6 inline-flex min-h-11 items-center underline underline-offset-8 transition hover:text-brown"
         >
           Google Mapで見る
         </a>

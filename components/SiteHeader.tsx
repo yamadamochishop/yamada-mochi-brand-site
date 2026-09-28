@@ -18,6 +18,17 @@ const nav = [
   ['FAQ', '/faq'],
 ];
 
+/** 今いるページ（または配下のページ）がそのナビ項目に属するか。 */
+function isCurrentSection(pathname: string | null, href: string) {
+  if (!pathname) return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function ariaCurrent(pathname: string | null, href: string) {
+  if (pathname === href) return 'page' as const;
+  return isCurrentSection(pathname, href) ? ('true' as const) : undefined;
+}
+
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -86,15 +97,25 @@ export function SiteHeader() {
             <span className="block text-xs tracking-brand text-sumi/65">{site.enName}</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-5 text-sm tracking-[0.08em] text-sumi/70 lg:flex xl:gap-7 xl:tracking-[0.12em]">
+        <nav
+          aria-label="メインナビゲーション"
+          className="hidden items-center gap-4 text-sm tracking-[0.04em] text-sumi/70 lg:flex xl:gap-7 xl:tracking-[0.12em]"
+        >
           {nav.map(([label, href]) => (
-            <Link key={href} href={href} className="whitespace-nowrap transition hover:text-sumi">
+            <Link
+              key={href}
+              href={href}
+              aria-current={ariaCurrent(pathname, href)}
+              className={`whitespace-nowrap py-2 underline-offset-[10px] transition-colors hover:text-sumi ${
+                isCurrentSection(pathname, href) ? 'text-sumi underline decoration-brown/60' : ''
+              }`}
+            >
               {label}
             </Link>
           ))}
           <Link
             href="/products"
-            className="whitespace-nowrap border border-sumi px-4 py-3 text-sumi transition hover:bg-sumi hover:text-base xl:px-5"
+            className="whitespace-nowrap border border-sumi px-4 py-3 text-sumi transition-colors hover:bg-sumi hover:text-base xl:px-5"
           >
             商品を選ぶ
           </Link>
@@ -115,17 +136,23 @@ export function SiteHeader() {
         ref={mobileNavigationRef}
         id="mobile-navigation"
         aria-label="スマートフォン用ナビゲーション"
-        className={`${isOpen ? 'block' : 'hidden'} border-t border-sumi/10 bg-base px-5 pb-6 pt-3 lg:hidden`}
+        className={`${isOpen ? 'block' : 'hidden'} max-h-[calc(100dvh-4.8125rem)] overflow-y-auto overscroll-contain border-t border-sumi/10 bg-base px-5 pb-6 pt-3 lg:hidden`}
       >
         <div className="mx-auto flex max-w-7xl flex-col">
           {nav.map(([label, href]) => (
             <Link
               key={href}
               href={href}
-              className="border-b border-sumi/10 py-4 text-sm tracking-[0.12em] text-sumi/75"
+              aria-current={ariaCurrent(pathname, href)}
+              className={`flex items-center justify-between border-b border-sumi/10 py-4 text-sm tracking-[0.12em] ${
+                isCurrentSection(pathname, href) ? 'text-sumi' : 'text-sumi/75'
+              }`}
               onClick={() => setIsOpen(false)}
             >
               {label}
+              {isCurrentSection(pathname, href) ? (
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-brown/70" />
+              ) : null}
             </Link>
           ))}
           <Link

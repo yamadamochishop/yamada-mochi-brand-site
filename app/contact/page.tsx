@@ -32,7 +32,14 @@ export default function ContactPage() {
           <dl className="mt-10 divide-y divide-sumi/10 border-y border-sumi/10">
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">
               <dt className="text-sm tracking-[0.12em] text-sumi/65">TEL</dt>
-              <dd>{site.tel}</dd>
+              <dd>
+                <a
+                  className="inline-flex min-h-11 items-center underline-offset-4 hover:underline md:min-h-0"
+                  href={`tel:${site.tel.replace(/-/g, '')}`}
+                >
+                  {site.tel}
+                </a>
+              </dd>
             </div>
             <div className="grid gap-2 py-5 md:grid-cols-[9rem_1fr]">
               <dt className="text-sm tracking-[0.12em] text-sumi/65">MAIL</dt>
@@ -50,7 +57,7 @@ export default function ContactPage() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             {site.googleFormUrl && (
               <a
-                className="inline-flex justify-center bg-green px-8 py-4 text-sm tracking-[0.12em] text-white"
+                className="ym-btn ym-btn-primary min-h-14 px-8 tracking-[0.12em]"
                 href={site.googleFormUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -58,10 +65,7 @@ export default function ContactPage() {
                 お問い合わせフォームへ
               </a>
             )}
-            <Link
-              className="inline-flex justify-center border border-sumi/20 px-8 py-4 text-sm tracking-[0.12em]"
-              href="/faq"
-            >
+            <Link className="ym-btn ym-btn-quiet min-h-14 px-8 tracking-[0.12em]" href="/faq">
               よくある質問を見る
             </Link>
           </div>

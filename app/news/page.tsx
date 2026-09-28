@@ -24,7 +24,12 @@ export default function NewsPage() {
         <div className="mx-auto mt-16 max-w-3xl divide-y divide-sumi/10 border-y border-sumi/10">
           {news.map((item) => (
             <article key={item.title} className="grid gap-3 py-7 md:grid-cols-[8rem_1fr]">
-              <time className="text-sm tracking-[0.12em] text-sumi/65">{item.date}</time>
+              <time
+                dateTime={item.date.replace('.', '-')}
+                className="text-sm tracking-[0.12em] text-sumi/65"
+              >
+                {item.date}
+              </time>
               <div>
                 <h2 className="font-serifjp text-xl tracking-[0.08em]">{item.title}</h2>
                 <p className="mt-3 leading-8 text-sumi/65">{item.body}</p>
