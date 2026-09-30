@@ -140,7 +140,7 @@ test('洋梨パイ carries only the human-confirmed facts and is on the October 
     pear.commitment,
     '飛騨桃パイと同じように、果物に火を入れすぎず、素材の味わいを活かして仕上げています。',
   );
-  // 価格・賞味期限・原材料・アレルゲン・産地・保存方法・通販・販売場所はHuman未確定なので設定してはいけない。
+  // 価格・賞味期限・原材料・アレルゲン・産地・保存方法・通販はHuman未確定なので設定してはいけない。
   for (const field of [
     pear.price,
     pear.shelfLife,
@@ -154,13 +154,13 @@ test('洋梨パイ carries only the human-confirmed facts and is on the October 
   }
   assert.equal(pear.images.length, 0);
   assert.equal(pear.commerce.status, 'undecided');
-  assert.deepEqual(pear.salesLocationIds, []);
+  assert.deepEqual(pear.salesLocationIds, ['jinya-morning-market']);
 
   const pageProduct = model.currentProducts.find((product) => product.id === 'yonashi-pie');
   assert.equal(pageProduct?.statusLabel, '販売中');
   assert.equal(pageProduct?.currentMonthLabel, '10月頃');
   assert.equal(pageProduct?.categoryLabel, 'パイ');
-  assert.equal(pageProduct?.salesLocationLabel, '未定');
+  assert.equal(pageProduct?.salesLocationLabel, '陣屋前朝市');
   assert.equal(pageProduct?.commerceLabel, '未定');
   // 予告枠は空になり、季節ページには「試作中」の仮表記が残らない。
   assert.deepEqual(model.upcomingProducts, []);

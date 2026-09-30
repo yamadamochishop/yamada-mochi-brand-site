@@ -136,8 +136,8 @@ export const seasonalProducts: SeasonalProductRecord[] = [
       '洋梨をさっと煮込み、レモンとバターを加えてシンプルに仕上げています。果実のやわらかな食感と香りを残しながら、パイ生地で包んで香ばしく焼き上げました。',
     commitment:
       '飛騨桃パイと同じように、果物に火を入れすぎず、素材の味わいを活かして仕上げています。',
-    // 販売場所はHuman未確定のため空のまま。
-    salesLocationIds: [],
+    // Human確認済み（2026-09-30）: 販売場所は陣屋前朝市（既存の販売場所ID）。
+    salesLocationIds: [JINYA_MARKET_ID],
     commerce: { status: 'undecided', offers: [] },
     images: [],
     status: 'draft',
