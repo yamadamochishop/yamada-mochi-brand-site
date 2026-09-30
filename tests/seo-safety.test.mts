@@ -302,7 +302,7 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   ]) {
     assert.match(html, new RegExp(name));
   }
-  for (const period of ['1月〜3月', '2月〜4月', '4月〜11月', '7月〜10月', '9月〜5月']) {
+  for (const period of ['1月〜3月', '2月〜4月', '4月〜11月', '7月〜10月', '9月〜5月', '10月頃']) {
     assert.match(html, new RegExp(period));
   }
   assert.doesNotMatch(html, />8月末まで</);
@@ -317,14 +317,20 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.match(html, /レモンとバターで仕上げています/);
   assert.doesNotMatch(html, /無添加|保存料|品種|糖度|毎日販売/u);
 
-  // 洋梨パイ: 予告のみ。桃パイの確定値を流用していないこと。
-  assert.match(html, /9月〜10月頃/);
+  // 洋梨パイ: 10月1日から販売。Human確定の事実だけが出ていて、桃パイの確定値や仮表記を流用していないこと。
+  assert.match(html, /洋梨の香りを、やさしく包んで。/);
+  assert.match(html, /洋梨をさっと煮込み、レモンとバターを加えてシンプルに仕上げています。/);
+  assert.match(
+    html,
+    /飛騨桃パイと同じように、果物に火を入れすぎず、素材の味わいを活かして仕上げています。/,
+  );
   assert.doesNotMatch(html, /洋梨パイ[\s\S]{0,400}?1個 250円（税込）/u);
+  assert.doesNotMatch(html, /試作中|内容や販売時期は変わる場合|9月〜10月頃|これから登場するもの/u);
   const statusBadges = (label: string) =>
     (html.match(new RegExp(`data-seasonal-status="${label}"`, 'g')) ?? []).length;
-  assert.equal(statusBadges('販売中'), 3);
+  assert.equal(statusBadges('販売中'), 4);
   assert.equal(statusBadges('まもなく終了'), 0);
-  assert.equal(statusBadges('販売予定'), 2);
+  assert.equal(statusBadges('販売予定'), 0);
   assert.equal(statusBadges('販売終了'), 2);
   // 状態バッジと項目名で「販売予定」が二重の意味を持たないこと。
   assert.match(html, /<dt[^>]*>販売時期<\/dt>/);
@@ -334,8 +340,9 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.match(html, /2026年の販売は8月中旬で終了しました/);
   assert.equal((html.match(/data-seasonal-cta=/g) ?? []).length, 3);
 
-  // シャインマスカット大福: 9月の店先に出るHuman確定の事実だけ。
-  assert.match(html, /9(<!-- -->)?月のお品書き/);
+  // シャインマスカット大福: 10月の店先に出るHuman確定の事実だけ。
+  assert.match(html, /10(<!-- -->)?月のお品書き/);
+  assert.doesNotMatch(html, /9(<!-- -->)?月のお品書き/);
   assert.match(html, /シャインマスカット大福/);
   assert.match(html, /1個 300円（税込）/);
   assert.match(html, /9月〜11月/);
