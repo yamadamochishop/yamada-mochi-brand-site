@@ -41,7 +41,7 @@ export function ArticlePurchaseCTA({ message }: { message: string }) {
               placement="article_cta"
               className="inline-flex min-h-11 flex-1 items-center justify-center bg-green px-6 text-sm tracking-[0.1em] text-white transition hover:bg-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
             >
-              オンラインショップ
+              常温6袋ギフトを購入
             </TrackedBaseLink>
           </div>
         </div>

@@ -63,7 +63,7 @@ export default function GiftPage() {
             placement="gift_hero"
             className="ym-btn ym-btn-lg ym-btn-primary mt-9 min-h-14 px-10 tracking-[0.12em]"
           >
-            BASEで購入する
+            常温6袋ギフトを購入
           </TrackedBaseLink>
         </div>
         <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
@@ -190,7 +190,7 @@ export default function GiftPage() {
             placement="gift_details"
             className="ym-btn ym-btn-lg ym-btn-primary mt-8 min-h-14 w-full px-10 tracking-[0.12em] md:w-auto"
           >
-            BASEで購入する
+            常温6袋ギフトを購入
           </TrackedBaseLink>
         </div>
       </section>

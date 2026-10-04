@@ -104,7 +104,7 @@ export default function HomePage() {
                 external
                 className={primaryCta}
               >
-                オンラインショップ
+                常温6袋ギフトを購入
               </TrackedLink>
             </div>
           </div>
