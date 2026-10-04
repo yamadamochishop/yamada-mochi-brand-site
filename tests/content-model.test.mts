@@ -22,9 +22,9 @@ const expectedProducts = [
 ] as const;
 
 const expectedGiftSets = [
-  ['six-flavor-gift', 2840, '2,840円（税込）', 'https://yamadamochi.thebase.in/'],
+  ['six-flavor-gift', 2840, '2,840円（税込）', 'https://yamadamochi.thebase.in/items/160959142'],
   ['choice-six-set', 2980, '2,980円（税込）', 'https://yamadamochi.thebase.in/items/149543351'],
-  ['twelve-set', 5480, '5,480円（税込）', 'https://yamadamochi.thebase.in/'],
+  ['twelve-set', 5480, '5,480円（税込）', 'https://yamadamochi.thebase.in/items/160959167'],
 ] as const;
 
 function cloneContentModel() {

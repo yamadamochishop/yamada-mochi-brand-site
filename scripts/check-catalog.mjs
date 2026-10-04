@@ -34,11 +34,7 @@ for (const product of catalog ?? []) {
   for (const field of requiredFields) {
     if (!product[field]) errors.push(`${product.slug ?? 'unknown'}: ${field} is required`);
   }
-  if (!(
-    /^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(product.baseUrl) ||
-    (['six-flavor-gift', 'twelve-set'].includes(product.slug) &&
-      product.baseUrl === 'https://yamadamochi.thebase.in/')
-  )) {
+  if (!/^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(product.baseUrl)) {
     errors.push(`${product.slug}: invalid BASE URL`);
   }
 }
@@ -47,7 +43,7 @@ const individualUrls = (catalog ?? [])
   .filter((item) => /\/items\//.test(item.baseUrl))
   .map((item) => item.baseUrl);
 if (new Set(individualUrls).size !== individualUrls.length) {
-  errors.push('individual catalogue BASE URLs must be unique; fixed sets may use the fallback');
+  errors.push('individual catalogue BASE URLs must be unique');
 }
 
 if (fixedSetVariants.length !== 8 || new Set(fixedSetVariants.map((item) => item.id)).size !== 8) {
@@ -63,13 +59,8 @@ for (const item of fixedSetVariants) {
         ? '5,280円（税込）'
         : '5,480円（税込）';
   if (item.price !== expected) errors.push(`${item.id}: incorrect price`);
-  if (!(
-    item.baseUrl === 'https://yamadamochi.thebase.in/' ||
-    /^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(item.baseUrl)
-  ))
-    errors.push(
-      `${item.id}: use the shop fallback or a verified individual BASE URL; never guess an ID`,
-    );
+  if (!/^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(item.baseUrl))
+    errors.push(`${item.id}: use a Human-confirmed individual BASE URL`);
 }
 
 const variantIndividualUrls = fixedSetVariants
@@ -121,5 +112,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  'check:catalog passed: 6 singles, 3 gift records and 8 fixed-set variants: current prices and BASE fallbacks are consistent.',
+  'check:catalog passed: 6 singles, 3 gift records and 8 fixed-set variants: current prices and individual BASE URLs are consistent.',
 );

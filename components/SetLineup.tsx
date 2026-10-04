@@ -32,9 +32,6 @@ export function SetLineup({ giftOnly = false }: { giftOnly?: boolean }) {
               const variants = fixedSetVariants.filter(
                 (variant) => variant.bags === set.bags && variant.purpose === purpose,
               );
-              const individualUrlsResolved = variants.every((variant) =>
-                /\/items\/\d+$/.test(variant.baseUrl),
-              );
               return (
                 <div key={purpose} className="mt-6 border-t border-sumi/10 pt-5">
                   <h4 className="font-serifjp text-lg">
@@ -53,32 +50,17 @@ export function SetLineup({ giftOnly = false }: { giftOnly?: boolean }) {
                     （同額）
                   </p>
                   <div className="mt-4 flex flex-col gap-3 lg:flex-row">
-                    {individualUrlsResolved ? (
-                      variants.map((variant) => (
-                        <TrackedBaseLink
-                          key={variant.id}
-                          href={variant.baseUrl}
-                          placement="set_card"
-                          className="ym-btn ym-btn-primary flex-1 px-4"
-                        >
-                          {variant.delivery}をBASEで見る
-                        </TrackedBaseLink>
-                      ))
-                    ) : (
+                    {variants.map((variant) => (
                       <TrackedBaseLink
-                        href="https://yamadamochi.thebase.in/"
+                        key={variant.id}
+                        href={variant.baseUrl}
                         placement="set_card"
                         className="ym-btn ym-btn-primary flex-1 px-4"
                       >
-                        公式オンラインショップ（BASE）
+                        {variant.delivery}をBASEで見る
                       </TrackedBaseLink>
-                    )}
+                    ))}
                   </div>
-                  {!individualUrlsResolved ? (
-                    <p className="mt-3 text-sm leading-7 text-sumi/65">
-                      BASEの商品一覧から、ご希望の包装・配送方法の商品をお選びください。
-                    </p>
-                  ) : null}
                 </div>
               );
             },
