@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { Product } from '../data/catalog.ts';
+import type { Product, CatalogSet, fixedSetVariants } from '../data/catalog.ts';
 import { site } from '../data/site.ts';
 import type { RecipeRecord } from '../types/content-model.ts';
 
@@ -98,6 +98,7 @@ export function productSchema(product: Product) {
   return {
     '@type': 'Product',
     name: `${product.name} 高山もち`,
+    url: absoluteUrl(`/products/${product.slug}`),
     image: absoluteUrl(product.image),
     description: product.seo.description,
     brand: {
@@ -108,7 +109,7 @@ export function productSchema(product: Product) {
       '@type': 'Offer',
       price: numericPrice(product.price),
       priceCurrency: 'JPY',
-      availability: 'https://schema.org/InStock',
+      url: product.baseUrl,
     },
   };
 }
@@ -129,6 +130,49 @@ export function productListJsonLd(products: Product[]) {
       '@type': 'ListItem',
       position: index + 1,
       item: productSchema(product),
+    })),
+  };
+}
+
+export function catalogSetSchema(product: CatalogSet) {
+  return {
+    '@type': 'Product',
+    name: product.name,
+    image: absoluteUrl(product.image),
+    description: product.seo.description,
+    brand: { '@type': 'Brand', name: site.name },
+    url: product.baseUrl,
+    offers: {
+      '@type': 'Offer',
+      price: numericPrice(product.price),
+      priceCurrency: 'JPY',
+      url: product.baseUrl,
+    },
+  };
+}
+
+export function setListJsonLd(variants: typeof fixedSetVariants, path: '/products' | '/gift') {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: path === '/gift' ? '山田もち店 ギフトセット' : '山田もち店 セット商品',
+    itemListElement: variants.map((variant, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: variant.name,
+        image: absoluteUrl(variant.image),
+        description: `6種類 × 各${variant.quantityPerFlavor}袋。${variant.content}。${variant.packaging}。${variant.delivery}。送料別。`,
+        brand: { '@type': 'Brand', name: site.name },
+        url: absoluteUrl(`${path}#set-${variant.bags}`),
+        offers: {
+          '@type': 'Offer',
+          price: numericPrice(variant.price),
+          priceCurrency: 'JPY',
+          url: variant.baseUrl,
+        },
+      },
     })),
   };
 }

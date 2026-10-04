@@ -4,18 +4,19 @@ import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
-import { catalogSets, sixFlavorGift } from '@/data/catalog';
-import { site } from '@/data/site';
-import { absoluteUrl, breadcrumbJsonLd, numericPrice, pageOpenGraph } from '@/lib/seo';
+import { catalogSets, sixFlavorGift, fixedSetVariants } from '@/data/catalog';
+import { SetLineup } from '@/components/SetLineup';
+import { SetDeliveryGuide } from '@/components/SetDeliveryGuide';
+import { breadcrumbJsonLd, pageOpenGraph, setListJsonLd, catalogSetSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'ギフト',
   description:
-    '飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。',
+    '飛騨高山の切り餅6種類を贈る6袋・12袋ギフト。ギフト箱・熨斗対応。常温便・冷凍便をお選びいただけます。',
   openGraph: pageOpenGraph({
     title: 'ギフト｜山田もち店',
     description:
-      '飛騨高山 朝市の切り餅 六種詰め合わせ。6種類の切り餅を各1袋ずつ詰めた、山田もち店のギフト商品です。',
+      '飛騨高山の切り餅6種類を贈る6袋・12袋ギフト。ギフト箱・熨斗対応。常温便・冷凍便をお選びいただけます。',
     path: '/gift',
     image: '/images/latest-sixset-field.webp',
     imageAlt: '飛騨高山の田んぼから贈る切り餅6種ギフト',
@@ -26,32 +27,15 @@ export const metadata: Metadata = {
 };
 
 export default function GiftPage() {
-  const giftLineupJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: '山田もち店 ギフトセット',
-    itemListElement: catalogSets.map((product, position) => ({
-      '@type': 'ListItem',
-      position: position + 1,
-      item: {
-        '@type': 'Product',
-        name: product.name,
-        description: product.seo.description,
-        image: absoluteUrl(product.image),
-        brand: {
-          '@type': 'Brand',
-          name: site.name,
-        },
-        url: product.baseUrl,
-        offers: {
-          '@type': 'Offer',
-          price: numericPrice(product.price),
-          priceCurrency: 'JPY',
-          availability: 'https://schema.org/InStock',
-        },
-      },
-    })),
-  };
+  const giftLineupJsonLd = setListJsonLd(
+    fixedSetVariants.filter((variant) => variant.purpose === '贈りもの用'),
+    '/gift',
+  );
+  giftLineupJsonLd.itemListElement.push({
+    '@type': 'ListItem',
+    position: giftLineupJsonLd.itemListElement.length + 1,
+    item: catalogSetSchema(catalogSets[1]),
+  });
 
   return (
     <main className="ym-page">
@@ -115,29 +99,28 @@ export default function GiftPage() {
         <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
           用途に合わせて選ぶ
         </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {catalogSets.map((product) => (
-            <article
-              key={product.slug}
-              className="flex flex-col border border-sumi/10 bg-white/35 p-7"
-            >
-              <h3 className="font-serifjp text-xl tracking-[0.1em]">{product.cardName}</h3>
-              <p className="mt-4 text-sm leading-7 text-sumi/65">
-                {product.content} / {product.price}
-              </p>
-              <p className="mb-7 mt-3 text-sm leading-7 text-sumi/65">
-                アレルゲン：{product.allergy}
-              </p>
-              <TrackedBaseLink
-                href={product.baseUrl}
-                placement="gift_set_card"
-                className="ym-btn ym-btn-primary mt-auto min-h-11 self-start px-5"
-              >
-                BASEの商品ページへ
-              </TrackedBaseLink>
-            </article>
-          ))}
-        </div>
+        <SetLineup giftOnly />
+        <article className="mt-6 border border-sumi/10 bg-white/35 p-7">
+          <h3 className="font-serifjp text-xl tracking-[0.1em]">{catalogSets[1].cardName}</h3>
+          <p className="mt-4 text-sm leading-7 text-sumi/65">
+            {catalogSets[1].content} / {catalogSets[1].price}・送料別
+          </p>
+          <p className="mt-2 text-sm leading-7 text-sumi/65">
+            6種類からお好きな味を合計6袋。{catalogSets[1].packaging}。配送は
+            {catalogSets[1].shipping.split(' / ')[0]}です。
+          </p>
+          <p className="mt-2 text-sm leading-7 text-sumi/65">
+            アレルゲン：{catalogSets[1].allergy}
+          </p>
+          <TrackedBaseLink
+            href={catalogSets[1].baseUrl}
+            placement="gift_set_card"
+            className="ym-btn ym-btn-primary mt-5"
+          >
+            選べる6袋セットをBASEで見る
+          </TrackedBaseLink>
+        </article>
+        <SetDeliveryGuide />
       </section>
       <section className="ym-container py-20 md:py-24">
         <div className="grid gap-6 md:grid-cols-2">

@@ -22,9 +22,9 @@ const expectedProducts = [
 ] as const;
 
 const expectedGiftSets = [
-  ['six-flavor-gift', 2980, '2,980円（税込）', 'https://yamadamochi.thebase.in/items/149543143'],
+  ['six-flavor-gift', 2840, '2,840円（税込）', 'https://yamadamochi.thebase.in/'],
   ['choice-six-set', 2980, '2,980円（税込）', 'https://yamadamochi.thebase.in/items/149543351'],
-  ['twelve-set', 5960, '5,960円（税込）', 'https://yamadamochi.thebase.in/items/149544078'],
+  ['twelve-set', 5480, '5,480円（税込）', 'https://yamadamochi.thebase.in/'],
 ] as const;
 
 function cloneContentModel() {
@@ -80,7 +80,7 @@ test('Product: six existing products retain slugs, prices, and BASE URLs', () =>
   assert.equal(validateContentModel(contentModel).length, 0);
 });
 
-test('Gift: three existing gift sets retain prices and resolve included products', () => {
+test('Gift: fixed gift sets follow current prices and the selectable set retains its price and resolve included products', () => {
   assert.equal(giftSetRecords.length, 3);
   assert.deepEqual(
     giftSetRecords.map((giftSet) => [

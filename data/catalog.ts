@@ -334,11 +334,14 @@ export const catalogSets: CatalogSet[] = [
     name: '飛騨高山 朝市の切り餅 6種類食べ比べセット',
     cardName: '6種類食べ比べセット',
     ...commonSetDetails,
-    baseUrl: 'https://yamadamochi.thebase.in/items/149543143',
-    price: '2,980円（税込）',
+    baseUrl: 'https://yamadamochi.thebase.in/',
+    price: '2,840円（税込）',
     content: '200g × 6袋',
-    packaging: '贈り物用ギフトボックス入り',
+    packaging: '贈りもの用ギフト箱・熨斗対応',
     allergy: 'えび・ごま・大豆・小麦',
+    shelfLife: '常温：製造日より8日 / 冷凍保存の目安：約3か月',
+    storage: '常温便は直射日光・高温多湿を避け、冷凍便は冷凍で保存してください。',
+    shipping: '常温便 / 冷凍便（それぞれ送料別）',
     seo: {
       title: '飛騨高山 朝市の切り餅 6種類食べ比べセット｜山田もち店',
       description:
@@ -366,11 +369,14 @@ export const catalogSets: CatalogSet[] = [
     name: '12袋セット',
     cardName: '12袋セット',
     ...commonSetDetails,
-    baseUrl: 'https://yamadamochi.thebase.in/items/149544078',
-    price: '5,960円（税込）',
+    baseUrl: 'https://yamadamochi.thebase.in/',
+    price: '5,480円（税込）',
     content: '200g × 12袋',
-    packaging: 'ギフトボックス入り',
     allergy: 'えび・ごま・大豆・小麦',
+    packaging: '贈りもの用ギフト箱・熨斗対応',
+    shelfLife: '常温：製造日より8日 / 冷凍保存の目安：約3か月',
+    storage: '常温便は直射日光・高温多湿を避け、冷凍便は冷凍で保存してください。',
+    shipping: '常温便 / 冷凍便（それぞれ送料別）',
     seo: {
       title: '12袋セット｜山田もち店',
       description: '飛騨高山の切り餅6種類を各2袋、合計12袋詰め合わせたセットです。',
@@ -380,6 +386,39 @@ export const catalogSets: CatalogSet[] = [
 
 export const catalog = [...products, ...catalogSets] as const;
 export const sixFlavorGift = catalogSets[0];
+
+/** Human確定仕様（2026-10-04）。新8商品の個別URLは未解決のため、BASEトップへ誘導。 */
+export const setLineup = [
+  { bags: 6, quantityPerFlavor: 1, homePrice: '2,640円（税込）', gift: catalogSets[0] },
+  { bags: 12, quantityPerFlavor: 2, homePrice: '5,280円（税込）', gift: catalogSets[2] },
+] as const;
+
+export const frozenDispatchNote =
+  '現在は、ご注文後に製造・真空包装・冷凍した商品を、冷凍便で発送しています。';
+export const frozenStorageNote =
+  '真空パックのまま冷凍保存できます。冷凍保存の目安は約3か月です。開封後は1枚ずつラップして冷凍してください。';
+export const separateShippingNote =
+  '※常温商品と冷凍商品を同時にご購入の場合、別便でのお届けとなるため、それぞれに送料がかかります。';
+
+export const fixedSetVariants = setLineup.flatMap((set) =>
+  (['常温便', '冷凍便'] as const).flatMap((delivery) =>
+    (['ご自宅用', '贈りもの用'] as const).map((purpose) => ({
+      id: `${set.bags}-${delivery === '常温便' ? 'ambient' : 'frozen'}-${purpose === 'ご自宅用' ? 'home' : 'gift'}`,
+      name: `【${delivery}・${purpose}】飛騨高山の切り餅 6種食べ比べ｜${set.bags}袋${purpose === 'ご自宅用' ? 'セット' : 'ギフト'}`,
+      bags: set.bags,
+      quantityPerFlavor: set.quantityPerFlavor,
+      delivery,
+      purpose,
+      price: purpose === 'ご自宅用' ? set.homePrice : set.gift.price,
+      content: `200g（4枚入り）× ${set.bags}袋`,
+      packaging:
+        purpose === 'ご自宅用' ? 'ギフト箱なし・配送用段ボール' : '贈りもの用ギフト箱・熨斗対応',
+      image: purpose === 'ご自宅用' ? '/images/latest-six-flavors-light.webp' : set.gift.image,
+      baseUrl: 'https://yamadamochi.thebase.in/',
+      // 在庫は同期していない。schemaにはavailabilityを出さない。
+    })),
+  ),
+);
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);

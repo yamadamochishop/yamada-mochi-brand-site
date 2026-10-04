@@ -21,11 +21,13 @@ export const salesChannels: SalesChannel[] = [
   {
     id: 'tabechoku',
     name: '食べチョク',
+    url: 'https://www.tabechoku.com/producers/23313',
     type: 'tabechoku',
   },
   {
     id: 'pokemaru',
     name: 'ポケマル',
+    url: 'https://poke-m.com/producers/297308',
     type: 'pokemaru',
   },
   {

@@ -23,7 +23,7 @@ export function PurchaseGuide({
         {[
           ['賞味期限', shelfLife],
           ['発送', '通常、ご注文から3〜5営業日以内に発送'],
-          ['配送方法', shipping.split(' / ')[0]],
+          ['配送方法', shipping.includes('冷凍便') ? shipping : shipping.split(' / ')[0]],
           [
             '送料',
             nekopos
@@ -35,7 +35,7 @@ export function PurchaseGuide({
           [
             'ギフト対応',
             isGift
-              ? 'ギフト箱・包装に対応。熨斗・手提げ袋の可否はBASEの商品ページでご確認ください。'
+              ? 'ギフト箱・熨斗対応。手提げ袋の可否はBASEの商品ページでご確認ください。'
               : '熨斗・手提げ袋などのご希望はBASEの商品ページでご確認ください。',
           ],
         ].map(([label, value]) => (

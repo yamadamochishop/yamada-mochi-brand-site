@@ -852,3 +852,96 @@ function assertCanonicalHeader(value: string | null): string {
   assert.ok(value, 'Redirect response must include Location');
   return value;
 }
+
+// Human-confirmed catalogue refresh (2026-10-04): rendered prices, schema and routes.
+test('Set refresh: page and schema prices agree for all eight variants; unknown stock is omitted', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const { fixedSetVariants } = await import('../data/catalog.ts');
+  assert.deepEqual(
+    fixedSetVariants.map((item) => item.price),
+    [
+      '2,640円（税込）',
+      '2,840円（税込）',
+      '2,640円（税込）',
+      '2,840円（税込）',
+      '5,280円（税込）',
+      '5,480円（税込）',
+      '5,280円（税込）',
+      '5,480円（税込）',
+    ],
+  );
+  for (const path of ['/products', '/gift']) {
+    const response = await fetch(`${localOrigin}${path}`, { headers: productionHeaders() });
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    const visible = withoutScripts(html);
+    const scripts = [
+      ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g),
+    ].map((match) => JSON.parse(match[1]));
+    const setList = scripts.find(
+      (item) =>
+        item['@type'] === 'ItemList' &&
+        item.name.includes(path === '/gift' ? 'ギフト' : 'セット商品'),
+    );
+    assert.ok(setList, path);
+    const expected = fixedSetVariants.filter(
+      (item) => path === '/products' || item.purpose === '贈りもの用',
+    );
+    for (const item of expected) {
+      const schema = setList.itemListElement.find(
+        (entry: { item: { name: string } }) => entry.item.name === item.name,
+      )?.item;
+      assert.ok(schema, item.id);
+      assert.equal(schema.offers.price, Number(item.price.replace(/[^0-9]/g, '')));
+      assert.equal(schema.offers.availability, undefined);
+      assert.match(visible, new RegExp(item.price.replace(/[()]/g, '\\$&')));
+      assert.match(visible, new RegExp(item.delivery));
+    }
+    assert.match(visible, /別便でのお届け/);
+    assert.match(visible, /それぞれに送料/);
+    assert.match(visible, /約3か月/);
+    assert.match(visible, /熨斗対応/);
+    for (const url of [
+      'https://www.tabechoku.com/producers/23313',
+      'https://poke-m.com/producers/297308',
+    ])
+      assert.ok(visible.includes(`href="${url}"`));
+  }
+});
+
+test('Set refresh: FAQPage exactly matches the rendered questions and answers', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const { faqs } = await import('../data/faqs.ts');
+  const html = await (await fetch(`${localOrigin}/faq`, { headers: productionHeaders() })).text();
+  const scripts = [
+    ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g),
+  ].map((match) => JSON.parse(match[1]));
+  const schema = scripts.find((item) => item['@type'] === 'FAQPage');
+  assert.deepEqual(
+    schema.mainEntity.map((item: { name: string; acceptedAnswer: { text: string } }) => ({
+      q: item.name,
+      a: item.acceptedAnswer.text,
+    })),
+    faqs.map(({ q, a }) => ({ q, a })),
+  );
+  const visible = withoutScripts(html);
+  for (const { q, a } of faqs) {
+    assert.ok(visible.includes(q), q);
+    assert.ok(visible.includes(a), q);
+  }
+});
+
+test('Set refresh: published routes contain no retired fixed price, ID, rice listing or stock assertion', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  for (const path of currentIndexablePaths) {
+    const response = await fetch(`${localOrigin}${path}`, { headers: productionHeaders() });
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.doesNotMatch(
+      html,
+      /5,960|5960|149543143|149544078|杵つき|ひとめぼれ|schema\.org\/InStock/,
+      path,
+    );
+    if (path !== '/gift') assert.doesNotMatch(html, /2,980|2980/, path);
+  }
+});

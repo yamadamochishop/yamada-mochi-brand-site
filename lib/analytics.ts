@@ -1,4 +1,6 @@
 export type BaseClickPlacement =
+  | 'online_shop'
+  | 'set_card'
   | 'sticky_bar'
   | 'product_card'
   | 'article_cta'
@@ -16,7 +18,7 @@ export function trackBaseClick(placement: BaseClickPlacement) {
 }
 
 export type SalesChannelClickChannel = 'tabechoku' | 'pokemaru';
-export type SalesChannelClickPlacement = 'recipe_product';
+export type SalesChannelClickPlacement = 'recipe_product' | 'online_shop';
 
 /** BASE以外の通販導線。`base_click` とは別イベントとして計測する。 */
 export function trackSalesChannelClick(

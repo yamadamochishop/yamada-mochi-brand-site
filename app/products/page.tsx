@@ -4,18 +4,20 @@ import { ProductCard } from '@/components/ProductCard';
 import { SectionHeading } from '@/components/SectionHeading';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
-import { products } from '@/data/catalog';
+import { SetLineup } from '@/components/SetLineup';
+import { SetDeliveryGuide } from '@/components/SetDeliveryGuide';
+import { products, fixedSetVariants } from '@/data/catalog';
 import { nekoposListNote } from '@/lib/shipping';
-import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd } from '@/lib/seo';
+import { breadcrumbJsonLd, pageOpenGraph, productListJsonLd, setListJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: '商品一覧',
+  title: '商品一覧｜飛騨高山の切り餅・通販',
   description:
-    '山田もち店の定番切り餅6種類。プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅。',
+    '飛騨高山の定番切り餅6種類と6袋・12袋の食べ比べセット。ご自宅用・贈りもの用、常温便・冷凍便をお選びいただけます。',
   openGraph: pageOpenGraph({
-    title: '商品一覧｜山田もち店',
+    title: '商品一覧｜飛騨高山の切り餅・通販｜山田もち店',
     description:
-      '山田もち店の定番切り餅6種類。プレーン、草餅、三色豆餅、たまり餅、昆布餅、黒ごま海老餅。',
+      '飛騨高山の定番切り餅6種類と6袋・12袋の食べ比べセット。ご自宅用・贈りもの用、常温便・冷凍便をお選びいただけます。',
     path: '/products',
     image: '/images/latest-six-flavors-light.webp',
     imageAlt: '山田もち店の切り餅6種類を一列に並べた商品一覧',
@@ -60,6 +62,16 @@ export default function ProductsPage() {
             <ProductCard key={product.slug} product={product} />
           ))}
         </div>
+      </section>
+      <section className="ym-container pb-20 md:pb-28">
+        <JsonLd data={setListJsonLd(fixedSetVariants, '/products')} />
+        <SectionHeading
+          eyebrow="SETS"
+          title="6種類を楽しむセット商品"
+          lead="ご自宅の食卓にも、大切な方への贈りものにも。包装と配送方法をお選びいただけます。"
+        />
+        <SetLineup />
+        <SetDeliveryGuide />
       </section>
       <Cta />
     </main>
