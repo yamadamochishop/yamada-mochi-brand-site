@@ -1,5 +1,6 @@
+import Link from 'next/link';
 import { TrackedBaseLink } from '@/components/TrackedBaseLink';
-import { fixedSetVariants, setLineup } from '@/data/catalog';
+import { fixedSetVariants, setLineup, products } from '@/data/catalog';
 
 export function SetLineup({ giftOnly = false }: { giftOnly?: boolean }) {
   return (
@@ -16,32 +17,71 @@ export function SetLineup({ giftOnly = false }: { giftOnly?: boolean }) {
           <p className="mt-4 text-sm leading-7 text-sumi/70">
             6種類 × 各{set.quantityPerFlavor}袋 ／ 1袋200g（4枚入り）
           </p>
-          <p className="mt-3 text-sm leading-7 text-sumi/70">{set.gift.ingredients}</p>
+          <p className="mt-3 text-sm leading-7 text-sumi/70">
+            {products.map((product, index) => (
+              <span key={product.slug}>
+                {index > 0 ? '、' : ''}
+                <Link href={`/products/${product.slug}`} className="underline underline-offset-4">
+                  {product.name}
+                </Link>
+              </span>
+            ))}
+          </p>
           {(giftOnly ? (['贈りもの用'] as const) : (['ご自宅用', '贈りもの用'] as const)).map(
-            (purpose) => (
-              <div key={purpose} className="mt-6 border-t border-sumi/10 pt-5">
-                <h4 className="font-serifjp text-lg">
-                  {purpose}　{purpose === 'ご自宅用' ? set.homePrice : set.gift.price}
-                </h4>
-                <p className="mt-2 text-sm leading-7 text-sumi/70">
-                  {purpose === 'ご自宅用' ? 'ギフト箱なし・配送用段ボール' : set.gift.packaging}
-                </p>
-                <div className="mt-4 flex flex-col gap-3 lg:flex-row">
-                  {fixedSetVariants
-                    .filter((variant) => variant.bags === set.bags && variant.purpose === purpose)
-                    .map((variant) => (
+            (purpose) => {
+              const variants = fixedSetVariants.filter(
+                (variant) => variant.bags === set.bags && variant.purpose === purpose,
+              );
+              const individualUrlsResolved = variants.every((variant) =>
+                /\/items\/\d+$/.test(variant.baseUrl),
+              );
+              return (
+                <div key={purpose} className="mt-6 border-t border-sumi/10 pt-5">
+                  <h4 className="font-serifjp text-lg">
+                    {purpose}　{purpose === 'ご自宅用' ? set.homePrice : set.gift.price}
+                  </h4>
+                  <p className="mt-2 text-sm leading-7 text-sumi/70">
+                    {purpose === 'ご自宅用' ? 'ギフト箱なし・配送用段ボール' : set.gift.packaging}
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-sumi/70">
+                    {variants.map((variant, index) => (
+                      <span key={variant.id} id={variant.id}>
+                        {index > 0 ? '・' : ''}
+                        {variant.delivery}
+                      </span>
+                    ))}
+                    （同額）
+                  </p>
+                  <div className="mt-4 flex flex-col gap-3 lg:flex-row">
+                    {individualUrlsResolved ? (
+                      variants.map((variant) => (
+                        <TrackedBaseLink
+                          key={variant.id}
+                          href={variant.baseUrl}
+                          placement="set_card"
+                          className="ym-btn ym-btn-primary flex-1 px-4"
+                        >
+                          {variant.delivery}をBASEで見る
+                        </TrackedBaseLink>
+                      ))
+                    ) : (
                       <TrackedBaseLink
-                        key={variant.id}
-                        href={variant.baseUrl}
+                        href="https://yamadamochi.thebase.in/"
                         placement="set_card"
                         className="ym-btn ym-btn-primary flex-1 px-4"
                       >
-                        {variant.delivery}をBASEで選ぶ
+                        公式オンラインショップ（BASE）
                       </TrackedBaseLink>
-                    ))}
+                    )}
+                  </div>
+                  {!individualUrlsResolved ? (
+                    <p className="mt-3 text-sm leading-7 text-sumi/65">
+                      BASEの商品一覧から、ご希望の包装・配送方法の商品をお選びください。
+                    </p>
+                  ) : null}
                 </div>
-              </div>
-            ),
+              );
+            },
           )}
           <p className="mt-5 text-sm leading-7 text-sumi/65">
             商品価格は常温便・冷凍便とも同額。送料別。

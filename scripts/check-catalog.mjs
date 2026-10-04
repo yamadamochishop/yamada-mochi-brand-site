@@ -46,8 +46,8 @@ for (const product of catalog ?? []) {
 const individualUrls = (catalog ?? [])
   .filter((item) => /\/items\//.test(item.baseUrl))
   .map((item) => item.baseUrl);
-if (individualUrls.length !== 7 || new Set(individualUrls).size !== individualUrls.length) {
-  errors.push('the six singles and selectable set must retain distinct individual BASE URLs');
+if (new Set(individualUrls).size !== individualUrls.length) {
+  errors.push('individual catalogue BASE URLs must be unique; fixed sets may use the fallback');
 }
 
 if (fixedSetVariants.length !== 8 || new Set(fixedSetVariants.map((item) => item.id)).size !== 8) {
@@ -63,8 +63,20 @@ for (const item of fixedSetVariants) {
         ? '5,280円（税込）'
         : '5,480円（税込）';
   if (item.price !== expected) errors.push(`${item.id}: incorrect price`);
-  if (item.baseUrl !== 'https://yamadamochi.thebase.in/')
-    errors.push(`${item.id}: resolve URL with public evidence before replacing fallback`);
+  if (!(
+    item.baseUrl === 'https://yamadamochi.thebase.in/' ||
+    /^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(item.baseUrl)
+  ))
+    errors.push(
+      `${item.id}: use the shop fallback or a verified individual BASE URL; never guess an ID`,
+    );
+}
+
+const variantIndividualUrls = fixedSetVariants
+  .filter((item) => /\/items\//.test(item.baseUrl))
+  .map((item) => item.baseUrl);
+if (new Set(variantIndividualUrls).size !== variantIndividualUrls.length) {
+  errors.push('resolved fixed-set variant URLs must be unique');
 }
 
 const officialGift = {
@@ -72,7 +84,6 @@ const officialGift = {
   price: '2,840円（税込）',
   content: '200g × 6袋',
   packaging: '贈りもの用ギフト箱・熨斗対応',
-  baseUrl: 'https://yamadamochi.thebase.in/',
 };
 for (const [field, expected] of Object.entries(officialGift)) {
   if (sixFlavorGift?.[field] !== expected)

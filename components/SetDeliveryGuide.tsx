@@ -1,5 +1,10 @@
 import Link from 'next/link';
-import { frozenDispatchNote, frozenStorageNote, separateShippingNote } from '@/data/catalog';
+import {
+  frozenDispatchNote,
+  frozenStorageNote,
+  separateShippingNote,
+  frozenCookingNote,
+} from '@/data/catalog';
 
 export function SetDeliveryGuide() {
   return (
@@ -10,9 +15,7 @@ export function SetDeliveryGuide() {
       </p>
       <p>{frozenDispatchNote}</p>
       <p>{frozenStorageNote}</p>
-      <p className="mt-3">
-        冷凍したお餅は500Wの電子レンジで約30秒、軽く温めて半解凍してから、トースターで焼き色がつくまで焼きます。機種・餅の大きさにより時間を調整してください。
-      </p>
+      <p className="mt-3">{frozenCookingNote}</p>
       <Link
         href="/recipes/mochi-yakikata"
         className="inline-flex min-h-11 items-center text-green underline underline-offset-4"

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import type { Product, CatalogSet, fixedSetVariants } from '../data/catalog.ts';
+import type { Product, CatalogSet, FixedSetVariant } from '../data/catalog.ts';
 import { site } from '../data/site.ts';
 import type { RecipeRecord } from '../types/content-model.ts';
 
@@ -151,7 +151,7 @@ export function catalogSetSchema(product: CatalogSet) {
   };
 }
 
-export function setListJsonLd(variants: typeof fixedSetVariants, path: '/products' | '/gift') {
+export function setListJsonLd(variants: FixedSetVariant[], path: '/products' | '/gift') {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -165,12 +165,12 @@ export function setListJsonLd(variants: typeof fixedSetVariants, path: '/product
         image: absoluteUrl(variant.image),
         description: `6種類 × 各${variant.quantityPerFlavor}袋。${variant.content}。${variant.packaging}。${variant.delivery}。送料別。`,
         brand: { '@type': 'Brand', name: site.name },
-        url: absoluteUrl(`${path}#set-${variant.bags}`),
+        url: absoluteUrl(`${path}#${variant.id}`),
         offers: {
           '@type': 'Offer',
           price: numericPrice(variant.price),
           priceCurrency: 'JPY',
-          url: variant.baseUrl,
+          ...(/\/items\/\d+$/.test(variant.baseUrl) ? { url: variant.baseUrl } : {}),
         },
       },
     })),

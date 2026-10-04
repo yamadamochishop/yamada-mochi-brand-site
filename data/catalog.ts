@@ -345,7 +345,7 @@ export const catalogSets: CatalogSet[] = [
     seo: {
       title: '飛騨高山 朝市の切り餅 6種類食べ比べセット｜山田もち店',
       description:
-        '飛騨高山・陣屋前朝市で親しまれる6種類の切り餅を各1袋、贈り物用ギフトボックスに詰めた食べ比べセットです。',
+        '飛騨高山・陣屋前朝市で親しまれる6種類の切り餅を各1袋、贈りもの用ギフト箱に詰めた食べ比べセットです。常温便・冷凍便、熨斗に対応しています。',
     },
   },
   {
@@ -397,6 +397,8 @@ export const frozenDispatchNote =
   '現在は、ご注文後に製造・真空包装・冷凍した商品を、冷凍便で発送しています。';
 export const frozenStorageNote =
   '真空パックのまま冷凍保存できます。冷凍保存の目安は約3か月です。開封後は1枚ずつラップして冷凍してください。';
+export const frozenCookingNote =
+  '冷凍したお餅は500Wの電子レンジで約30秒、軽く温めて半解凍してから、トースターで焼き色がつくまで焼きます。機種・餅の大きさにより時間を調整してください。';
 export const separateShippingNote =
   '※常温商品と冷凍商品を同時にご購入の場合、別便でのお届けとなるため、それぞれに送料がかかります。';
 
@@ -419,6 +421,8 @@ export const fixedSetVariants = setLineup.flatMap((set) =>
     })),
   ),
 );
+
+export type FixedSetVariant = (typeof fixedSetVariants)[number];
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);

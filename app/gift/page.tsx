@@ -165,7 +165,7 @@ export default function GiftPage() {
         <div className="mx-auto max-w-3xl border-y border-sumi/10 py-8">
           <p className="text-xs tracking-brand text-brown/85">GIFT DETAILS</p>
           <h2 className="mt-4 font-serifjp text-2xl tracking-[0.1em] md:text-3xl">
-            {sixFlavorGift.name}
+            6袋ギフト（6種類食べ比べ）
           </h2>
           <dl className="mt-8 divide-y divide-sumi/10 border-y border-sumi/10">
             {[

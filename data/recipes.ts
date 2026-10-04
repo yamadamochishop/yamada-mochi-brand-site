@@ -1,3 +1,4 @@
+import { frozenCookingNote } from './catalog.ts';
 import type { RecipeRecord } from '../types/content-model.ts';
 
 /**
@@ -66,7 +67,7 @@ export const recipes: RecipeRecord[] = [
       },
       {
         title: '冷凍したお餅の解凍・焼き方',
-        text: '冷凍したお餅は500Wの電子レンジで約30秒、軽く温めて半解凍してから、トースターで焼き色がつくまで焼きます。機種・餅の大きさにより時間を調整してください。',
+        text: frozenCookingNote,
       },
     ],
     column: {

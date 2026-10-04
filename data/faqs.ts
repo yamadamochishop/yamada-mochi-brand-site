@@ -1,8 +1,8 @@
 import {
-  sixFlavorGift,
   setLineup,
   frozenDispatchNote,
   frozenStorageNote,
+  frozenCookingNote,
   separateShippingNote,
 } from './catalog.ts';
 import { nekoposShippingDetail, takkyubinShippingDetail } from '../lib/shipping.ts';
@@ -25,7 +25,7 @@ export const faqs: Faq[] = [
   },
   {
     q: '内容量を教えてください。',
-    a: `1袋200g（4枚入り）、6袋セットは${sixFlavorGift.content}です。`,
+    a: '1袋200g（4枚入り）で、6袋セットは6種類を各1袋ずつ詰め合わせています。',
   },
   {
     q: '12袋セットはいくらですか？',
@@ -33,7 +33,7 @@ export const faqs: Faq[] = [
   },
   {
     q: 'お餅の送料を教えてください。',
-    a: `${nekoposShippingDetail}${takkyubinShippingDetail}冷凍便は別の配送方法です。冷凍便の送料はBASEの商品ページ・購入画面でご確認ください。${separateShippingNote}`,
+    a: `${nekoposShippingDetail}${takkyubinShippingDetail}冷凍便のセット商品は別の配送方法です。冷凍便の送料はBASEの商品ページ・購入画面でご確認ください。${separateShippingNote}`,
   },
   {
     q: '賞味期限を教えてください。',
@@ -41,7 +41,7 @@ export const faqs: Faq[] = [
   },
   {
     q: '常温便と冷凍便の違いは？',
-    a: `常温便は製造後、常温で発送します。${frozenDispatchNote}用途に応じてお選びください。冷凍便は好きなタイミングで食べたい方や、年末年始のストックにも便利です。`,
+    a: `6種類食べ比べセットは常温便・冷凍便をご用意しています。常温便は製造後、常温で発送します。${frozenDispatchNote}用途に応じてお選びください。冷凍便は好きなタイミングで食べたい方や、年末年始のストックにも便利です。`,
   },
   { q: '冷凍保存はできますか？', a: frozenStorageNote },
   {
@@ -50,7 +50,7 @@ export const faqs: Faq[] = [
   },
   {
     q: '冷凍したお餅は、どのように焼けばよいですか？',
-    a: '500Wの電子レンジで約30秒、軽く温めて半解凍してから、トースターで焼き色がつくまで焼きます。機種・餅の大きさにより時間を調整してください。',
+    a: frozenCookingNote,
     link: { href: '/recipes/mochi-yakikata', label: 'お餅のおいしい焼き方・解凍方法を見る' },
   },
 ];

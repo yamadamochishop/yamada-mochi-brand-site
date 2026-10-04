@@ -1,3 +1,4 @@
+import { separateShippingNote } from '../data/catalog.ts';
 import {
   nekoposShippingDetail,
   setShippingDetail,
@@ -21,15 +22,22 @@ export function PurchaseGuide({
     <div className="mt-8 border-y border-sumi/10 bg-[#f1ece3] px-5 py-2 text-sm text-sumi/70">
       <dl className="divide-y divide-sumi/10">
         {[
-          ['賞味期限', shelfLife],
-          ['発送', '通常、ご注文から3〜5営業日以内に発送'],
+          [shipping.includes('冷凍便') ? '賞味期限・保存の目安' : '賞味期限', shelfLife],
+          [
+            '発送',
+            shipping.includes('冷凍便')
+              ? '常温便は通常、ご注文から3〜5営業日以内に発送。冷凍便の発送目安はBASEの商品ページでご確認ください。'
+              : '通常、ご注文から3〜5営業日以内に発送',
+          ],
           ['配送方法', shipping.includes('冷凍便') ? shipping : shipping.split(' / ')[0]],
           [
             '送料',
             nekopos
               ? `${nekoposShippingDetail}${takkyubinShippingDetail}`
               : isGift
-                ? setShippingDetail
+                ? shipping.includes('冷凍便')
+                  ? `${setShippingDetail}冷凍便の送料はBASEの商品ページ・購入画面でご確認ください。${separateShippingNote}`
+                  : setShippingDetail
                 : '地域別送料はBASEの商品ページ・購入画面でご確認ください。',
           ],
           [

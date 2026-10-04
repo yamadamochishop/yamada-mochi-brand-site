@@ -3,7 +3,7 @@ import { OnlineShopLinks } from '@/components/OnlineShopLinks';
 
 export function Cta({
   title = '飛騨高山の思い出を、大切な人へ。',
-  text = 'ご自宅用にも、季節の贈り物にも。常温便・冷凍便を公式オンラインショップでお選びいただけます。',
+  text = 'ご自宅用にも、季節の贈り物にも。山田もち店のお餅は公式オンラインショップからご購入いただけます。',
 }: {
   title?: string;
   text?: string;

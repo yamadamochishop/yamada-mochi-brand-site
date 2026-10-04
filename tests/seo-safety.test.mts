@@ -894,6 +894,8 @@ test('Set refresh: page and schema prices agree for all eight variants; unknown 
       assert.ok(schema, item.id);
       assert.equal(schema.offers.price, Number(item.price.replace(/[^0-9]/g, '')));
       assert.equal(schema.offers.availability, undefined);
+      assert.equal(schema.url, `https://www.yamadamochi.com${path}#${item.id}`);
+      assert.ok(visible.includes(`id="${item.id}"`));
       assert.match(visible, new RegExp(item.price.replace(/[()]/g, '\\$&')));
       assert.match(visible, new RegExp(item.delivery));
     }
@@ -943,5 +945,33 @@ test('Set refresh: published routes contain no retired fixed price, ID, rice lis
       path,
     );
     if (path !== '/gift') assert.doesNotMatch(html, /2,980|2980/, path);
+  }
+});
+
+test('Set refresh: unresolved URLs use honest shop CTAs and single-product CTAs make no frozen-delivery claim', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  for (const [path, expectedCtas] of [
+    ['/products', 4],
+    ['/gift', 2],
+  ] as const) {
+    const html = withoutScripts(
+      await (await fetch(`${localOrigin}${path}`, { headers: productionHeaders() })).text(),
+    );
+    const cards = html.slice(html.indexOf('id="set-6"'), html.indexOf('常温便・冷凍便について'));
+    assert.equal((cards.match(/公式オンラインショップ（BASE）/g) ?? []).length, expectedCtas, path);
+    assert.doesNotMatch(cards, /(?:常温便|冷凍便)をBASEで(?:選ぶ|見る)/, path);
+    assert.match(cards, /ご希望の包装・配送方法の商品をお選びください/);
+  }
+  for (const slug of ['plain', 'yomogi', 'sansyokumame', 'kombu', 'tamari', 'ebi']) {
+    const html = withoutScripts(
+      await (
+        await fetch(`${localOrigin}/products/${slug}`, { headers: productionHeaders() })
+      ).text(),
+    );
+    const cta = html.match(
+      /<section data-purchase-area[^>]*class="bg-green[\s\S]*?<\/section>/,
+    )?.[0];
+    assert.ok(cta, slug);
+    assert.doesNotMatch(cta, /冷凍便/, slug);
   }
 });
