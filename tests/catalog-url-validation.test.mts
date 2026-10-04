@@ -49,7 +49,7 @@ test('Human-confirmed BASE URLs match all eight delivery, packaging and bag-coun
   assert.equal(catalogSets[0].baseUrl, 'https://yamadamochi.thebase.in/items/160959142');
   assert.equal(catalogSets[2].baseUrl, 'https://yamadamochi.thebase.in/items/160959167');
   assert.equal(catalogSets[1].baseUrl, 'https://yamadamochi.thebase.in/items/149543351');
-  assert.equal(catalogSets[1].price, '2,980円（税込）');
+  assert.equal(catalogSets[1].price, '2,640円（税込）');
 });
 
 test('catalog URL guard accepts the confirmed catalogue', async () => {

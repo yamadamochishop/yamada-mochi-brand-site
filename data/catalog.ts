@@ -366,7 +366,7 @@ export const catalogSets: CatalogSet[] = [
     cardName: '選べる6袋セット',
     ...commonSetDetails,
     baseUrl: 'https://yamadamochi.thebase.in/items/149543351',
-    price: '2,980円（税込）',
+    price: '2,640円（税込）',
     content: '200g × 6袋',
     packaging: 'ギフトボックス入り',
     allergy:

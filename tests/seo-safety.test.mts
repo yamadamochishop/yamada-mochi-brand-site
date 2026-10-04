@@ -941,7 +941,7 @@ test('Set refresh: published routes contain no retired fixed price, rice listing
     assert.equal(response.status, 200, path);
     const html = await response.text();
     assert.doesNotMatch(html, /5,960|5960|杵つき|ひとめぼれ|schema\.org\/InStock/, path);
-    if (path !== '/gift') assert.doesNotMatch(html, /2,980|2980/, path);
+    assert.doesNotMatch(html, /2,980|2980/, path);
   }
 });
 
