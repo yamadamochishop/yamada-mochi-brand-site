@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import { OnlineShopLinks } from '@/components/OnlineShopLinks';
 
 export function Cta({
   title = '飛騨高山の思い出を、大切な人へ。',
-  text = 'ご自宅用にも、季節の贈り物にも。山田もち店のお餅はBASEからご購入いただけます。',
+  text = 'ご自宅用にも、季節の贈り物にも。山田もち店のお餅は公式オンラインショップからご購入いただけます。',
 }: {
   title?: string;
   text?: string;
@@ -13,11 +14,12 @@ export function Cta({
         <p className="mb-5 text-xs tracking-brand text-base/60">ONLINE SHOP</p>
         <h2 className="font-serifjp text-2xl tracking-[0.12em] sm:text-3xl md:text-5xl">{title}</h2>
         <p className="mx-auto mt-6 max-w-2xl leading-8 text-base/75">{text}</p>
+        <OnlineShopLinks />
         <Link
           href="/products"
           className="ym-btn ym-btn-lg ym-btn-on-dark mt-10 min-h-14 w-full px-8 tracking-[0.12em] sm:w-auto sm:min-w-72"
         >
-          商品を選んで購入する
+          商品一覧を見る
         </Link>
       </div>
     </section>

@@ -12,7 +12,7 @@ const compiled = ts.transpileModule(source, {
 const catalogModule = await import(
   `data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`
 );
-const { catalog, sixFlavorGift } = catalogModule;
+const { catalog, sixFlavorGift, fixedSetVariants } = catalogModule;
 const errors = [];
 
 if (!Array.isArray(catalog) || catalog.length !== 9) {
@@ -39,16 +39,42 @@ for (const product of catalog ?? []) {
   }
 }
 
-if (new Set((catalog ?? []).map((product) => product.baseUrl)).size !== 9) {
-  errors.push('BASE URLs must be unique for all 9 products');
+const individualUrls = (catalog ?? [])
+  .filter((item) => /\/items\//.test(item.baseUrl))
+  .map((item) => item.baseUrl);
+if (new Set(individualUrls).size !== individualUrls.length) {
+  errors.push('individual catalogue BASE URLs must be unique');
+}
+
+if (fixedSetVariants.length !== 8 || new Set(fixedSetVariants.map((item) => item.id)).size !== 8) {
+  errors.push('fixed sets must contain exactly 8 distinct delivery/packaging variants');
+}
+for (const item of fixedSetVariants) {
+  const expected =
+    item.bags === 6
+      ? item.purpose === 'ご自宅用'
+        ? '2,640円（税込）'
+        : '2,840円（税込）'
+      : item.purpose === 'ご自宅用'
+        ? '5,280円（税込）'
+        : '5,480円（税込）';
+  if (item.price !== expected) errors.push(`${item.id}: incorrect price`);
+  if (!/^https:\/\/yamadamochi\.thebase\.in\/items\/\d+$/.test(item.baseUrl))
+    errors.push(`${item.id}: use a Human-confirmed individual BASE URL`);
+}
+
+const variantIndividualUrls = fixedSetVariants
+  .filter((item) => /\/items\//.test(item.baseUrl))
+  .map((item) => item.baseUrl);
+if (new Set(variantIndividualUrls).size !== variantIndividualUrls.length) {
+  errors.push('resolved fixed-set variant URLs must be unique');
 }
 
 const officialGift = {
   name: '飛騨高山 朝市の切り餅 6種類食べ比べセット',
-  price: '2,980円（税込）',
+  price: '2,840円（税込）',
   content: '200g × 6袋',
-  packaging: '贈り物用ギフトボックス入り',
-  baseUrl: 'https://yamadamochi.thebase.in/items/149543143',
+  packaging: '贈りもの用ギフト箱・熨斗対応',
 };
 for (const [field, expected] of Object.entries(officialGift)) {
   if (sixFlavorGift?.[field] !== expected)
@@ -57,7 +83,7 @@ for (const [field, expected] of Object.entries(officialGift)) {
 
 const ignored = new Set([catalogPath, path.join(root, 'scripts/check-catalog.mjs')]);
 const forbidden = [
-  { pattern: /(?:2,640|2640)/, message: 'old price 2,640 remains' },
+  { pattern: /(?:5,960|5960)/, message: 'retired fixed 12-bag price remains' },
   { pattern: /2,980円（税込）/, message: 'price must be referenced from catalog.ts' },
   {
     pattern: /https:\/\/yamadamochi\.thebase\.in\/items\/\d+/,
@@ -86,5 +112,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  'check:catalog passed: 9 products, official gift spec, prices and BASE URLs are consistent.',
+  'check:catalog passed: 6 singles, 3 gift records and 8 fixed-set variants: current prices and individual BASE URLs are consistent.',
 );

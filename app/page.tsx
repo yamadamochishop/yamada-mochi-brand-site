@@ -5,8 +5,8 @@ import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { SectionHeading } from '@/components/SectionHeading';
 import { TrackedLink } from '@/components/TrackedLink';
 import { RecipeGuideLinks } from '@/components/recipe/RecipeGuideLinks';
-import { sixFlavorGift } from '@/data/catalog';
-import { site } from '@/data/site';
+import { OnlineShopLinks } from '@/components/OnlineShopLinks';
+import { sixFlavorGift, setLineup } from '@/data/catalog';
 import { voices } from '@/data/voices';
 import { getRecipeGuides } from '@/lib/recipe-page';
 
@@ -71,26 +71,31 @@ export default function HomePage() {
         <div className="ym-container grid items-center gap-10 md:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src={sixFlavorGift.image}
-              alt={sixFlavorGift.name}
+              src="/images/latest-six-flavors-light.webp"
+              alt="山田もち店の切り餅6種類"
               fill
               sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
               className="object-cover"
             />
           </div>
           <div>
-            <p className="text-xs tracking-brand text-brown/85">POPULAR GIFT</p>
+            <p className="text-xs tracking-brand text-brown/85">SIX FLAVORS</p>
             <h2 className="mt-4 font-serifjp text-3xl leading-relaxed tracking-[0.1em] md:text-5xl">
-              {sixFlavorGift.name}
+              6種類食べ比べセット
             </h2>
             <p className="mt-6 leading-8 text-sumi/70">
               六つの味を一袋ずつ。飛騨高山で出会った味わいを、ご自宅や贈り物で楽しめるセットです。
             </p>
             <p className="mt-5 text-lg">
-              {sixFlavorGift.content} ／ {sixFlavorGift.price}
+              ご自宅用6袋 {setLineup[0].homePrice}
+              <br />
+              贈りもの用6袋 {sixFlavorGift.price}
+            </p>
+            <p className="mt-3 text-sm leading-7 text-sumi/70">
+              常温便・冷凍便をお選びいただけます（送料別）。ご自宅用は配送用段ボール、贈りもの用はギフト箱・熨斗対応。
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/gift" className={quietCta}>
+              <Link href="/products#set-6" className={quietCta}>
                 商品を見る
               </Link>
               <TrackedLink
@@ -99,7 +104,7 @@ export default function HomePage() {
                 external
                 className={primaryCta}
               >
-                オンラインショップ
+                常温6袋ギフトを購入
               </TrackedLink>
             </div>
           </div>
@@ -187,7 +192,7 @@ export default function HomePage() {
               旅の思い出を。
             </h2>
             <p className="mt-6 leading-8 text-sumi/70">
-              ご自宅用、贈り物、お中元、お歳暮、お祝いに。六種類の切り餅をギフトボックスに詰めてお届けします。
+              贈り物、お中元、お歳暮、お祝いに。六種類の切り餅をギフト箱に詰めてお届けします。熨斗にも対応しています。
             </p>
             <TrackedLink href="/gift" event="gift_cta_click" className={`${primaryCta} mt-8`}>
               ギフトを見る
@@ -235,23 +240,10 @@ export default function HomePage() {
             <br />
             思い出に残るお餅をお届けします。
           </h2>
-          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <TrackedLink
-              href="/products"
-              event="top_cta_click"
-              className="ym-btn ym-btn-lg ym-btn-on-dark min-w-52"
-            >
-              商品一覧
-            </TrackedLink>
-            <TrackedLink
-              href={site.baseUrl}
-              event="top_cta_click"
-              external
-              className="ym-btn ym-btn-lg ym-btn-on-dark-solid min-w-52"
-            >
-              オンラインショップ
-            </TrackedLink>
-          </div>
+          <OnlineShopLinks />
+          <Link href="/products" className="ym-btn ym-btn-on-dark mt-6">
+            商品一覧を見る
+          </Link>
         </div>
       </section>
     </main>

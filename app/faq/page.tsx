@@ -7,7 +7,7 @@ import { faqs } from '@/data/faqs';
 import { faqPageJsonLd, pageOpenGraph } from '@/lib/seo';
 
 const description =
-  '山田もち店の切り餅とギフトセットについて、内容・価格・送料・賞味期限、冷凍したお餅の焼き方をご案内します。';
+  '山田もち店の切り餅とギフトセットについて、内容・価格・常温便と冷凍便・別便送料・賞味期限、冷凍保存と焼き方をご案内します。';
 
 export const metadata: Metadata = {
   title: 'よくある質問',

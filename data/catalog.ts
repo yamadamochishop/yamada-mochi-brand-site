@@ -328,21 +328,36 @@ const commonSetDetails = {
   shipping: '常温便 / 通常、ご注文から3〜5営業日以内に発送',
 } as const;
 
+/** Human確認済みの正式な公開URL（2026-10-04）。商品IDを推測しない。 */
+const confirmedSetBaseUrls = {
+  '6-ambient-home': 'https://yamadamochi.thebase.in/items/149543143',
+  '6-ambient-gift': 'https://yamadamochi.thebase.in/items/160959142',
+  '12-ambient-home': 'https://yamadamochi.thebase.in/items/149544078',
+  '12-ambient-gift': 'https://yamadamochi.thebase.in/items/160959167',
+  '6-frozen-home': 'https://yamadamochi.thebase.in/items/160965806',
+  '12-frozen-home': 'https://yamadamochi.thebase.in/items/160965880',
+  '6-frozen-gift': 'https://yamadamochi.thebase.in/items/160965827',
+  '12-frozen-gift': 'https://yamadamochi.thebase.in/items/160965932',
+};
+
 export const catalogSets: CatalogSet[] = [
   {
     slug: 'six-flavor-gift',
     name: '飛騨高山 朝市の切り餅 6種類食べ比べセット',
     cardName: '6種類食べ比べセット',
     ...commonSetDetails,
-    baseUrl: 'https://yamadamochi.thebase.in/items/149543143',
-    price: '2,980円（税込）',
+    baseUrl: confirmedSetBaseUrls['6-ambient-gift'],
+    price: '2,840円（税込）',
     content: '200g × 6袋',
-    packaging: '贈り物用ギフトボックス入り',
+    packaging: '贈りもの用ギフト箱・熨斗対応',
     allergy: 'えび・ごま・大豆・小麦',
+    shelfLife: '常温：製造日より8日 / 冷凍保存の目安：約3か月',
+    storage: '常温便は直射日光・高温多湿を避け、冷凍便は冷凍で保存してください。',
+    shipping: '常温便 / 冷凍便（それぞれ送料別）',
     seo: {
       title: '飛騨高山 朝市の切り餅 6種類食べ比べセット｜山田もち店',
       description:
-        '飛騨高山・陣屋前朝市で親しまれる6種類の切り餅を各1袋、贈り物用ギフトボックスに詰めた食べ比べセットです。',
+        '飛騨高山・陣屋前朝市で親しまれる6種類の切り餅を各1袋、贈りもの用ギフト箱に詰めた食べ比べセットです。常温便・冷凍便、熨斗に対応しています。',
     },
   },
   {
@@ -351,7 +366,7 @@ export const catalogSets: CatalogSet[] = [
     cardName: '選べる6袋セット',
     ...commonSetDetails,
     baseUrl: 'https://yamadamochi.thebase.in/items/149543351',
-    price: '2,980円（税込）',
+    price: '2,640円（税込）',
     content: '200g × 6袋',
     packaging: 'ギフトボックス入り',
     allergy:
@@ -366,11 +381,14 @@ export const catalogSets: CatalogSet[] = [
     name: '12袋セット',
     cardName: '12袋セット',
     ...commonSetDetails,
-    baseUrl: 'https://yamadamochi.thebase.in/items/149544078',
-    price: '5,960円（税込）',
+    baseUrl: confirmedSetBaseUrls['12-ambient-gift'],
+    price: '5,480円（税込）',
     content: '200g × 12袋',
-    packaging: 'ギフトボックス入り',
     allergy: 'えび・ごま・大豆・小麦',
+    packaging: '贈りもの用ギフト箱・熨斗対応',
+    shelfLife: '常温：製造日より8日 / 冷凍保存の目安：約3か月',
+    storage: '常温便は直射日光・高温多湿を避け、冷凍便は冷凍で保存してください。',
+    shipping: '常温便 / 冷凍便（それぞれ送料別）',
     seo: {
       title: '12袋セット｜山田もち店',
       description: '飛騨高山の切り餅6種類を各2袋、合計12袋詰め合わせたセットです。',
@@ -380,6 +398,47 @@ export const catalogSets: CatalogSet[] = [
 
 export const catalog = [...products, ...catalogSets] as const;
 export const sixFlavorGift = catalogSets[0];
+
+/** Human確定仕様（2026-10-04）。新8商品の購入先はHuman確認済みの個別URL。 */
+export const setLineup = [
+  { bags: 6, quantityPerFlavor: 1, homePrice: '2,640円（税込）', gift: catalogSets[0] },
+  { bags: 12, quantityPerFlavor: 2, homePrice: '5,280円（税込）', gift: catalogSets[2] },
+] as const;
+
+export const frozenDispatchNote =
+  '現在は、ご注文後に製造・真空包装・冷凍した商品を、冷凍便で発送しています。';
+export const frozenStorageNote =
+  '真空パックのまま冷凍保存できます。冷凍保存の目安は約3か月です。開封後は1枚ずつラップして冷凍してください。';
+export const frozenCookingNote =
+  '冷凍したお餅は500Wの電子レンジで約30秒、軽く温めて半解凍してから、トースターで焼き色がつくまで焼きます。機種・餅の大きさにより時間を調整してください。';
+export const separateShippingNote =
+  '※常温商品と冷凍商品を同時にご購入の場合、別便でのお届けとなるため、それぞれに送料がかかります。';
+
+export const fixedSetVariants = setLineup.flatMap((set) =>
+  (['常温便', '冷凍便'] as const).flatMap((delivery) =>
+    (['ご自宅用', '贈りもの用'] as const).map((purpose) => {
+      const id =
+        `${set.bags}-${delivery === '常温便' ? 'ambient' : 'frozen'}-${purpose === 'ご自宅用' ? 'home' : 'gift'}` as const;
+      return {
+        id,
+        name: `【${delivery}・${purpose}】飛騨高山の切り餅 6種食べ比べ｜${set.bags}袋${purpose === 'ご自宅用' ? 'セット' : 'ギフト'}`,
+        bags: set.bags,
+        quantityPerFlavor: set.quantityPerFlavor,
+        delivery,
+        purpose,
+        price: purpose === 'ご自宅用' ? set.homePrice : set.gift.price,
+        content: `200g（4枚入り）× ${set.bags}袋`,
+        packaging:
+          purpose === 'ご自宅用' ? 'ギフト箱なし・配送用段ボール' : '贈りもの用ギフト箱・熨斗対応',
+        image: purpose === 'ご自宅用' ? '/images/latest-six-flavors-light.webp' : set.gift.image,
+        baseUrl: confirmedSetBaseUrls[id],
+        // 在庫は同期していない。schemaにはavailabilityを出さない。
+      };
+    }),
+  ),
+);
+
+export type FixedSetVariant = (typeof fixedSetVariants)[number];
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
