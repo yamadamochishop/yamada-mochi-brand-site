@@ -1,7 +1,7 @@
-'use client';
-
 import type { ReactNode } from 'react';
-import { trackBaseClick, type BaseClickPlacement } from '@/lib/analytics';
+import type { BaseClickPlacement } from '@/lib/analytics';
+import { baseItemForUrl } from '@/lib/base-click-items';
+import { TrackedBaseAnchor } from '@/components/TrackedBaseAnchor';
 
 export function TrackedBaseLink({
   href,
@@ -15,14 +15,13 @@ export function TrackedBaseLink({
   children: ReactNode;
 }) {
   return (
-    <a
+    <TrackedBaseAnchor
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      placement={placement}
+      item={baseItemForUrl(href)}
       className={className}
-      onClick={() => trackBaseClick(placement)}
     >
       {children}
-    </a>
+    </TrackedBaseAnchor>
   );
 }
