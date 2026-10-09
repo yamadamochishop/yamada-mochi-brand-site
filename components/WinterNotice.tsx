@@ -37,7 +37,7 @@ export function WinterNotice() {
     };
   }, []);
 
-  if (now === null || winterCampaign.heading === null || !isCampaignActive(winterCampaign, now)) {
+  if (now === null || !isCampaignActive(winterCampaign, now)) {
     return null;
   }
 

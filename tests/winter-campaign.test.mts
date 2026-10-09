@@ -5,7 +5,6 @@ import { isCampaignActive, nextBoundary, winterNoticeRows } from '../lib/campaig
 
 const campaign: WinterCampaign = {
   ...winterCampaign,
-  heading: '年末年始のお届け案内',
   confirmedAt: '2026-10-15T12:00:00+09:00',
   displayFrom: '2026-12-20T00:00:00+09:00',
   displayUntil: '2027-01-05T00:00:00+09:00',
@@ -17,14 +16,32 @@ const campaign: WinterCampaign = {
 
 const at = (value: string) => new Date(value);
 
-test('winter campaign stays unpublished while all configured values are null', () => {
+test('winter campaign stays unpublished while all schedule values are null', () => {
+  const { heading, ...schedule } = winterCampaign;
+  assert.equal(heading, '年末年始のお届けについて');
   assert.equal(
-    Object.values(winterCampaign).every((value) => value === null),
+    Object.values(schedule).every((value) => value === null),
     true,
   );
   assert.equal(isCampaignActive(winterCampaign, at('2026-12-25T12:00:00+09:00')), false);
   assert.deepEqual(winterNoticeRows(winterCampaign, at('2026-12-25T12:00:00+09:00')), []);
   assert.equal(nextBoundary(winterCampaign, at('2026-12-25T12:00:00+09:00')), null);
+});
+
+test('confirmed dates activate the notice with the default heading', () => {
+  const scheduled = {
+    ...winterCampaign,
+    confirmedAt: '2026-10-15T12:00:00+09:00',
+    displayFrom: '2026-12-20T00:00:00+09:00',
+    displayUntil: '2027-01-05T00:00:00+09:00',
+    ambientOrderDeadline: '2026-12-25T23:59:59+09:00',
+  };
+  const now = at('2026-12-21T00:00:00+09:00');
+
+  assert.equal(isCampaignActive(scheduled, now), true);
+  assert.deepEqual(winterNoticeRows(scheduled, now), [
+    '年内お届けの受付締切：常温便 12月25日（金）',
+  ]);
 });
 
 test('campaign uses inclusive start, exclusive end, and Tokyo midnight as an instant', () => {

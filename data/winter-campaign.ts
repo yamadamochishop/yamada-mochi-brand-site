@@ -1,5 +1,5 @@
 export type WinterCampaign = {
-  heading: string | null;
+  heading: string;
   displayFrom: string | null;
   displayUntil: string | null;
   ambientOrderDeadline: string | null;
@@ -10,7 +10,7 @@ export type WinterCampaign = {
 };
 
 export const winterCampaign: WinterCampaign = {
-  heading: null,
+  heading: '年末年始のお届けについて',
   displayFrom: null,
   displayUntil: null,
   ambientOrderDeadline: null,
