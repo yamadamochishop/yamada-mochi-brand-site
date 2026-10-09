@@ -96,7 +96,7 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/products#set-6" className={quietCta}>
-                商品を見る
+                常温便・冷凍便を選ぶ
               </Link>
               <TrackedLink
                 href={sixFlavorGift.baseUrl}

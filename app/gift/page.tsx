@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { PurchaseGuide } from '@/components/PurchaseGuide';
@@ -58,13 +59,18 @@ export default function GiftPage() {
           <p className="mt-8 leading-9 text-sumi/70">
             飛騨高山・陣屋前朝市で長く親しまれてきた、山田もち店の切り餅を六種類詰め合わせました。
           </p>
-          <TrackedBaseLink
-            href={sixFlavorGift.baseUrl}
-            placement="gift_hero"
-            className="ym-btn ym-btn-lg ym-btn-primary mt-9 min-h-14 px-10 tracking-[0.12em]"
-          >
-            常温6袋ギフトを購入
-          </TrackedBaseLink>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <TrackedBaseLink
+              href={sixFlavorGift.baseUrl}
+              placement="gift_hero"
+              className="ym-btn ym-btn-lg ym-btn-primary min-h-14 px-10 tracking-[0.12em]"
+            >
+              常温6袋ギフトを購入
+            </TrackedBaseLink>
+            <Link href="#6-frozen-gift" className="ym-btn ym-btn-lg ym-btn-quiet min-h-14 px-6">
+              冷凍便の贈りもの用を見る
+            </Link>
+          </div>
         </div>
         <div className="relative aspect-square overflow-hidden md:aspect-[4/5]">
           <Image

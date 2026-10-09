@@ -979,3 +979,55 @@ test('Set refresh: confirmed URLs use direct product CTAs and single-product CTA
     assert.doesNotMatch(cta, /冷凍便/, slug);
   }
 });
+
+test('YM-010 WP-1: product jump links reach their sections and comparison precedes purchase', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const response = await fetch(`${localOrigin}/products`, { headers: productionHeaders() });
+  assert.equal(response.status, 200);
+  const visible = withoutScripts(await response.text());
+  const nav = visible.match(/<nav aria-label="商品一覧のページ内ナビ"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(nav);
+  for (const [id, element] of [
+    ['sets', 'section'],
+    ['singles', 'section'],
+    ['delivery', 'div'],
+  ] as const) {
+    assert.ok(nav.includes(`href="#${id}"`), id);
+    assert.match(visible, new RegExp(`<${element} id="${id}"`), id);
+  }
+  const comparison = visible.match(
+    /<section aria-labelledby="set-selection-heading"[\s\S]*?<\/section>/,
+  )?.[0];
+  assert.ok(comparison);
+  const { catalogSets, fixedSetVariants, frozenDispatchNote, setLineup } =
+    await import('../data/catalog.ts');
+  for (const detail of [
+    fixedSetVariants[0].packaging,
+    setLineup[0].gift.packaging,
+    catalogSets[1].shipping.split(' / ')[1],
+    frozenDispatchNote,
+  ])
+    assert.ok(comparison.includes(detail), detail);
+  // ボタン文言はReactのテキスト境界コメントで分かれるため、正規表現で位置を取る。
+  const firstFrozenCta = visible.search(/冷凍便(<!-- -->)?をBASEで見る/);
+  assert.ok(firstFrozenCta > 0);
+  assert.ok(visible.indexOf(comparison) < firstFrozenCta);
+  assert.match(comparison, /href="#delivery"/);
+  assert.doesNotMatch(comparison, /約3か月/);
+});
+
+test('YM-010 WP-1: home and gift link to the matching set variants', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const home = withoutScripts(
+    await (await fetch(localOrigin, { headers: productionHeaders() })).text(),
+  );
+  const gift = withoutScripts(
+    await (await fetch(`${localOrigin}/gift`, { headers: productionHeaders() })).text(),
+  );
+  assert.match(home, /href="\/products#set-6"[^>]*>常温便・冷凍便を選ぶ<\/a>/);
+  // 既存の「商品を見る」の文言を変えただけで、同じ行き先のリンクを増やしていない。
+  assert.equal((home.match(/href="\/products#set-6"/g) ?? []).length, 1);
+  assert.doesNotMatch(home, /href="\/products#set-6"[^>]*>商品を見る<\/a>/);
+  assert.match(gift, /href="#6-frozen-gift"[^>]*>冷凍便の贈りもの用を見る<\/a>/);
+  assert.match(gift, /id="6-frozen-gift"/);
+});
