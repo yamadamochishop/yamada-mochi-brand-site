@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ProductCard } from '@/components/ProductCard';
 import { SectionHeading } from '@/components/SectionHeading';
 import { Cta } from '@/components/Cta';
 import { JsonLd } from '@/components/JsonLd';
 import { SetLineup } from '@/components/SetLineup';
+import { SetDeliveryCompare } from '@/components/SetDeliveryCompare';
 import { SetDeliveryGuide } from '@/components/SetDeliveryGuide';
 import { products, fixedSetVariants } from '@/data/catalog';
 import { nekoposListNote } from '@/lib/shipping';
@@ -44,6 +46,20 @@ export default function ProductsPage() {
           lead="飛騨高山の田んぼで育てたもち米を使った、山田もち店の定番6種類です。"
           as="h1"
         />
+        <nav
+          aria-label="商品一覧のページ内ナビ"
+          className="mx-auto -mt-4 mb-10 grid max-w-3xl gap-2 sm:grid-cols-3"
+        >
+          <Link href="#sets" className="ym-btn ym-btn-quiet px-3">
+            セット（6袋・12袋）
+          </Link>
+          <Link href="#singles" className="ym-btn ym-btn-quiet px-3">
+            単品（4枚入り）
+          </Link>
+          <Link href="#delivery" className="ym-btn ym-btn-quiet px-3">
+            常温便と冷凍便の違い
+          </Link>
+        </nav>
         <p className="mx-auto -mt-4 mb-14 max-w-2xl border border-green/25 bg-white/50 px-5 py-3 text-center text-sm leading-7 text-sumi/75">
           {nekoposListNote}
         </p>
@@ -57,21 +73,28 @@ export default function ProductsPage() {
             className="object-cover object-center"
           />
         </div>
-        <div className="grid gap-x-10 gap-y-20 md:grid-cols-3">
+        <section
+          id="singles"
+          aria-label="単品（4枚入り）"
+          className="grid gap-x-10 gap-y-20 md:grid-cols-3"
+        >
           {products.map((product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
-        </div>
+        </section>
       </section>
-      <section className="ym-container pb-20 md:pb-28">
+      <section id="sets" className="ym-container pb-20 md:pb-28">
         <JsonLd data={setListJsonLd(fixedSetVariants, '/products')} />
         <SectionHeading
           eyebrow="SETS"
           title="6種類を楽しむセット商品"
           lead="ご自宅の食卓にも、大切な方への贈りものにも。包装と配送方法をお選びいただけます。"
         />
+        <SetDeliveryCompare />
         <SetLineup />
-        <SetDeliveryGuide />
+        <div id="delivery">
+          <SetDeliveryGuide />
+        </div>
       </section>
       <Cta />
     </main>
