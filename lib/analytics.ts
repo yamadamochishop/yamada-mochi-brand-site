@@ -1,3 +1,5 @@
+import type { BaseClickItem } from './base-click-items.ts';
+
 export type BaseClickPlacement =
   | 'online_shop'
   | 'set_card'
@@ -10,11 +12,15 @@ export type BaseClickPlacement =
   | 'gift_hero'
   | 'gift_set_card'
   | 'gift_details'
-  | 'recipe_product';
+  | 'recipe_product'
+  | 'top_cta';
 
-export function trackBaseClick(placement: BaseClickPlacement) {
+export function trackBaseClick(placement: BaseClickPlacement, item?: BaseClickItem) {
   if (typeof window === 'undefined') return;
-  window.gtag?.('event', 'base_click', { placement });
+  window.gtag?.('event', 'base_click', {
+    placement,
+    ...item,
+  });
 }
 
 export type SalesChannelClickChannel = 'tabechoku' | 'pokemaru';
@@ -105,6 +111,11 @@ export function trackRecipeFilterUse({
 export function trackEvent(event: TopPageEvent) {
   if (typeof window === 'undefined') return;
   window.gtag?.('event', event);
+}
+
+export function trackTrackedLinkClick(event: TopPageEvent, baseClick?: { item?: BaseClickItem }) {
+  trackEvent(event);
+  if (baseClick) trackBaseClick('top_cta', baseClick.item);
 }
 
 declare global {

@@ -1,9 +1,7 @@
-'use client';
-
 import type { ReactNode } from 'react';
-import Link from 'next/link';
 import type { TopPageEvent } from '@/lib/analytics';
-import { trackEvent } from '@/lib/analytics';
+import { baseItemForUrl, isExternalBaseLink } from '@/lib/base-click-items';
+import { TrackedLinkClient } from '@/components/TrackedLinkClient';
 
 export function TrackedLink({
   href,
@@ -18,22 +16,17 @@ export function TrackedLink({
   children: ReactNode;
   external?: boolean;
 }) {
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
-        onClick={() => trackEvent(event)}
-      >
-        {children}
-      </a>
-    );
-  }
+  const baseClick = isExternalBaseLink(href, external) ? { item: baseItemForUrl(href) } : undefined;
+
   return (
-    <Link href={href} className={className} onClick={() => trackEvent(event)}>
+    <TrackedLinkClient
+      href={href}
+      event={event}
+      className={className}
+      external={external}
+      baseClick={baseClick}
+    >
       {children}
-    </Link>
+    </TrackedLinkClient>
   );
 }
