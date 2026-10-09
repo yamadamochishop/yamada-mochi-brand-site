@@ -11,13 +11,13 @@ import { SetDeliveryGuide } from '@/components/SetDeliveryGuide';
 import { breadcrumbJsonLd, pageOpenGraph, setListJsonLd, catalogSetSchema } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'ギフト',
+  title: '飛騨高山の切り餅ギフト｜6種食べ比べ・熨斗対応',
   description:
-    '飛騨高山の切り餅6種類を贈る6袋・12袋ギフト。ギフト箱・熨斗対応。常温便・冷凍便をお選びいただけます。',
+    '飛騨高山の切り餅6種類を詰め合わせた6袋・12袋ギフト。ギフト箱・熨斗に対応し、お歳暮や季節のご挨拶にもお使いいただけます。常温便・冷凍便をお選びいただけます。',
   openGraph: pageOpenGraph({
-    title: 'ギフト｜山田もち店',
+    title: '飛騨高山の切り餅ギフト｜6種食べ比べ・熨斗対応｜山田もち店',
     description:
-      '飛騨高山の切り餅6種類を贈る6袋・12袋ギフト。ギフト箱・熨斗対応。常温便・冷凍便をお選びいただけます。',
+      '飛騨高山の切り餅6種類を詰め合わせた6袋・12袋ギフト。ギフト箱・熨斗に対応し、お歳暮や季節のご挨拶にもお使いいただけます。常温便・冷凍便をお選びいただけます。',
     path: '/gift',
     image: '/images/latest-sixset-field.webp',
     imageAlt: '飛騨高山の田んぼから贈る切り餅6種ギフト',

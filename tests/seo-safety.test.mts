@@ -934,6 +934,63 @@ test('Set refresh: FAQPage exactly matches the rendered questions and answers', 
   }
 });
 
+test('YM-010 WP-5: gift metadata uses the approved copy without changing canonical or structured data', async (context) => {
+  if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
+  const response = await fetch(`${localOrigin}/gift`, { headers: productionHeaders() });
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const expectedTitle = '飛騨高山の切り餅ギフト｜6種食べ比べ・熨斗対応｜山田もち店';
+  const expectedDescription =
+    '飛騨高山の切り餅6種類を詰め合わせた6袋・12袋ギフト。ギフト箱・熨斗に対応し、お歳暮や季節のご挨拶にもお使いいただけます。常温便・冷凍便をお選びいただけます。';
+
+  const renderedTitle = html.match(/<title>([^<]*)<\/title>/u)?.[1];
+  assert.equal(renderedTitle, expectedTitle);
+  const metaTags = html.match(/<meta\b[^>]*>/g) ?? [];
+  const metaContent = (attribute: 'name' | 'property', value: string) =>
+    metaTags
+      .find((tag) => tag.includes(`${attribute}="${value}"`))
+      ?.match(/\bcontent="([^"]*)"/)?.[1];
+  const openGraphTitle = metaContent('property', 'og:title');
+  assert.equal(openGraphTitle, expectedTitle);
+  assert.equal(metaContent('name', 'description'), expectedDescription);
+  assert.equal(metaContent('property', 'og:description'), expectedDescription);
+  assert.doesNotMatch(renderedTitle, /｜山田もち店｜山田もち店/u);
+  assert.doesNotMatch(openGraphTitle, /｜山田もち店｜山田もち店/u);
+  assert.equal(canonicalFrom(html), `${productionOrigin}/gift`);
+
+  const { catalogSets, fixedSetVariants } = await import('../data/catalog.ts');
+  const { breadcrumbJsonLd, catalogSetSchema, setListJsonLd, siteJsonLd } =
+    await import('../lib/seo.ts');
+  const giftLineupJsonLd = setListJsonLd(
+    fixedSetVariants.filter((variant) => variant.purpose === '贈りもの用'),
+    '/gift',
+  );
+  giftLineupJsonLd.itemListElement.push({
+    '@type': 'ListItem',
+    position: giftLineupJsonLd.itemListElement.length + 1,
+    item: catalogSetSchema(catalogSets[1]),
+  });
+  const schemas = [
+    ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g),
+  ].map((match) => JSON.parse(match[1]));
+  assert.equal(schemas.length, 3);
+  assert.deepEqual(
+    schemas.find((schema) => schema['@graph']),
+    siteJsonLd(),
+  );
+  assert.deepEqual(
+    schemas.find((schema) => schema['@type'] === 'BreadcrumbList'),
+    breadcrumbJsonLd([
+      { name: 'ホーム', path: '/' },
+      { name: 'ギフト', path: '/gift' },
+    ]),
+  );
+  assert.deepEqual(
+    schemas.find((schema) => schema['@type'] === 'ItemList'),
+    giftLineupJsonLd,
+  );
+});
+
 test('Set refresh: published routes contain no retired fixed price, rice listing or stock assertion', async (context) => {
   if (!localOrigin) return context.skip('HTTP checks are disabled for the mutation unit run');
   for (const path of currentIndexablePaths) {
