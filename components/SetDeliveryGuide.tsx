@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { WinterNotice } from '@/components/WinterNotice';
 import {
   frozenDispatchNote,
   frozenStorageNote,
@@ -9,6 +10,7 @@ import {
 export function SetDeliveryGuide() {
   return (
     <div className="mt-10 border-y border-sumi/10 bg-[#f1ece3] p-6 text-sm leading-8 text-sumi/75">
+      <WinterNotice />
       <h3 className="font-serifjp text-xl text-sumi">常温便・冷凍便について</h3>
       <p className="mt-4">
         常温便は製造後、常温で発送します。冷凍便は、好きなタイミングで楽しみたい方や長期保存、年末年始のストックにも便利です。
