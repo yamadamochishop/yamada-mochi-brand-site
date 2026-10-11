@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HeroSlideshow } from '@/components/HeroSlideshow';
+import { HeroVideo } from '@/components/HeroVideo';
 import { SectionHeading } from '@/components/SectionHeading';
 import { TrackedLink } from '@/components/TrackedLink';
 import { RecipeGuideLinks } from '@/components/recipe/RecipeGuideLinks';
@@ -28,10 +28,12 @@ export default function HomePage() {
     <main className="ym-page">
       <section className="relative min-h-[78vh] overflow-hidden bg-green text-base md:min-h-[88vh]">
         <div className="absolute inset-0">
-          <HeroSlideshow />
+          <HeroVideo />
           {/* スマホでは本文が画面幅いっぱいに重なるため、全体を少し沈めて読みやすくする。 */}
-          <div className="absolute inset-0 bg-green/35 md:bg-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/45 to-green/5" />
+          <div className="absolute inset-0 bg-green/50 md:bg-transparent" />
+          {/* 動画の明るいカット（打ち粉の台、餅つき機）でも、本文とボタンの文字が
+              コントラスト比4.5:1を下回らない濃さにしている。 */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green/80 via-green/55 to-green/30 md:from-green/85 md:via-green/65 md:to-green/10" />
         </div>
         <div className="relative mx-auto flex min-h-[78vh] max-w-7xl items-center px-5 py-24 md:min-h-[88vh] md:px-8">
           <div className="max-w-3xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.42)]">
