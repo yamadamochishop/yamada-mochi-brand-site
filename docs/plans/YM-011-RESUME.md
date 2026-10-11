@@ -31,7 +31,7 @@
 
 ## 3. 再開手順（Human の回答が来たら、この順で）
 
-0. **H-19（緊急）**: Human が冷凍便の受付を止めると決めた場合、BASE の操作は Human が行う。HP 側は BASE の商品ページへリンクしているだけなので、HP の変更は不要（止めている間に HP の文言を変えるかは別途判断）。
+0. **H-19（緊急）**: Human が冷凍便の受付を止めると決めた場合、BASE の操作は Human が行う（「在庫0」を推奨。非公開・削除にすると HP の冷凍便ボタンのリンク先が開けなくなるおそれがある）。HP はトップ・/products・/gift・FAQ に冷凍便の選択肢と案内（`SetLineup`、`SetDeliveryGuide`、`data/faqs.ts` など）が残り、BASE の在庫とは連動しない。停止期間中の HP の表示（一時的な注意書き、冷凍便ボタンの扱い）は Human が決め、変更する場合は Codex に別PRで実装させ、375px でトップ・/products・/gift の文言を確認して独立レビューを受ける。
 1. **H-6（年末日程）**: `data/winter-campaign.ts` に、オフセット付きISO日時（例 `2026-12-20T23:59:59+09:00`）で各日付・表示期間・`confirmedAt` を入れる別PRを Codex に作らせる。`tests/winter-campaign.test.mts` が通ること、375pxで /products と /gift の `SetDeliveryGuide` 先頭に案内が出ることを確認する。BASE用の文例は `YM-010-base-smartphone-steps.md` にある。
 2. **H-3（解凍テスト）**: 結果の文言で `frozenCookingNote`（`data/catalog.ts`）を更新するPRを Codex に作らせる（HP・レシピ・FAQに反映される）。同梱紙の原稿HTML（Drive）の「食べるとき」を同じ文言にして PDF を再出力する。BASE は Human が同じ文言に直す。
 3. **H-2・H-4（ラベル）**: 確定したラベルの文字列を受け取ってから、WP-6（`ebi.ingredients` と施設の注意書き）を実装する。ラベルの文字列と `data/` が完全に一致するテストを付ける。
