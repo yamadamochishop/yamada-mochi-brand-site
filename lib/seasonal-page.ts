@@ -9,13 +9,14 @@ import {
 } from './content-model/seasonal-calendar.ts';
 import type { SeasonalProductRecord } from '../types/content-model.ts';
 
-export const SEASONAL_LISTING_MONTH = 9;
+export const SEASONAL_LISTING_MONTH = 10;
 
 /** 「今、店先にあるもの」に出す商品はHuman管理。販売が終わった商品はここから外す。 */
 export const currentSeasonalProductIds = [
   'shine-muscat-daifuku',
   'konasu-pickles',
   'akakabu-nagazuke',
+  'yonashi-pie',
 ] as const;
 
 const categoryLabels: Record<SeasonalProductRecord['category'], string> = {

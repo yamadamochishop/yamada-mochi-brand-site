@@ -128,13 +128,16 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     name: '洋梨パイ',
     category: 'pie',
     seasonality: 'seasonal',
-    salesPeriod: { display: '9月〜10月頃', startMonth: 9, endMonth: 10 },
-    // 試作段階のため upcoming。製法・価格・賞味期限・原材料はHuman未確定なので設定しない。
-    availabilityStatus: 'upcoming',
-    story: '飛騨桃パイと同じように、旬の果物を活かしたシンプルなパイとして作る予定です。',
-    // 販売場所はHuman未確定のため空のまま。
-    salesLocationIds: [],
-    notes: ['試作中のため、内容や販売時期は変わる場合があります。'],
+    salesPeriod: { display: '10月頃', startMonth: 10, endMonth: 10 },
+    // Human確認済み（2026-09-30）: 2026年10月1日から販売。価格・賞味期限・原材料・アレルゲン・産地・通販はHuman未確定なので設定しない。
+    availabilityStatus: 'available',
+    catchcopy: '洋梨の香りを、やさしく包んで。',
+    story:
+      '洋梨をさっと煮込み、レモンとバターを加えてシンプルに仕上げています。果実のやわらかな食感と香りを残しながら、パイ生地で包んで香ばしく焼き上げました。',
+    commitment:
+      '飛騨桃パイと同じように、果物に火を入れすぎず、素材の味わいを活かして仕上げています。',
+    // Human確認済み（2026-09-30）: 販売場所は陣屋前朝市（既存の販売場所ID）。
+    salesLocationIds: [JINYA_MARKET_ID],
     commerce: { status: 'undecided', offers: [] },
     images: [],
     status: 'draft',

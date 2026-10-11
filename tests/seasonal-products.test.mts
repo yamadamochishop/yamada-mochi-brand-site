@@ -108,6 +108,7 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-maruzuke',
     'akakabu-nagazuke',
     'konasu-pickles',
+    'yonashi-pie',
     'shine-muscat-daifuku',
   ]);
   // 飛騨桃パイ・青朴葉餅はHuman確認済みで2026年の販売を終えている。
