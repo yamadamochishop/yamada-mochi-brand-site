@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "pnpm run build",
+  "buildCommand": "pnpm run check && pnpm run test",
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install"
 }
