@@ -61,7 +61,7 @@ test('シャインマスカット大福 carries only the human-confirmed product
   assert.equal(daifuku.seasonality, 'seasonal');
   assert.equal(daifuku.salesPeriod.display, '9月〜11月');
   assert.deepEqual([daifuku.salesPeriod.startMonth, daifuku.salesPeriod.endMonth], [9, 11]);
-  assert.equal(daifuku.availabilityStatus, 'available');
+  assert.equal(daifuku.availabilityStatus, 'ended');
   assert.deepEqual(daifuku.price, {
     amount: 300,
     currency: 'JPY',
@@ -108,9 +108,8 @@ test('availability only marks the human-confirmed groups available', () => {
     'akakabu-maruzuke',
     'akakabu-nagazuke',
     'konasu-pickles',
-    'shine-muscat-daifuku',
   ]);
-  // 飛騨桃パイ・青朴葉餅はHuman確認済みで2026年の販売を終えている。
+  // 季節限定の4商品はHuman確認済みで2026年の販売を終えている。
   assert.equal(
     seasonalProducts.find((product) => product.id === 'hida-peach-pie')?.availabilityStatus,
     'ended',
@@ -119,6 +118,11 @@ test('availability only marks the human-confirmed groups available', () => {
     seasonalProducts.find((product) => product.id === 'ao-hoba-mochi')?.availabilityStatus,
     'ended',
   );
+  for (const id of ['yonashi-pie', 'shine-muscat-daifuku']) {
+    const record = seasonalProducts.find((product) => product.id === id)!;
+    assert.equal(record.availabilityStatus, 'ended');
+    assert.deepEqual(record.notes, ['2026年シーズンの販売は終了しました']);
+  }
   assert.equal(
     contentModel.productCalendarReferences.every(
       (reference) => reference.availabilityStatus === 'available',
