@@ -7,6 +7,7 @@ import { TrackedLink } from '@/components/TrackedLink';
 import { RecipeGuideLinks } from '@/components/recipe/RecipeGuideLinks';
 import { OnlineShopLinks } from '@/components/OnlineShopLinks';
 import { sixFlavorGift, setLineup } from '@/data/catalog';
+import { news } from '@/data/news';
 import { voices } from '@/data/voices';
 import { getRecipeGuides } from '@/lib/recipe-page';
 
@@ -65,6 +66,54 @@ export default function HomePage() {
                 山田もち店について
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="home-news-title" className="border-b border-sumi/10 bg-base py-10 md:py-12">
+        <div className="ym-container">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs tracking-brand text-brown/85">LATEST NEWS</p>
+              <h2 id="home-news-title" className="mt-2 font-serifjp text-2xl tracking-[0.1em]">
+                山田もち店からのお知らせ
+              </h2>
+            </div>
+            <Link
+              href="/news"
+              className="inline-flex min-h-11 items-center text-sm text-green underline underline-offset-8 transition-colors hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+            >
+              お知らせ一覧を見る →
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-3 md:grid-cols-2">
+            {news.slice(0, 2).map((item) => (
+              <article
+                key={item.id}
+                className="border border-sumi/10 bg-kinari px-5 py-5 transition-colors hover:border-brown/40 md:px-6"
+              >
+                <time
+                  dateTime={item.date.replaceAll('.', '-')}
+                  className="text-xs tracking-[0.12em] text-sumi/60"
+                >
+                  {item.date}
+                </time>
+                <h3 className="mt-3 font-serifjp text-base leading-7 tracking-[0.04em]">
+                  <Link
+                    href={`/news#${item.id}`}
+                    className="group inline-flex min-h-11 items-center gap-3 text-sumi transition-colors hover:text-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+                  >
+                    {item.title}
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </h3>
+              </article>
+            ))}
           </div>
         </div>
       </section>

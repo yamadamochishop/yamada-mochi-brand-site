@@ -129,13 +129,11 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     category: 'pie',
     seasonality: 'seasonal',
     salesPeriod: { display: '9月〜10月頃', startMonth: 9, endMonth: 10 },
-    // 試作段階のため upcoming。製法・価格・賞味期限・原材料はHuman未確定なので設定しない。
-    availabilityStatus: 'upcoming',
-    story: '飛騨桃パイと同じように、旬の果物を活かしたシンプルなパイとして作る予定です。',
-    // 販売場所はHuman未確定のため空のまま。
+    // Human確認済み（2026-10-17）: 2026年シーズンの販売終了。製法・価格・販売場所は未確定のまま。
+    availabilityStatus: 'ended',
     salesLocationIds: [],
-    notes: ['試作中のため、内容や販売時期は変わる場合があります。'],
-    commerce: { status: 'undecided', offers: [] },
+    notes: ['2026年シーズンの販売は終了しました'],
+    commerce: unavailableCommerce(),
     images: [],
     status: 'draft',
   },
@@ -160,7 +158,9 @@ export const seasonalProducts: SeasonalProductRecord[] = [
     category: 'wagashi',
     seasonality: 'seasonal',
     salesPeriod: { display: '9月〜11月', startMonth: 9, endMonth: 11 },
-    availabilityStatus: 'available',
+    // Human確認済み（2026-10-17）: 2026年シーズンの販売終了。
+    availabilityStatus: 'ended',
+    notes: ['2026年シーズンの販売は終了しました'],
     // Human確認済み（2026-09-11）: 1個 300円（税込）。表記は既存商品と同じ「◯◯円（税込）」に揃える。
     price: { amount: 300, currency: 'JPY', taxIncluded: true, display: '1個 300円（税込）' },
     salesLocationIds: [JINYA_MARKET_ID],

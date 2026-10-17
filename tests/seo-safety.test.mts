@@ -317,15 +317,15 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.match(html, /レモンとバターで仕上げています/);
   assert.doesNotMatch(html, /無添加|保存料|品種|糖度|毎日販売/u);
 
-  // 洋梨パイ: 予告のみ。桃パイの確定値を流用していないこと。
+  // 洋梨パイ: 2026年シーズン終了。桃パイの確定値を流用していないこと。
   assert.match(html, /9月〜10月頃/);
   assert.doesNotMatch(html, /洋梨パイ[\s\S]{0,400}?1個 250円（税込）/u);
   const statusBadges = (label: string) =>
     (html.match(new RegExp(`data-seasonal-status="${label}"`, 'g')) ?? []).length;
-  assert.equal(statusBadges('販売中'), 3);
+  assert.equal(statusBadges('販売中'), 2);
   assert.equal(statusBadges('まもなく終了'), 0);
-  assert.equal(statusBadges('販売予定'), 2);
-  assert.equal(statusBadges('販売終了'), 2);
+  assert.equal(statusBadges('販売予定'), 0);
+  assert.equal(statusBadges('販売終了'), 4);
   // 状態バッジと項目名で「販売予定」が二重の意味を持たないこと。
   assert.match(html, /<dt[^>]*>販売時期<\/dt>/);
   assert.doesNotMatch(html, /<dt[^>]*>販売予定<\/dt>/);
@@ -334,15 +334,15 @@ test('Seasonal list: confirmed content and conservative schema are rendered safe
   assert.match(html, /2026年の販売は8月中旬で終了しました/);
   assert.equal((html.match(/data-seasonal-cta=/g) ?? []).length, 3);
 
-  // シャインマスカット大福: 9月の店先に出るHuman確定の事実だけ。
-  assert.match(html, /9(<!-- -->)?月のお品書き/);
+  // シャインマスカット大福: 終了商品として残すHuman確定の事実だけ。
+  assert.match(html, /10(<!-- -->)?月のお品書き/);
   assert.match(html, /シャインマスカット大福/);
   assert.match(html, /1個 300円（税込）/);
   assert.match(html, /9月〜11月/);
   assert.doesNotMatch(html, /シャインマスカット大福[\s\S]{0,600}?(賞味期限|アレルギー|産地)/u);
-  // 画像はシャインマスカット大福の実物写真だけ（今の商品カード＋商品ごとの販売時期の行）。
+  // 画像は終了商品の一覧に残るシャインマスカット大福の実物写真だけ。
   const images = html.match(/<img\b[^>]*>/g) ?? [];
-  assert.equal(images.length, 2);
+  assert.equal(images.length, 1);
   assert.equal(
     images.every((image) => image.includes('shine-muscat-daifuku-main')),
     true,

@@ -86,9 +86,13 @@ function ProductMetadata({
   const items = [
     ...(product.price ? [{ term: '価格', value: product.price.display }] : []),
     { term: '販売時期', value: product.salesPeriod.display },
-    { term: '販売場所', value: product.salesLocationLabel },
+    ...(product.salesLocationIds.length > 0
+      ? [{ term: '販売場所', value: product.salesLocationLabel }]
+      : []),
     ...(product.shelfLife ? [{ term: '賞味期限', value: product.shelfLife }] : []),
-    { term: '通販', value: product.commerceLabel },
+    ...(product.availabilityStatus !== 'ended'
+      ? [{ term: '通販', value: product.commerceLabel }]
+      : []),
   ];
   return (
     <dl
