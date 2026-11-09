@@ -1,0 +1,12 @@
+{
+  "reviewedHead": "6b2bcded5f49d6d67e24f3882a8b3574a4f3d516",
+  "date": "2026-11-09 JST",
+  "sha256": {
+    "app/faq/page.tsx": "7d9133445a95fb0223882ae3dd0221176720a9ff5c7afe833d7d06d648fa4f12",
+    "components/SetDeliveryGuide.tsx": "31b1e3e34514cd463a745abb29ffb12e87d7ae2ec571cc32e45658bd0aefe51c",
+    "components/WinterNotice.tsx": "879f5fecc7f15ef7be13fe0fe8f46913e325acfa3885c99a926d71db7f6ca0da",
+    "data/faqs.ts": "9f11629f3e0fcaa16d672821c8d961c3b120b2d4291f2965824c3aba069ea5d2",
+    "lib/campaign.ts": "2c85c7974863dcbf34d25a8ff22d1cd130deb88f0ef4a49f6fded1198874caf8",
+    "tests/winter-campaign.test.mts": "45068c2fb190be27a3ad61edeac578791835b95103eec7ecd41748aa0cd5d82c"
+  }
+}

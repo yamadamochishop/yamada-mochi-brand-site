@@ -1,0 +1,60 @@
+$ pnpm run check:catalog && pnpm run lint && pnpm run typecheck && pnpm run build
+$ node scripts/check-catalog.mjs && node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/check-content-model.mjs
+check:catalog passed: 6 singles, 3 gift records and 8 fixed-set variants: current prices and individual BASE URLs are consistent.
+check:content-model warning: seasonal listing month is 10, but the current Asia/Tokyo month is 11
+check:content-model passed: 6 products, 3 gift sets, 12 seasonal records, 9 channels, 1 locations.
+$ eslint .
+$ tsc --noEmit
+$ next build
+   ▲ Next.js 15.5.20
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.8s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/38) ...
+   Generating static pages (9/38)
+   Generating static pages (18/38)
+   Generating static pages (28/38)
+ ✓ Generating static pages (38/38)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    2.32 kB         113 kB
+├ ○ /_not-found                            129 B         102 kB
+├ ○ /brand-story                           686 B         111 kB
+├ ○ /contact                               167 B         105 kB
+├ ○ /craft                                 686 B         111 kB
+├ ○ /faq                                 2.13 kB         107 kB
+├ ○ /gift                                2.14 kB         112 kB
+├ ○ /icon.svg                                0 B            0 B
+├ ○ /market                                686 B         111 kB
+├ ○ /news                                  167 B         105 kB
+├ ○ /products                            2.14 kB         112 kB
+├ ● /products/[slug]                       721 B         111 kB
+├   ├ /products/plain
+├   ├ /products/yomogi
+├   ├ /products/sansyokumame
+├   └ [+3 more paths]
+├ ○ /recipes                             10.3 kB         121 kB
+├ ● /recipes/[slug]                        880 B         111 kB
+├   ├ /recipes/mochi-yakikata
+├   ├ /recipes/isobeyaki
+├   ├ /recipes/ebi-mochi-cheese-pizza
+├   └ [+10 more paths]
+├ ○ /robots.txt                            129 B         102 kB
+├ ○ /seasonal                              173 B         110 kB
+├ ○ /sitemap.xml                           129 B         102 kB
+├ ○ /third-generation                      686 B         111 kB
+└ ○ /voices                                711 B         106 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/560-58e6d3853edfbbca.js       45.6 kB
+  ├ chunks/a039cd8b-eb14cb2c2aa5162d.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+ƒ Middleware                             34.9 kB
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)

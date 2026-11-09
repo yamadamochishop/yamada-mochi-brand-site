@@ -3,8 +3,19 @@ import test from 'node:test';
 import { winterCampaign, type WinterCampaign } from '../data/winter-campaign.ts';
 import { isCampaignActive, nextBoundary, winterNoticeRows } from '../lib/campaign.ts';
 
+const unconfirmed: WinterCampaign = {
+  heading: '年末年始のお届けについて',
+  confirmedAt: null,
+  displayFrom: null,
+  displayUntil: null,
+  ambientOrderDeadline: null,
+  frozenOrderDeadline: null,
+  lastShipDate: null,
+  newYearShipStart: null,
+};
+
 const campaign: WinterCampaign = {
-  ...winterCampaign,
+  ...unconfirmed,
   confirmedAt: '2026-10-15T12:00:00+09:00',
   displayFrom: '2026-12-20T00:00:00+09:00',
   displayUntil: '2027-01-05T00:00:00+09:00',
@@ -17,20 +28,20 @@ const campaign: WinterCampaign = {
 const at = (value: string) => new Date(value);
 
 test('winter campaign stays unpublished while all schedule values are null', () => {
-  const { heading, ...schedule } = winterCampaign;
+  const { heading, ...schedule } = unconfirmed;
   assert.equal(heading, '年末年始のお届けについて');
   assert.equal(
     Object.values(schedule).every((value) => value === null),
     true,
   );
-  assert.equal(isCampaignActive(winterCampaign, at('2026-12-25T12:00:00+09:00')), false);
-  assert.deepEqual(winterNoticeRows(winterCampaign, at('2026-12-25T12:00:00+09:00')), []);
-  assert.equal(nextBoundary(winterCampaign, at('2026-12-25T12:00:00+09:00')), null);
+  assert.equal(isCampaignActive(unconfirmed, at('2026-12-25T12:00:00+09:00')), false);
+  assert.deepEqual(winterNoticeRows(unconfirmed, at('2026-12-25T12:00:00+09:00')), []);
+  assert.equal(nextBoundary(unconfirmed, at('2026-12-25T12:00:00+09:00')), null);
 });
 
 test('confirmed dates activate the notice with the default heading', () => {
   const scheduled = {
-    ...winterCampaign,
+    ...unconfirmed,
     confirmedAt: '2026-10-15T12:00:00+09:00',
     displayFrom: '2026-12-20T00:00:00+09:00',
     displayUntil: '2027-01-05T00:00:00+09:00',
@@ -40,7 +51,7 @@ test('confirmed dates activate the notice with the default heading', () => {
 
   assert.equal(isCampaignActive(scheduled, now), true);
   assert.deepEqual(winterNoticeRows(scheduled, now), [
-    '年内お届けの受付締切：常温便 12月25日（金）',
+    '年内発送分の注文受付締切：常温便 2026年12月25日（金） 23:59（日本時間）',
   ]);
 });
 
@@ -78,27 +89,44 @@ test('notice omits null rows and formats dates in Asia/Tokyo', () => {
     frozenOrderDeadline: '2026-12-23T14:59:59Z',
   };
   assert.deepEqual(winterNoticeRows(partial, at('2026-12-22T00:00:00+09:00')), [
-    '年内お届けの受付締切：冷凍便 12月23日（水）',
-    '年始の発送開始：1月4日（月）',
+    '年内発送分の注文受付締切：冷凍便 2026年12月23日（水） 23:59（日本時間）',
+    '年始の発送再開日：2027年1月4日（月）',
   ]);
 });
 
 test('each order deadline switches to ended wording at its exact instant', () => {
   const beforeFrozen = winterNoticeRows(campaign, at('2026-12-23T23:59:58.999+09:00'));
-  assert.equal(beforeFrozen[0], '年内お届けの受付締切：常温便 12月25日（金）');
-  assert.equal(beforeFrozen[1], '年内お届けの受付締切：冷凍便 12月23日（水）');
+  assert.equal(
+    beforeFrozen[0],
+    '年内発送分の注文受付締切：常温便 2026年12月25日（金） 23:59（日本時間）',
+  );
+  assert.equal(
+    beforeFrozen[1],
+    '年内発送分の注文受付締切：冷凍便 2026年12月23日（水） 23:59（日本時間）',
+  );
 
   const atFrozen = winterNoticeRows(campaign, at('2026-12-23T23:59:59+09:00'));
   assert.equal(atFrozen[0], beforeFrozen[0]);
-  assert.equal(atFrozen[1], '冷凍便の年内お届けの受付は終了しました');
+  assert.equal(
+    atFrozen[2],
+    '締切後の新規ご注文（冷凍便）は2027年1月4日（月）以降に順次発送いたします。',
+  );
+  assert.equal(
+    atFrozen[1],
+    '冷凍便：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。',
+  );
 
   const beforeAmbient = winterNoticeRows(campaign, at('2026-12-25T23:59:58.999+09:00'));
   assert.equal(beforeAmbient[0], beforeFrozen[0]);
   const atAmbient = winterNoticeRows(campaign, at('2026-12-25T23:59:59+09:00'));
-  assert.equal(atAmbient[0], '常温便の年内お届けの受付は終了しました');
+  assert.equal(
+    atAmbient[0],
+    '常温便：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。',
+  );
   assert.deepEqual(atAmbient.slice(2), [
-    '年内の最終発送日：12月29日（火）',
-    '年始の発送開始：1月4日（月）',
+    '締切後の新規ご注文（常温便・冷凍便）は2027年1月4日（月）以降に順次発送いたします。',
+    '年内の最終発送日：2026年12月29日（火）',
+    '年始の発送再開日：2027年1月4日（月）',
   ]);
 });
 
@@ -120,4 +148,98 @@ test('nextBoundary selects the closest future display or deadline instant', () =
     '2027-01-04T15:00:00.000Z',
   );
   assert.equal(nextBoundary(campaign, at('2027-01-05T00:00:00+09:00')), null);
+});
+
+// Human確定日程の境界。実際の設定を使い、仮の日程にすり替わる退行を防ぐ。
+test('2026 confirmed shipping dates show JST time and switch both deliveries at 17:00', () => {
+  const before = at('2026-12-20T16:59:59.999+09:00');
+  assert.deepEqual(winterNoticeRows(winterCampaign, before), [
+    '年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）',
+    '年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）',
+    '年内の最終発送日：2026年12月30日（水）',
+    '年始の発送再開日：2027年1月3日（日）',
+  ]);
+  assert.equal(nextBoundary(winterCampaign, before)?.toISOString(), '2026-12-20T08:00:00.000Z');
+  for (const instant of ['2026-12-20T17:00:00+09:00', '2026-12-20T08:00:00.001Z']) {
+    const rows = winterNoticeRows(winterCampaign, at(instant));
+    assert.deepEqual(rows.slice(0, 3), [
+      '常温便：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。',
+      '冷凍便：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。',
+      '締切後の新規ご注文（常温便・冷凍便）は2027年1月3日（日）以降に順次発送いたします。',
+    ]);
+    assert.equal(
+      rows.some((row) => row.includes('（受付終了）')),
+      false,
+    );
+    assert.equal(
+      rows.some((row) => row.includes('年内お届け')),
+      false,
+    );
+  }
+});
+
+test('2026 notice is active from November 9 through the shipping restart day only', () => {
+  assert.equal(isCampaignActive(winterCampaign, at('2026-11-08T23:59:59.999+09:00')), false);
+  assert.equal(isCampaignActive(winterCampaign, at('2026-11-09T00:00:00+09:00')), true);
+  for (const instant of [
+    '2026-12-30T12:00:00+09:00',
+    '2027-01-03T00:00:00+09:00',
+    '2027-01-03T23:59:59.999+09:00',
+  ]) {
+    assert.equal(isCampaignActive(winterCampaign, at(instant)), true);
+  }
+  assert.equal(isCampaignActive(winterCampaign, at('2027-01-04T00:00:00+09:00')), false);
+  assert.deepEqual(winterNoticeRows(winterCampaign, at('2027-01-04T00:00:00+09:00')), []);
+  assert.equal(nextBoundary(winterCampaign, at('2027-01-04T00:00:00+09:00')), null);
+});
+
+test('2026 confirmed deadline, final shipment and restart stay in chronological order', () => {
+  assert.equal(winterCampaign.ambientOrderDeadline, '2026-12-20T17:00:00+09:00');
+  assert.equal(winterCampaign.frozenOrderDeadline, winterCampaign.ambientOrderDeadline);
+  assert.equal(winterCampaign.lastShipDate, '2026-12-30T00:00:00+09:00');
+  assert.equal(winterCampaign.newYearShipStart, '2027-01-03T00:00:00+09:00');
+  const instants = [
+    winterCampaign.displayFrom,
+    winterCampaign.ambientOrderDeadline,
+    winterCampaign.lastShipDate,
+    winterCampaign.newYearShipStart,
+    winterCampaign.displayUntil,
+  ];
+  assert.equal(
+    instants.every((instant) => instant !== null),
+    true,
+  );
+  const times = instants.map((instant) => Date.parse(instant!));
+  assert.equal(
+    times.every((time, index) => index === 0 || times[index - 1] < time),
+    true,
+  );
+});
+
+test('orders after the cutoff remain accepted through final shipment and restart day', () => {
+  for (const instant of [
+    '2026-12-21T12:00:00+09:00',
+    '2026-12-30T00:00:00+09:00',
+    '2027-01-03T00:00:00+09:00',
+    '2027-01-03T23:59:59.999+09:00',
+  ]) {
+    const rows = winterNoticeRows(winterCampaign, at(instant));
+    for (const delivery of ['常温便', '冷凍便']) {
+      assert.ok(
+        rows.includes(
+          `${delivery}：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。`,
+        ),
+      );
+    }
+    assert.ok(
+      rows.includes(
+        '締切後の新規ご注文（常温便・冷凍便）は2027年1月3日（日）以降に順次発送いたします。',
+      ),
+    );
+    assert.ok(rows.includes('年内の最終発送日：2026年12月30日（水）'));
+    assert.equal(
+      rows.some((row) => row.includes('到着します')),
+      false,
+    );
+  }
 });
