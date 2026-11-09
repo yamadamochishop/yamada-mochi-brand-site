@@ -55,6 +55,8 @@ export function WinterNotice() {
           <li key={row}>{row}</li>
         ))}
       </ul>
+      <p className="mt-3">年内発送分の受付締切であり、年内の到着を保証するものではありません。</p>
+      <p>年末年始は、通常の発送目安と異なります。</p>
     </aside>
   );
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Cta } from '@/components/Cta';
 import { SectionHeading } from '@/components/SectionHeading';
 import { JsonLd } from '@/components/JsonLd';
+import { WinterNotice } from '@/components/WinterNotice';
 import { faqs } from '@/data/faqs';
 import { faqPageJsonLd, pageOpenGraph } from '@/lib/seo';
 
@@ -29,6 +30,7 @@ export default function FaqPage() {
       <section className="ym-container py-20 md:py-28">
         <SectionHeading eyebrow="FAQ" title="よくあるご質問" as="h1" />
         <div className="mx-auto mt-16 max-w-3xl space-y-4">
+          <WinterNotice />
           {faqs.map((faq) => (
             <details key={faq.q} className="border border-sumi/10 bg-white/30">
               <summary className="cursor-pointer p-6 font-serifjp text-lg leading-relaxed md:text-xl tracking-[0.08em]">

@@ -2,6 +2,7 @@ import type { WinterCampaign } from '../data/winter-campaign.ts';
 
 const tokyoDateFormatter = new Intl.DateTimeFormat('ja-JP', {
   timeZone: 'Asia/Tokyo',
+  year: 'numeric',
   month: 'numeric',
   day: 'numeric',
   weekday: 'short',
@@ -27,8 +28,15 @@ function tokyoDate(value: string): string {
   const parts = tokyoDateFormatter.formatToParts(new Date(value));
   const part = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find((item) => item.type === type)?.value;
-  return `${part('month')}月${part('day')}日（${part('weekday')}）`;
+  return `${part('year')}年${part('month')}月${part('day')}日（${part('weekday')}）`;
 }
+
+const tokyoTimeFormatter = new Intl.DateTimeFormat('ja-JP', {
+  timeZone: 'Asia/Tokyo',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
 
 export function isCampaignActive(campaign: WinterCampaign, now: Date): boolean {
   const period = displayPeriod(campaign);
@@ -46,9 +54,7 @@ export function winterNoticeRows(campaign: WinterCampaign, now: Date): string[] 
     const time = campaignTime(deadline);
     if (time === null || deadline === null) continue;
     rows.push(
-      now.getTime() < time
-        ? `年内お届けの受付締切：${delivery} ${tokyoDate(deadline)}`
-        : `${delivery}の年内お届けの受付は終了しました`,
+      `年内発送分の注文受付締切：${delivery} ${tokyoDate(deadline)} ${tokyoTimeFormatter.format(new Date(deadline))}（日本時間）${now.getTime() < time ? '' : '（受付終了）'}`,
     );
   }
 
@@ -56,7 +62,7 @@ export function winterNoticeRows(campaign: WinterCampaign, now: Date): string[] 
     rows.push(`年内の最終発送日：${tokyoDate(campaign.lastShipDate)}`);
   }
   if (campaignTime(campaign.newYearShipStart) !== null && campaign.newYearShipStart !== null) {
-    rows.push(`年始の発送開始：${tokyoDate(campaign.newYearShipStart)}`);
+    rows.push(`年始の発送再開日：${tokyoDate(campaign.newYearShipStart)}`);
   }
   return rows;
 }
