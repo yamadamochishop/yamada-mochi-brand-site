@@ -47,14 +47,32 @@ export function winterNoticeRows(campaign: WinterCampaign, now: Date): string[] 
   if (!isCampaignActive(campaign, now)) return [];
 
   const rows: string[] = [];
+  const closedDeliveries: string[] = [];
   for (const [delivery, deadline] of [
     ['常温便', campaign.ambientOrderDeadline],
     ['冷凍便', campaign.frozenOrderDeadline],
   ] as const) {
     const time = campaignTime(deadline);
     if (time === null || deadline === null) continue;
+    if (now.getTime() < time) {
+      rows.push(
+        `年内発送分の注文受付締切：${delivery} ${tokyoDate(deadline)} ${tokyoTimeFormatter.format(new Date(deadline))}（日本時間）`,
+      );
+    } else {
+      closedDeliveries.push(delivery);
+      rows.push(
+        `${delivery}：年内発送分のご注文受付は終了しました。ネット注文は引き続き受け付けております。`,
+      );
+    }
+  }
+
+  if (
+    closedDeliveries.length > 0 &&
+    campaignTime(campaign.newYearShipStart) !== null &&
+    campaign.newYearShipStart !== null
+  ) {
     rows.push(
-      `年内発送分の注文受付締切：${delivery} ${tokyoDate(deadline)} ${tokyoTimeFormatter.format(new Date(deadline))}（日本時間）${now.getTime() < time ? '' : '（受付終了）'}`,
+      `締切後の新規ご注文（${closedDeliveries.join('・')}）は${tokyoDate(campaign.newYearShipStart)}以降に順次発送いたします。`,
     );
   }
 

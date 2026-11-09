@@ -1,0 +1,416 @@
+{
+  "date": "2026-11-09 JST",
+  "reviewedHead": "6b2bcded5f49d6d67e24f3882a8b3574a4f3d516",
+  "scenario": "before-deadline-current-clock",
+  "boundaryBrowserTest": false,
+  "results": [
+    {
+      "route": "/products",
+      "dateGroups": [
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 140.5390625
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": ["ASIDE"],
+      "heading": "H3",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 375,
+      "seasonalStockCopy": false,
+      "viewportWidth": 375,
+      "errors": []
+    },
+    {
+      "route": "/gift",
+      "dateGroups": [
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 140.5390625
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": ["ASIDE"],
+      "heading": "H3",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 375,
+      "seasonalStockCopy": false,
+      "viewportWidth": 375,
+      "errors": []
+    },
+    {
+      "route": "/faq",
+      "dateGroups": [
+        {
+          "height": 24,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 143.078125
+        },
+        {
+          "height": 24,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 143.078125
+        },
+        {
+          "height": 24,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 160.609375
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": [
+        "ASIDE",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS"
+      ],
+      "heading": "H2",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 375,
+      "seasonalStockCopy": false,
+      "viewportWidth": 375,
+      "errors": []
+    },
+    {
+      "route": "/products",
+      "dateGroups": [
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 140.5390625
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": ["ASIDE"],
+      "heading": "H3",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 390,
+      "seasonalStockCopy": false,
+      "viewportWidth": 390,
+      "errors": []
+    },
+    {
+      "route": "/gift",
+      "dateGroups": [
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 125.1953125
+        },
+        {
+          "height": 32,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 159.3828125
+        },
+        {
+          "height": 32,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 140.5390625
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": ["ASIDE"],
+      "heading": "H3",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 390,
+      "seasonalStockCopy": false,
+      "viewportWidth": 390,
+      "errors": []
+    },
+    {
+      "route": "/faq",
+      "dateGroups": [
+        {
+          "height": 24,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 143.078125
+        },
+        {
+          "height": 24,
+          "text": "2026年12月20日（日）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "17:00（日本時間）",
+          "whiteSpace": "nowrap",
+          "width": 143.078125
+        },
+        {
+          "height": 24,
+          "text": "2026年12月30日（水）",
+          "whiteSpace": "nowrap",
+          "width": 182.1484375
+        },
+        {
+          "height": 24,
+          "text": "2027年1月3日（日）",
+          "whiteSpace": "nowrap",
+          "width": 160.609375
+        }
+      ],
+      "disclaimers": [
+        {
+          "rendered": true,
+          "text": "年内発送分の受付締切であり、年内の到着を保証するものではありません。"
+        },
+        {
+          "rendered": true,
+          "text": "年末年始は、通常の発送目安と異なります。"
+        },
+        {
+          "rendered": true,
+          "text": "発送再開日は到着日ではありません。"
+        }
+      ],
+      "faqSectionOrder": [
+        "ASIDE",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS",
+        "DETAILS"
+      ],
+      "heading": "H2",
+      "noticeCount": 1,
+      "noticeOverflow": false,
+      "noticeText": "年末年始のお届けについて年内発送分の注文受付締切：常温便 2026年12月20日（日） 17:00（日本時間）年内発送分の注文受付締切：冷凍便 2026年12月20日（日） 17:00（日本時間）年内の最終発送日：2026年12月30日（水）年始の発送再開日：2027年1月3日（日）年内発送分の受付締切であり、年内の到着を保証するものではありません。年末年始は、通常の発送目安と異なります。発送再開日は到着日ではありません。",
+      "scrollWidth": 390,
+      "seasonalStockCopy": false,
+      "viewportWidth": 390,
+      "errors": []
+    }
+  ]
+}
