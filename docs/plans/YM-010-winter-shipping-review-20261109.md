@@ -80,7 +80,7 @@
 - Humanの2026-11-09確定方針を採用。常温・冷凍共通の年内発送分締切は2026/12/20 17:00 JST。その後もネット注文を受け付け、新規注文は2027/1/3以降に順次発送する。最終発送12/30、年内到着保証なし。発送再開日は到着日ではない。
 - GitHub PR #36はopen/Draft、リモートHEAD・ローカルHEADとも指定の `6b2bcded5f49d6d67e24f3882a8b3574a4f3d516` と一致。base/mainは `9782c3f02eb1030fc9a50b9b707b293ec89986d1`。#26・#33は取り込まない。既存の未追跡ファイルは変更・ステージ対象外とした。
 - Decision LogのDEC-007・009・011を再確認。Registryは更新しない。HPの表示切替はBASEの注文受付・発送・日時指定の設定を自動変更しない。
-- Claude Codeの独立レビュー済みであることとM-1/L-1〜L-5は、今回のHuman依頼を根拠とする。GitHubのレビュー/コメントとDrive検索ではレビュー原文を取得できなかったため、原文を確認済みとは扱わない。新HEADの独立レビューは別工程。
+- M-1修正時点では、Claude Codeの独立レビュー済みであることとM-1/L-1〜L-5はHuman依頼を根拠とした。その後Humanから報告の転記Markdownを受領し、[レビュー記録として別保管](../reviews/YM-010/README.md)して内容を確認した。GitHub・Driveに当時の原本を保存していなかった旨もHumanから確認した。旧HEADのレビューと、修正後HEADの独立再レビューは分ける。
 
 ### 対応内容・実際の表示
 
@@ -154,3 +154,11 @@ Human用チェックリスト（BASE操作は未実施）:
 - 修正後の証跡: [checkログ](../evidence/ym010-20261109-m1/check.txt)、[testログ](../evidence/ym010-20261109-m1/test.txt)、[6ケースのDOM計測](../evidence/ym010-20261109-m1/mobile-results.json)、[ソースハッシュ](../evidence/ym010-20261109-m1/source-manifest.json)。
 - 画像: [products 375px](../evidence/ym010-20261109-m1/products-375.jpg) / [390px](../evidence/ym010-20261109-m1/products-390.jpg)、[gift 375px](../evidence/ym010-20261109-m1/gift-375.jpg) / [390px](../evidence/ym010-20261109-m1/gift-390.jpg)、[faq 375px](../evidence/ym010-20261109-m1/faq-375.jpg) / [390px](../evidence/ym010-20261109-m1/faq-390.jpg)。
 - 修正コミットの完全なHEAD SHAはPR #36本文と完了報告に記録する。画像・ログ・ソースハッシュを同じ修正コミットに含める。作業開始時のレビュー済みSHAと、修正後の独立レビュー待ちSHAを混同しない。
+
+### レビュー記録の受領（2026-11-09、実装変更なし）
+
+- 共有されたClaude Code報告の転記を `docs/reviews/YM-010/` に保管した。判定・指摘本文の保管先と、この実装変更履歴を分離する。
+- 報告は旧HEAD `6b2bcded5f49d6d67e24f3882a8b3574a4f3d516` に対するAPPROVE（条件付き）、Critical/High 0、M-1 1件、L-1〜L-5。後続のHuman判断は報告本文と区別する。
+- M-1のHuman判断による実装は `8ff94835ee5f025c730af14ade090f35494df92a` のまま。今回ソース・テスト・表示・BASEは変更していない。
+- 共有元との内容照合（空白・表のMarkdown整形を除く）、保存先リンク、`git diff --check`、ソースハッシュ不変を確認した。文書のみのためcheck/test/ブラウザ検証は再実行せず、上記149件と6画面の検証結果を維持する。
+- 記録追加後の新HEADも独立再レビュー待ち。PRはDraftのまま停止し、main merge・本番公開・BASE変更は行わない。
