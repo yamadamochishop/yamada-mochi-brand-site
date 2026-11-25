@@ -199,6 +199,17 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
             </p>
           ))}
 
+          {/* 冒頭の要点。スマートフォンの最初の画面に入るよう、画像より前に置く。 */}
+          {recipe.keyPoint ? (
+            <section className="mt-8 border-l-2 border-brown/40 bg-white/35 p-6 md:p-7">
+              <p className="text-xs tracking-brand text-brown/85">{recipe.keyPoint.label}</p>
+              <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+                {recipe.keyPoint.title}
+              </h2>
+              <p className="mt-4 leading-8 text-sumi/70">{recipe.keyPoint.text}</p>
+            </section>
+          ) : null}
+
           {methodLinks.length > 0 ? (
             <nav aria-labelledby="recipe-method-links" className="mt-10">
               <p id="recipe-method-links" className="text-xs tracking-brand text-brown/85">
@@ -255,16 +266,6 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                 </div>
               ))}
             </dl>
-          ) : null}
-
-          {recipe.keyPoint ? (
-            <section className="mt-10 border-l-2 border-brown/40 bg-white/35 p-7">
-              <p className="text-xs tracking-brand text-brown/85">{recipe.keyPoint.label}</p>
-              <h2 className="mt-3 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
-                {recipe.keyPoint.title}
-              </h2>
-              <p className="mt-5 leading-8 text-sumi/70">{recipe.keyPoint.text}</p>
-            </section>
           ) : null}
 
           <section className="mt-14 md:mt-20">
