@@ -1,0 +1,290 @@
+{
+  "ebi-mochi-cheese-pizza": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "kombu-mochi-ozoni-fu"],
+    "variationAnchors": ["variation-1"],
+    "recipeJsonLd": null
+  },
+  "kombu-mochi-ozoni-fu": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "ebi-mochi-cheese-pizza"],
+    "variationAnchors": [],
+    "recipeJsonLd": null
+  },
+  "age-mame-mochi": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "ebi-mochi-cheese-pizza"],
+    "variationAnchors": ["variation-1"],
+    "recipeJsonLd": null
+  },
+  "yomogi-mochi-zenzai": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "yomogi-an-butter", "isobeyaki"],
+    "variationAnchors": ["variation-1"],
+    "recipeJsonLd": null
+  },
+  "tamari-mochi-butter-pepper": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "ebi-mochi-cheese-pizza"],
+    "variationAnchors": [],
+    "recipeJsonLd": null
+  },
+  "garlic-butter-mochi": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "mentaiko-mayo-mochi"],
+    "variationAnchors": [],
+    "recipeJsonLd": {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "ガーリックバター餅",
+      "description": "香ばしく焼いた白餅にガーリックバターをたっぷり塗り、もう一度トースターへ。にんにくとバターの香りが広がる簡単アレンジです。",
+      "image": "https://www.yamadamochi.com/images/recipes/garlic-butter-mochi.webp",
+      "url": "https://www.yamadamochi.com/recipes/garlic-butter-mochi",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "recipeCategory": "お餅",
+      "keywords": "トースター, バター, にんにく",
+      "datePublished": "2026-09-11",
+      "recipeIngredient": ["プレーン（白餅） 2切れ", "市販のガーリックバター 大さじ1程度"],
+      "recipeInstructions": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "白餅をトースターで3分ほど焼きます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "表面にガーリックバターをしっかり塗ります。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "再びトースターへ入れ、約2分、表面に軽く焼き色がつくまで焼きます。"
+        }
+      ]
+    }
+  },
+  "mentaiko-mayo-mochi": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "garlic-butter-mochi"],
+    "variationAnchors": [],
+    "recipeJsonLd": {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "明太子マヨ餅",
+      "description": "香ばしく焼いた白餅に明太マヨをのせてもう一度トースターへ。明太子の塩気とマヨネーズのコクがよく合う簡単アレンジです。",
+      "image": "https://www.yamadamochi.com/images/recipes/mentaiko-mayo-mochi.webp",
+      "url": "https://www.yamadamochi.com/recipes/mentaiko-mayo-mochi",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "recipeCategory": "お餅",
+      "keywords": "トースター, 明太子, マヨネーズ",
+      "datePublished": "2026-09-11",
+      "recipeIngredient": [
+        "プレーン（白餅） 1切れ",
+        "明太子 1/4本",
+        "マヨネーズ 大さじ1",
+        "刻み海苔 適量"
+      ],
+      "recipeInstructions": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "白餅をトースターで軽く焼き色がつくまで焼きます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "明太子とマヨネーズを混ぜます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "焼いた餅の上に明太マヨを塗ります。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "text": "再びトースターで約2分焼きます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "text": "好みで刻み海苔をのせます。"
+        }
+      ]
+    }
+  },
+  "yomogi-an-butter": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "yomogi-mochi-zenzai", "isobeyaki"],
+    "variationAnchors": [],
+    "recipeJsonLd": null
+  },
+  "dashi-butter-mochi": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "garlic-butter-mochi"],
+    "variationAnchors": [],
+    "recipeJsonLd": {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "レンジで簡単 だしバター餅",
+      "description": "やわらかくした白餅に、だしの効いためんつゆとバターを絡めるだけ。忙しい時にも作りやすい、シンプルなお餅アレンジです。",
+      "image": "https://www.yamadamochi.com/images/recipes/dashi-butter-mochi.webp",
+      "url": "https://www.yamadamochi.com/recipes/dashi-butter-mochi",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "recipeCategory": "お餅",
+      "keywords": "電子レンジ, だし, バター",
+      "datePublished": "2026-09-11",
+      "recipeIngredient": ["プレーン（白餅） 2切れ", "めんつゆ（4倍濃縮） 小さじ1", "バター 5g"],
+      "recipeInstructions": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "白餅をさっと水にくぐらせ、耐熱皿へ置きます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "ラップをせず600Wの電子レンジで約1分、やわらかくなるまで加熱します。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "めんつゆをかけて餅に絡めます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "text": "バターをのせます。"
+        }
+      ]
+    }
+  },
+  "mochi-pizza": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "garlic-butter-mochi"],
+    "variationAnchors": [],
+    "recipeJsonLd": {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "トースターで簡単 ピザ餅",
+      "description": "白餅にトマト、ソーセージまたはベーコン、チーズをのせて焼くだけ。朝食や軽食にも食べやすい、山田もち店の昔からのアレンジです。",
+      "image": "https://www.yamadamochi.com/images/recipes/mochi-pizza.webp",
+      "url": "https://www.yamadamochi.com/recipes/mochi-pizza",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "recipeCategory": "お餅",
+      "keywords": "トースター, チーズ, 朝食・軽食",
+      "datePublished": "2026-09-11",
+      "recipeIngredient": [
+        "プレーン（白餅） 1切れ",
+        "とろけるチーズ ひとつかみ",
+        "ミニトマト 1個",
+        "ソーセージ（またはベーコン） 1本"
+      ],
+      "recipeInstructions": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "ミニトマトを半分に切り、ソーセージまたはベーコンを食べやすく切ります。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "白餅の上にトマト、ソーセージまたはベーコンをのせます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "上からチーズをのせます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "text": "トースターで、餅がやわらかく膨らみ、チーズが溶けるまで焼きます。"
+        }
+      ]
+    }
+  },
+  "mochi-ebi-ajillo": {
+    "methodLinks": [],
+    "relatedRecipeIds": ["mochi-yakikata", "isobeyaki", "garlic-butter-mochi"],
+    "variationAnchors": [],
+    "recipeJsonLd": {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": "餅と海老のアヒージョ",
+      "description": "もちもちの白餅と海老を、にんにくの香るオリーブオイルで。おつまみにも食事にも楽しめる、山田もち店の旧レシピを整えたアレンジです。",
+      "image": "https://www.yamadamochi.com/images/recipes/mochi-ebi-ajillo.webp",
+      "url": "https://www.yamadamochi.com/recipes/mochi-ebi-ajillo",
+      "inLanguage": "ja",
+      "author": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://www.yamadamochi.com/#organization"
+      },
+      "recipeCategory": "お餅",
+      "keywords": "フライパン, 海老, おつまみ",
+      "datePublished": "2026-09-11",
+      "recipeIngredient": [
+        "プレーン（白餅） 1切れ",
+        "むき海老 4尾",
+        "にんにく 1片",
+        "オリーブオイル 100ml",
+        "鷹の爪 1本",
+        "塩 少々"
+      ],
+      "recipeInstructions": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "text": "白餅を1.5〜2cm程度の一口サイズに切ります。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "text": "海老は必要に応じて背わたを取り、水気をしっかり拭きます。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "text": "にんにくを薄切りにします。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "text": "小さめのフライパンまたはスキレットにオリーブオイル、にんにく、鷹の爪、塩を入れ、弱火で香りを出します。"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "text": "餅と海老を加え、海老に火が通り、餅の表面が膨らんでやわらかくなるまで3〜5分を目安に加熱します。"
+        }
+      ]
+    }
+  }
+}

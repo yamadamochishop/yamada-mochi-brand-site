@@ -408,7 +408,12 @@ function validateRecipePopularity(
   if (!hasMetric) errors.push(`${owner}: popularity requires at least one metric`);
 }
 
-function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: string[]) {
+function validateRecipe(
+  recipe: RecipeRecord,
+  productIds: Set<string>,
+  recipeStatuses: Map<string, string>,
+  errors: string[],
+) {
   const owner = `recipe:${recipe.id}`;
 
   if (!recipe.title.trim()) errors.push(`${owner}: missing title`);
@@ -425,6 +430,11 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
     errors.push(`${owner}: recipe requires at least one relatedProductId`);
   }
   validateRelatedProducts(owner, recipe.relatedProductIds, productIds, errors);
+  for (const relatedId of recipe.relatedRecipeIds ?? []) {
+    if (recipeStatuses.get(relatedId) !== 'published') {
+      errors.push(`${owner}: relatedRecipeId "${relatedId}" must reference a published recipe`);
+    }
+  }
 
   validateRecipeImage(owner, recipe.mainImage, errors);
   for (const image of recipe.stepImages ?? []) {
@@ -453,6 +463,7 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
   }
 
   // アレンジで案内する商品はカタログに存在すること。リンク切れの商品ページを作らない。
+  const anchorIds = new Set<string>();
   for (const variation of recipe.variations ?? []) {
     if (!variation.title.trim() || !variation.text.trim()) {
       errors.push(`${owner}: variation requires a title and text`);
@@ -461,6 +472,11 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
       errors.push(
         `${owner}: variation "${variation.title}" references unknown product "${variation.productId}"`,
       );
+    }
+    for (const anchorId of [variation.anchorId, ...(variation.legacyAnchorIds ?? [])]) {
+      if (!anchorId) continue;
+      if (anchorIds.has(anchorId)) errors.push(`${owner}: duplicate anchorId "${anchorId}"`);
+      anchorIds.add(anchorId);
     }
   }
 
@@ -600,8 +616,9 @@ export function validateContentModel(data: ContentModelData): string[] {
     }
   }
 
+  const recipeStatuses = new Map(data.recipes.map((recipe) => [recipe.id, recipe.status]));
   for (const recipe of data.recipes) {
-    validateRecipe(recipe, productIds, errors);
+    validateRecipe(recipe, productIds, recipeStatuses, errors);
   }
 
   for (const channel of data.salesChannels) {

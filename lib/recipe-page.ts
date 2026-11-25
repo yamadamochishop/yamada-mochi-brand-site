@@ -68,6 +68,12 @@ export function getRecipesForProduct(productSlug: string): RecipeRecord[] {
 
 /** 同じ商品を使うレシピを優先し、足りなければ他のレシピで補う。 */
 export function getRelatedRecipes(recipe: RecipeRecord): RecipeRecord[] {
+  if (recipe.relatedRecipeIds) {
+    return recipe.relatedRecipeIds
+      .slice(0, 4)
+      .map((id) => publishedRecipes.find((candidate) => candidate.id === id))
+      .filter((candidate): candidate is RecipeRecord => Boolean(candidate));
+  }
   const others = publishedRecipes.filter((candidate) => candidate.id !== recipe.id);
   const sharesProduct = others.filter((candidate) =>
     candidate.relatedProductIds.some((productId) => recipe.relatedProductIds.includes(productId)),
@@ -352,17 +358,33 @@ export type RecipeSectionLink = { id: string; label: string };
 export function getRecipeMethodLinks(recipe: RecipeRecord): RecipeSectionLink[] {
   const { general } = splitRecipeVariations(recipe);
   if (general.length < 2) return [];
-  return [
+  const links = [
     { id: 'recipe-steps', label: recipe.stepsTitle ?? DEFAULT_STEPS_TITLE },
     ...general.map((variation, index) => ({
-      id: recipeVariationAnchor(index),
+      id: getVariationAnchorId(variation, index),
       label: variation.title,
     })),
   ];
+  if (recipe.productVariationsNavLabel && splitRecipeVariations(recipe).byProduct.length > 0) {
+    const frozenIndex = links.findIndex((link) => link.id === 'frozen');
+    links.splice(frozenIndex >= 0 ? frozenIndex : links.length, 0, {
+      id: 'product-variations',
+      label: recipe.productVariationsNavLabel,
+    });
+  }
+  return links;
 }
 
 export function recipeVariationAnchor(index: number): string {
   return `variation-${index + 1}`;
+}
+
+export function getVariationAnchorId(variation: RecipeVariation, index: number): string {
+  return variation.anchorId ?? recipeVariationAnchor(index);
+}
+
+export function showBaseTechniqueStepsFooter(recipe: RecipeRecord): boolean {
+  return !recipe.methodGuide && linksToBaseTechnique(recipe);
 }
 
 /** 焼き方の基本ページへ案内するか。トースターで焼くレシピにだけ、焼き方ページ自身は除く。 */

@@ -10,6 +10,9 @@ import {
   getRecipeGuides,
   getRecipeInventory,
   getRecipeMethodLinks,
+  getRelatedRecipes,
+  getVariationAnchorId,
+  showBaseTechniqueStepsFooter,
   getRecipeProductLabels,
   getRecipesForProduct,
   linksToBaseTechnique,
@@ -23,6 +26,8 @@ import {
 import { products } from '../data/catalog.ts';
 import { recipeItemListJsonLd, recipeJsonLd } from '../lib/seo.ts';
 import type { RecipeRecord } from '../types/content-model.ts';
+import { frozenCookingNote } from '../data/catalog.ts';
+import { readFileSync } from 'node:fs';
 
 function fixture(overrides: Partial<RecipeRecord>): RecipeRecord {
   return {
@@ -327,19 +332,88 @@ test('isobeyaki: flavor variations link products without displacing product-page
   assert.equal(isobeyaki.cookingTimeMinutes, undefined);
   assert.equal(isobeyaki.servings, undefined);
   assert.equal(isobeyaki.difficulty, undefined);
-  assert.doesNotMatch(JSON.stringify(isobeyaki), /水で濡ら/u);
+  assert.doesNotMatch(JSON.stringify(isobeyaki.steps), /水で濡ら/u);
 });
 
 test('mochi-yakikata: method links cover the toaster steps and every alternative method', () => {
   const yakikata = publishedRecipes.find((recipe) => recipe.id === 'mochi-yakikata')!;
   assert.deepEqual(getRecipeMethodLinks(yakikata), [
     { id: 'recipe-steps', label: 'トースターで焼く（基本）' },
-    { id: 'variation-1', label: 'フライパンで焼く' },
-    { id: 'variation-2', label: '電子レンジでやわらかく' },
-    { id: 'variation-3', label: '冷凍したお餅の解凍・焼き方' },
+    { id: 'toaster-microwave', label: '電子レンジで温めてからトースターで焼く' },
+    { id: 'frying-pan-oil', label: 'フライパンで焼く（油あり）' },
+    { id: 'frying-pan-no-oil', label: 'フライパンで焼く（油なし）' },
+    { id: 'microwave-soft', label: '電子レンジでやわらかく' },
+    { id: 'product-variations', label: 'お餅の種類で変える' },
+    { id: 'frozen', label: '冷凍したお餅の解凍・焼き方' },
   ]);
   const isobeyaki = publishedRecipes.find((recipe) => recipe.id === 'isobeyaki')!;
   assert.deepEqual(getRecipeMethodLinks(isobeyaki), []);
   assert.equal(linksToBaseTechnique(isobeyaki), true);
   assert.equal(linksToBaseTechnique(yakikata), false);
+});
+
+test('YM-012: eleven untouched recipes retain their pre-change outputs', () => {
+  const baseline = JSON.parse(
+    readFileSync(new URL('./fixtures/ym012-legacy-recipes.json', import.meta.url), 'utf8'),
+  );
+  for (const recipe of publishedRecipes.filter(
+    (item) => !['mochi-yakikata', 'isobeyaki'].includes(item.id),
+  )) {
+    assert.deepEqual(
+      {
+        methodLinks: getRecipeMethodLinks(recipe),
+        relatedRecipeIds: getRelatedRecipes(recipe).map((item) => item.id),
+        variationAnchors: splitRecipeVariations(recipe).general.map((variation, index) =>
+          getVariationAnchorId(variation, index),
+        ),
+        recipeJsonLd: recipeJsonLd(recipe),
+      },
+      baseline[recipe.id],
+      recipe.id,
+    );
+  }
+});
+
+test('YM-012: named and legacy anchors lead to the same variations', () => {
+  const recipe = publishedRecipes.find((item) => item.id === 'mochi-yakikata')!;
+  const general = splitRecipeVariations(recipe).general;
+  assert.deepEqual(
+    general.map((variation, index) => getVariationAnchorId(variation, index)),
+    ['toaster-microwave', 'frying-pan-oil', 'frying-pan-no-oil', 'microwave-soft', 'frozen'],
+  );
+  assert.deepEqual(
+    general.flatMap((variation) =>
+      (variation.legacyAnchorIds ?? []).map((legacy) => [legacy, variation.anchorId]),
+    ),
+    [
+      ['variation-1', 'frying-pan-oil'],
+      ['variation-2', 'microwave-soft'],
+      ['variation-3', 'frozen'],
+    ],
+  );
+  assert.equal(general[4].text, frozenCookingNote);
+  assert.doesNotMatch(JSON.stringify(general[2]), /4〜5分/);
+  assert.deepEqual(
+    recipeJsonLd(recipe)?.recipeInstructions.map((step) => step.text),
+    recipe.steps.map((step) => step.instruction),
+  );
+  assert.equal(recipe.steps.length, 3);
+});
+
+test('YM-012: isobeyaki has four exact instructions, four related recipes and no old footer', () => {
+  const recipe = publishedRecipes.find((item) => item.id === 'isobeyaki')!;
+  assert.deepEqual(
+    recipeJsonLd(recipe)?.recipeInstructions.map((step) => step.text),
+    [
+      '砂糖と醤油を1：2の割合で混ぜ合わせます。',
+      'お餅をトースターまたはフライパンで、中までやわらかく焼きます。',
+      '焼きたてのお餅に砂糖醤油を絡めます。',
+      '焼き海苔を巻いたら完成です。',
+    ],
+  );
+  assert.deepEqual(
+    getRelatedRecipes(recipe).map((item) => item.id),
+    ['garlic-butter-mochi', 'mentaiko-mayo-mochi', 'dashi-butter-mochi', 'mochi-pizza'],
+  );
+  assert.equal(showBaseTechniqueStepsFooter(recipe), false);
 });

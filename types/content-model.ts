@@ -246,6 +246,10 @@ export type RecipeStep = {
 export type RecipeVariation = {
   title: string;
   text: string;
+  anchorId?: string;
+  legacyAnchorIds?: string[];
+  steps?: string[];
+  afterText?: string;
   /**
    * 別の商品で楽しむアレンジの場合、その商品のID。
    * 商品ページへの内部リンクに使うだけで、`relatedProductIds` には加えない
@@ -299,6 +303,20 @@ export type RecipeRecord = {
   slug: string;
   title: string;
   description: string;
+  intro?: string[];
+  keyPoint?: { label: string; title: string; text: string };
+  methodGuide?: {
+    title: string;
+    intro?: string;
+    items: { label: string; text: string; anchorId: string }[];
+    linkLabel: string;
+  };
+  cautions?: string[];
+  faqs?: { q: string; a: string; link?: { href: string; label: string } }[];
+  productVariationsIntro?: string;
+  productVariationsNavLabel?: string;
+  relatedRecipeIds?: string[];
+  brandNote?: { title: string; body: string; brandStoryLabel: string };
   category: RecipeCategory;
   season?: string;
   /**
