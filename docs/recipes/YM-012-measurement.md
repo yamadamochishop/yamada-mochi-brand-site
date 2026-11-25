@@ -1,0 +1,22 @@
+# YM-012 計測仕様
+
+焼き方・磯辺焼きの2ページで、導線ごとのクリックを区別する。既存イベント名と既存パラメータは変更しない。
+
+| 導線                         | イベント                                     | パラメータ                                                                                               | 発火箇所                                                        |
+| ---------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| ページ内ナビ                 | `recipe_section_nav`                         | `recipe_slug`, `section_id`                                                                              | 詳細ページの「このページで紹介する方法」のアンカーリンク        |
+| 焼き方ガイド                 | `recipe_internal_click`                      | `recipe_slug`, `link_type=technique_guide`, `target_path`, `placement=method_guide / steps_footer / faq` | 磯辺焼きの焼き方カード・案内・FAQ、既存手順直後の案内           |
+| 関連レシピ                   | `recipe_internal_click`                      | `recipe_slug`, `link_type=related_recipe`, `target_path`, `placement=related_recipes`                    | 詳細ページ下部の関連カードの画像・タイトル・ボタン              |
+| 商品詳細                     | `recipe_to_product_click`（既存）            | `recipe_slug`, `product_slug`, `placement=recipe_brand_note` など                                        | ブランド紹介の商品リンク、既存の冒頭・アレンジ・CTAの商品リンク |
+| ブランドストーリー・商品一覧 | `recipe_internal_click`                      | `recipe_slug`, `link_type=brand_story / products_list`, `target_path`, `placement=brand_note`            | 磯辺焼きのブランド紹介の文字リンク                              |
+| 外部EC                       | `base_click` / `sales_channel_click`（既存） | 既存の `placement`、商品・チャネル等                                                                     | 商品CTAからBASE・食べチョク・ポケマルへ移るリンク               |
+
+`recipe_view` は既存の閲覧イベントとして残す。`recipe_section_nav` は同一ページ内の移動、`recipe_internal_click` は別ページへの回遊に使う。1つのリンクには1つのクリック計測だけを付け、カードの3つのリンクもそれぞれ単独で発火させる。FAQPage構造化データは追加しない。
+
+`base_click` / `sales_channel_click` は外部ECへの遷移であって購入完了ではない。キーイベントにしても購入として扱わない。
+
+## GA4側の設定と確認
+
+イベントスコープのカスタムディメンション登録候補は `section_id`, `link_type`, `target_path`, `placement`, `recipe_slug`, `product_slug`。既に登録済みのものはHumanが確認し、重複登録しない。イベント名やパラメータ名を変更する場合は、過去データとの連続性を確認する。
+
+DebugViewでは、対象ページを開いて `recipe_view` を確認する。目次、焼き方カード、FAQ、関連カードの画像・タイトル・ボタン、ブランド紹介の3リンク、商品CTA、外部ECリンクをそれぞれ1回ずつ押す。各クリックで期待するイベントが1件だけ届き、`recipe_slug` が元ページ、`target_path` がリンク先（フラグメントを含む）、`placement` が表の位置と一致することを確認する。外部ECの購入完了はこの画面では判定しない。
