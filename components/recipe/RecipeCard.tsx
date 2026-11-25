@@ -124,7 +124,7 @@ export function RecipeCard({
         <p
           className={
             compact
-              ? 'mt-3 hidden line-clamp-2 text-sm leading-7 text-sumi/65 sm:block'
+              ? 'mt-3 max-sm:hidden line-clamp-2 text-sm leading-7 text-sumi/65'
               : 'mt-3 line-clamp-3 text-sm leading-7 text-sumi/65'
           }
         >

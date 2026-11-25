@@ -511,8 +511,12 @@ test('Recipe Hub: confirmed content is rendered and unverified values stay out',
   const yakikataHtml = await yakikata.text();
   assert.match(visible(yakikataHtml), /冷凍したお餅の解凍・焼き方/u);
   assert.match(visible(yakikataHtml), /トースターで焼く（基本）/u);
-  assert.match(visible(yakikataHtml), /href="#variation-3"/);
-  assert.match(visible(yakikataHtml), /id="variation-3"/);
+  // YM-012: ページ内ナビは名前ベースのIDへ。既存の #variation-N リンクは同じ内容へ飛ぶ別名として残す。
+  assert.match(visible(yakikataHtml), /href="#frozen"/);
+  assert.match(visible(yakikataHtml), /id="frozen"/);
+  for (const legacyId of ['variation-1', 'variation-2', 'variation-3']) {
+    assert.match(visible(yakikataHtml), new RegExp(`id="${legacyId}"`));
+  }
   assert.equal((visible(yakikataHtml).match(/<h1\b/g) ?? []).length, 1);
 
   const zenzai = await fetch(`${localOrigin}/recipes/yomogi-mochi-zenzai`, {

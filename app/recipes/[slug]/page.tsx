@@ -326,8 +326,9 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           </section>
 
           {recipe.methodGuide ? (
-            <section className="mt-14 md:mt-20">
-              <h2 className="font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+            <section id="method-guide" className="mt-14 scroll-mt-28 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/85">HOW TO BAKE</p>
+              <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
                 {recipe.methodGuide.title}
               </h2>
               {recipe.methodGuide.intro ? (
@@ -343,7 +344,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                         linkType: 'technique_guide',
                         placement: 'method_guide',
                       }}
-                      className={productLinkClass}
+                      className={`inline-flex min-h-11 items-center ${productLinkClass}`}
                     >
                       {item.label}
                     </TrackedRecipeLink>
@@ -380,8 +381,9 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           ) : null}
 
           {recipe.cautions?.length ? (
-            <section className="mt-14 md:mt-20">
-              <h2 className="font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+            <section id="cautions" className="mt-14 scroll-mt-28 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/85">CAUTION</p>
+              <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
                 調理器具を使うときの注意
               </h2>
               <ul className="mt-6 space-y-3">
@@ -395,8 +397,11 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
           ) : null}
 
           {recipe.faqs?.length ? (
-            <section className="mt-14 md:mt-20">
-              <h2 className="font-serifjp text-2xl tracking-[0.12em] md:text-3xl">よくある質問</h2>
+            <section id="faq" className="mt-14 scroll-mt-28 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/85">FAQ</p>
+              <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+                よくある質問
+              </h2>
               <div className="mt-6 space-y-7">
                 {recipe.faqs.map((faq) => (
                   <div key={faq.q}>
@@ -418,6 +423,112 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   </div>
                 ))}
               </div>
+            </section>
+          ) : null}
+
+          {recipe.arrangementSection ? (
+            <section id="arrangements" className="mt-14 scroll-mt-28 md:mt-20">
+              <p className="text-xs tracking-brand text-brown/85">ARRANGE</p>
+              <h2 className="mt-4 font-serifjp text-2xl leading-relaxed tracking-[0.12em] md:text-3xl">
+                {recipe.arrangementSection.title}
+              </h2>
+              {recipe.arrangementSection.intro.map((paragraph) => (
+                <p key={paragraph} className="mt-5 leading-8 text-sumi/70">
+                  {paragraph}
+                </p>
+              ))}
+              <nav aria-label="調味料を変えるアレンジ" className="mt-8">
+                <p className="text-xs tracking-brand text-brown/85">調味料を変える</p>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {recipe.arrangementSection.items.map((item, index) => (
+                    <li key={item.anchorId}>
+                      <RecipeSectionNavLink
+                        recipeSlug={recipe.slug}
+                        sectionId={item.anchorId}
+                        className="flex min-h-12 items-center justify-between gap-3 border border-sumi/15 bg-white/40 px-4 py-2 text-sm leading-6 tracking-[0.06em] text-sumi/80 transition hover:border-sumi/40 hover:text-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
+                      >
+                        {index + 1}. {item.title}
+                        <span aria-hidden="true" className="text-brown/70">
+                          ↓
+                        </span>
+                      </RecipeSectionNavLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className="mt-10">
+                {recipe.arrangementSection.items.map((item, index) => (
+                  <div
+                    key={item.anchorId}
+                    id={item.anchorId}
+                    className="scroll-mt-28 border-t border-sumi/10 py-10"
+                  >
+                    <h3 className="font-serifjp text-xl leading-relaxed tracking-[0.1em]">
+                      {index + 1}. {item.title}
+                    </h3>
+                    <p className="mt-4 leading-8 text-sumi/70">{item.lead}</p>
+                    <h4 className="mt-8 font-serifjp text-lg tracking-[0.1em]">
+                      材料（{item.servings}）
+                    </h4>
+                    <dl className="mt-4 divide-y divide-sumi/10 border-y border-sumi/10">
+                      {item.ingredients.map((ingredient) => (
+                        <div
+                          key={ingredient.name}
+                          className="grid grid-cols-[1fr_auto] items-baseline gap-4 py-4 text-sm"
+                        >
+                          <dt className="leading-7 text-sumi/70">{ingredient.name}</dt>
+                          <dd className="text-right leading-7 text-sumi/70">{ingredient.amount}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <h4 className="mt-8 font-serifjp text-lg tracking-[0.1em]">作り方</h4>
+                    <ol className="mt-4 list-decimal space-y-3 pl-6 leading-8 text-sumi/70">
+                      {item.steps.map((step) => (
+                        <li key={step}>{step}</li>
+                      ))}
+                    </ol>
+                    {item.tips.map((tip) => (
+                      <p key={tip} className="mt-5 leading-8 text-sumi/70">
+                        {tip}
+                      </p>
+                    ))}
+                    <p className="mt-5 leading-8 text-sumi/70">
+                      相性のよいお餅：
+                      {item.pairings.map((pairing, pairingIndex) => (
+                        <span key={pairing.productId}>
+                          {pairingIndex > 0 ? '・' : null}
+                          <RecipeProductLink
+                            productSlug={pairing.productId}
+                            recipeSlug={recipe.slug}
+                            placement="recipe_arrangement"
+                            className={`inline-flex min-h-11 items-center ${productLinkClass}`}
+                          >
+                            {pairing.label}
+                          </RecipeProductLink>
+                        </span>
+                      ))}
+                    </p>
+                    {item.relatedRecipe ? (
+                      <TrackedRecipeLink
+                        href={`/recipes/${item.relatedRecipe.id}`}
+                        tracking={{
+                          recipeSlug: recipe.slug,
+                          linkType: 'related_recipe',
+                          placement: 'arrangement',
+                        }}
+                        className={`mt-3 inline-flex min-h-11 items-center ${productLinkClass}`}
+                      >
+                        {item.relatedRecipe.label}
+                      </TrackedRecipeLink>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+              {recipe.arrangementSection.outro.map((paragraph) => (
+                <p key={paragraph} className="mt-5 leading-8 text-sumi/70">
+                  {paragraph}
+                </p>
+              ))}
             </section>
           ) : null}
 
@@ -517,9 +628,13 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
 
       {recipe.brandNote ? relatedSection : ctaSection}
       {recipe.brandNote ? (
-        <section className="ym-container border-t border-sumi/10 py-16">
+        <section
+          id="brand-note"
+          className="ym-container scroll-mt-28 border-t border-sumi/10 py-16"
+        >
           <div className="mx-auto max-w-3xl">
-            <h2 className="font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
+            <p className="text-xs tracking-brand text-brown/85">ABOUT</p>
+            <h2 className="mt-4 font-serifjp text-2xl tracking-[0.12em] md:text-3xl">
               {recipe.brandNote.title}
             </h2>
             <p className="mt-6 leading-9 text-sumi/70">{recipe.brandNote.body}</p>
@@ -531,7 +646,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   linkType: 'brand_story',
                   placement: 'brand_note',
                 }}
-                className={productLinkClass}
+                className={`inline-flex min-h-11 items-center ${productLinkClass}`}
               >
                 {recipe.brandNote.brandStoryLabel}
               </TrackedRecipeLink>
@@ -540,9 +655,9 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   productSlug={recipeProducts[0].slug}
                   recipeSlug={recipe.slug}
                   placement="recipe_brand_note"
-                  className={productLinkClass}
+                  className={`inline-flex min-h-11 items-center ${productLinkClass}`}
                 >
-                  プレーンの商品ページ
+                  {recipeProducts[0].name}の商品ページ
                 </RecipeProductLink>
               ) : null}
               <TrackedRecipeLink
@@ -552,7 +667,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ s
                   linkType: 'products_list',
                   placement: 'brand_note',
                 }}
-                className={productLinkClass}
+                className={`inline-flex min-h-11 items-center ${productLinkClass}`}
               >
                 商品一覧
               </TrackedRecipeLink>

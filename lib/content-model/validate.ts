@@ -463,7 +463,20 @@ function validateRecipe(
   }
 
   // アレンジで案内する商品はカタログに存在すること。リンク切れの商品ページを作らない。
-  const anchorIds = new Set<string>();
+  const anchorIds = new Set([
+    'recipe-steps',
+    'product-variations',
+    'method-guide',
+    'cautions',
+    'faq',
+    'arrangements',
+    'brand-note',
+  ]);
+  const addAnchorId = (anchorId: string) => {
+    if (anchorIds.has(anchorId)) errors.push(`${owner}: duplicate anchorId "${anchorId}"`);
+    anchorIds.add(anchorId);
+  };
+  let generalVariationIndex = 0;
   for (const variation of recipe.variations ?? []) {
     if (!variation.title.trim() || !variation.text.trim()) {
       errors.push(`${owner}: variation requires a title and text`);
@@ -473,10 +486,33 @@ function validateRecipe(
         `${owner}: variation "${variation.title}" references unknown product "${variation.productId}"`,
       );
     }
-    for (const anchorId of [variation.anchorId, ...(variation.legacyAnchorIds ?? [])]) {
-      if (!anchorId) continue;
-      if (anchorIds.has(anchorId)) errors.push(`${owner}: duplicate anchorId "${anchorId}"`);
-      anchorIds.add(anchorId);
+    if (!variation.productId) {
+      generalVariationIndex += 1;
+      addAnchorId(variation.anchorId ?? `variation-${generalVariationIndex}`);
+    } else if (variation.anchorId) {
+      addAnchorId(variation.anchorId);
+    }
+    for (const anchorId of variation.legacyAnchorIds ?? []) {
+      if (anchorId) addAnchorId(anchorId);
+    }
+  }
+
+  for (const arrangement of recipe.arrangementSection?.items ?? []) {
+    addAnchorId(arrangement.anchorId);
+    for (const pairing of arrangement.pairings) {
+      if (!productIds.has(pairing.productId)) {
+        errors.push(
+          `${owner}: arrangement "${arrangement.title}" references unknown product "${pairing.productId}"`,
+        );
+      }
+    }
+    if (
+      arrangement.relatedRecipe &&
+      recipeStatuses.get(arrangement.relatedRecipe.id) !== 'published'
+    ) {
+      errors.push(
+        `${owner}: arrangement relatedRecipe "${arrangement.relatedRecipe.id}" must reference a published recipe`,
+      );
     }
   }
 

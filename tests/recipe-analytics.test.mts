@@ -42,6 +42,43 @@ test('YM-012: each recipe tracking call sends one event with exact parameters', 
       ],
     ]);
     events.length = 0;
+    trackRecipeSectionNav('isobeyaki', 'arrange-butter');
+    assert.deepEqual(events, [
+      ['event', 'recipe_section_nav', { recipe_slug: 'isobeyaki', section_id: 'arrange-butter' }],
+    ]);
+    events.length = 0;
+    trackRecipeInternalClick({
+      recipeSlug: 'isobeyaki',
+      linkType: 'related_recipe',
+      targetPath: '/recipes/tamari-mochi-butter-pepper',
+      placement: 'arrangement',
+    });
+    assert.deepEqual(events, [
+      [
+        'event',
+        'recipe_internal_click',
+        {
+          recipe_slug: 'isobeyaki',
+          link_type: 'related_recipe',
+          target_path: '/recipes/tamari-mochi-butter-pepper',
+          placement: 'arrangement',
+        },
+      ],
+    ]);
+    events.length = 0;
+    trackRecipeProductClick({
+      recipeSlug: 'isobeyaki',
+      productSlug: 'kombu',
+      placement: 'recipe_arrangement',
+    });
+    assert.deepEqual(events, [
+      [
+        'event',
+        'recipe_to_product_click',
+        { recipe_slug: 'isobeyaki', product_slug: 'kombu', placement: 'recipe_arrangement' },
+      ],
+    ]);
+    events.length = 0;
     trackRecipeProductClick({
       recipeSlug: 'isobeyaki',
       productSlug: 'plain',

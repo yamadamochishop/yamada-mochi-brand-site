@@ -332,7 +332,7 @@ test('isobeyaki: flavor variations link products without displacing product-page
   assert.equal(isobeyaki.cookingTimeMinutes, undefined);
   assert.equal(isobeyaki.servings, undefined);
   assert.equal(isobeyaki.difficulty, undefined);
-  assert.doesNotMatch(JSON.stringify(isobeyaki.steps), /水で濡ら/u);
+  assert.doesNotMatch(JSON.stringify(isobeyaki), /水で濡ら/u);
 });
 
 test('mochi-yakikata: method links cover the toaster steps and every alternative method', () => {
@@ -416,4 +416,39 @@ test('YM-012: isobeyaki has four exact instructions, four related recipes and no
     ['garlic-butter-mochi', 'mentaiko-mayo-mochi', 'dashi-butter-mochi', 'mochi-pizza'],
   );
   assert.equal(showBaseTechniqueStepsFooter(recipe), false);
+});
+
+test('YM-012: isobeyaki arrangement data follows the approved draft and stays out of Recipe JSON-LD', () => {
+  const recipe = publishedRecipes.find((item) => item.id === 'isobeyaki')!;
+  const arrangements = recipe.arrangementSection?.items ?? [];
+  assert.deepEqual(
+    arrangements.map((item) => [
+      item.anchorId,
+      item.title,
+      item.ingredients.length,
+      item.steps.length,
+      item.pairings.map((pairing) => pairing.productId),
+    ]),
+    [
+      ['arrange-shoyu', 'シンプルな醤油磯辺焼き', 3, 3, ['plain', 'kombu']],
+      ['arrange-butter', 'コクと香りのバター醤油磯辺焼き', 4, 4, ['plain', 'sansyokumame']],
+      ['arrange-sesame', '香ばしいごま油醤油の磯辺焼き', 5, 4, ['ebi', 'plain']],
+      ['arrange-shichimi', 'ピリ辛七味醤油の磯辺焼き', 4, 4, ['plain', 'kombu', 'tamari']],
+    ],
+  );
+  assert.deepEqual(
+    arrangements.map((item) => item.servings),
+    Array(4).fill('切り餅2枚分'),
+  );
+  assert.deepEqual(
+    arrangements.map((item) => item.relatedRecipe?.id),
+    [undefined, 'tamari-mochi-butter-pepper', undefined, undefined],
+  );
+  const jsonLd = recipeJsonLd(recipe)!;
+  assert.doesNotMatch(
+    JSON.stringify([jsonLd.recipeIngredient, jsonLd.recipeInstructions]),
+    /バター|七味|ごま油/,
+  );
+  assert.doesNotMatch(toRecipeListItem(recipe).searchText, /バター|七味|ごま油/);
+  assert.doesNotMatch(JSON.stringify(recipe), /お餅自/);
 });

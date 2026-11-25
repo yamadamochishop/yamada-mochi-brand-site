@@ -160,6 +160,46 @@ test('Recipe: an unknown related product ID fails validation', () => {
   assert.match(validateContentModel(candidate).join('\n'), /unknown relatedProductId/);
 });
 
+test('Recipe: arrangement references and all rendered anchors are validated', () => {
+  const unknownProduct = cloneContentModel();
+  unknownProduct.recipes.find(
+    (recipe) => recipe.id === 'isobeyaki',
+  )!.arrangementSection!.items[0].pairings[0].productId = 'missing-product';
+  assert.match(
+    validateContentModel(unknownProduct).join('\n'),
+    /arrangement .* references unknown product "missing-product"/,
+  );
+
+  const unpublishedRecipe = cloneContentModel();
+  unpublishedRecipe.recipes.find(
+    (recipe) => recipe.id === 'isobeyaki',
+  )!.arrangementSection!.items[1].relatedRecipe!.id = 'recipe-sample';
+  assert.match(
+    validateContentModel(unpublishedRecipe).join('\n'),
+    /arrangement relatedRecipe "recipe-sample" must reference a published recipe/,
+  );
+
+  for (const anchorId of ['arrange-butter', 'recipe-steps', 'method-guide', 'arrangements']) {
+    const duplicate = cloneContentModel();
+    duplicate.recipes.find(
+      (recipe) => recipe.id === 'isobeyaki',
+    )!.arrangementSection!.items[0].anchorId = anchorId;
+    assert.match(
+      validateContentModel(duplicate).join('\n'),
+      new RegExp(`duplicate anchorId "${anchorId}"`),
+    );
+  }
+
+  const defaultVariation = cloneContentModel();
+  const recipe = defaultVariation.recipes.find((item) => item.id === 'isobeyaki')!;
+  recipe.variations![0].anchorId = 'variation-2';
+  recipe.variations!.splice(1, 0, { title: '検証用', text: '検証用のアレンジ' });
+  assert.match(
+    validateContentModel(defaultVariation).join('\n'),
+    /duplicate anchorId "variation-2"/,
+  );
+});
+
 test('Recipe: required content fields fail validation when empty', () => {
   const cases: [Partial<RecipeRecord>, RegExp][] = [
     [{ description: '   ' }, /missing description/],
@@ -356,8 +396,10 @@ test('Recipe: the thirteen existing recipe records stay valid', () => {
     const isolated = cloneContentModel();
     isolated.recipes = [
       recipe,
-      ...contentModel.recipes.filter((candidate) =>
-        recipe.relatedRecipeIds?.includes(candidate.id),
+      ...contentModel.recipes.filter(
+        (candidate) =>
+          recipe.relatedRecipeIds?.includes(candidate.id) ||
+          recipe.arrangementSection?.items.some((item) => item.relatedRecipe?.id === candidate.id),
       ),
     ];
     assert.deepEqual(validateContentModel(isolated), [], `recipe "${recipe.id}" is invalid`);

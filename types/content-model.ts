@@ -258,6 +258,18 @@ export type RecipeVariation = {
   productId?: string;
 };
 
+export type RecipeArrangement = {
+  anchorId: string;
+  title: string;
+  lead: string;
+  servings: string;
+  ingredients: RecipeIngredient[];
+  steps: string[];
+  tips: string[];
+  pairings: { productId: string; label: string }[];
+  relatedRecipe?: { id: string; label: string };
+};
+
 /**
  * レシピに添える暮らしのコラム。調理手順ではないため、
  * 手順・材料とは別の枠として扱う。
@@ -313,6 +325,12 @@ export type RecipeRecord = {
   };
   cautions?: string[];
   faqs?: { q: string; a: string; link?: { href: string; label: string } }[];
+  arrangementSection?: {
+    title: string;
+    intro: string[];
+    outro: string[];
+    items: RecipeArrangement[];
+  };
   productVariationsIntro?: string;
   productVariationsNavLabel?: string;
   relatedRecipeIds?: string[];

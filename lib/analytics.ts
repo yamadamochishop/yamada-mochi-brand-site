@@ -52,6 +52,7 @@ export type RecipeProductClickPlacement =
   | 'recipe_product_cta' // 詳細ページ末尾「このレシピにおすすめのお餅」の「商品を見る」
   | 'recipe_hub_product_group' // 一覧ページ「お餅から探す」の商品名
   | 'recipe_variation' // 詳細ページ「ほかのお餅で楽しむ」アレンジの商品リンク
+  | 'recipe_arrangement' // 調味料アレンジの相性のよいお餅
   | 'recipe_brand_note';
 
 export function trackRecipeSectionNav(recipeSlug: string, sectionId: string) {
@@ -65,7 +66,7 @@ export function trackRecipeSectionNav(recipeSlug: string, sectionId: string) {
 export type RecipeInternalLinkType =
   'technique_guide' | 'related_recipe' | 'brand_story' | 'products_list';
 export type RecipeInternalPlacement =
-  'method_guide' | 'steps_footer' | 'faq' | 'related_recipes' | 'brand_note';
+  'method_guide' | 'steps_footer' | 'faq' | 'related_recipes' | 'brand_note' | 'arrangement';
 
 export function trackRecipeInternalClick({
   recipeSlug,
