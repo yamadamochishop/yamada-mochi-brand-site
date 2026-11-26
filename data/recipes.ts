@@ -128,6 +128,7 @@ export const recipes: RecipeRecord[] = [
     relatedProductIds: ['plain', 'yomogi', 'sansyokumame', 'kombu', 'tamari', 'ebi'],
     author: '山田もち店',
     publishedAt: '2026-08-28',
+    updatedAt: '2026-11-26',
     status: 'published',
     seo: {
       title: 'お餅のおいしい焼き方と解凍方法｜トースター・フライパン',
@@ -366,6 +367,7 @@ export const recipes: RecipeRecord[] = [
     },
     author: '山田もち店',
     publishedAt: '2026-08-28',
+    updatedAt: '2026-11-26',
     status: 'published',
     seo: {
       title: '磯辺焼きの作り方｜砂糖1：醤油2と焼き海苔の基本',
