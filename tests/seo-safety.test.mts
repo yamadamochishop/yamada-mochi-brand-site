@@ -551,6 +551,8 @@ test('Home: recipe guides, shipping copy, and metadata are rendered', async (con
   assert.equal(home.status, 200);
   const html = await home.text();
   const visible = html.replace(/<script[\s\S]*?<\/script>/g, '');
+  // YM-012: VERCEL_ENV が production でないビルド（このテストのローカルビルド）では本番GA4を読み込まない。
+  assert.doesNotMatch(html, /googletagmanager\.com\/gtag/);
   assert.match(html, /<title>山田もち店｜飛騨高山・陣屋前朝市の切り餅と通販<\/title>/u);
   assert.doesNotMatch(html, /<title>[^<]*山田もち店[^<]*山田もち店[^<]*<\/title>/u);
   assert.equal((visible.match(/<h1\b/g) ?? []).length, 1);

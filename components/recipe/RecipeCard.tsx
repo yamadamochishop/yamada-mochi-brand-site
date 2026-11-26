@@ -106,8 +106,8 @@ export function RecipeCard({
         <h3
           className={
             compact
-              ? 'mt-3 font-serifjp text-[15px] leading-7 tracking-[0.1em] md:text-lg'
-              : 'mt-3 font-serifjp text-xl leading-relaxed tracking-[0.1em] md:text-2xl'
+              ? 'mt-3 font-serifjp text-[15px] leading-7 tracking-[0.1em] [line-break:strict] [word-break:auto-phrase] md:text-lg'
+              : 'mt-3 font-serifjp text-xl leading-relaxed tracking-[0.1em] [line-break:strict] [word-break:auto-phrase] md:text-2xl'
           }
         >
           <CardLink

@@ -450,5 +450,9 @@ test('YM-012: isobeyaki arrangement data follows the approved draft and stays ou
     /バター|七味|ごま油/,
   );
   assert.doesNotMatch(toRecipeListItem(recipe).searchText, /バター|七味|ごま油/);
-  assert.doesNotMatch(JSON.stringify(recipe), /お餅自/);
+  assert.ok(
+    recipe.arrangementSection?.outro.includes(
+      '※味付きのお餅を使用する場合は、お餅自体の塩気に合わせて調味料の量を調整してください。',
+    ),
+  );
 });
