@@ -13,7 +13,7 @@ export function SetDeliveryGuide() {
       <WinterNotice />
       <h3 className="font-serifjp text-xl text-sumi">常温便・冷凍便について</h3>
       <p className="mt-4">
-        常温便は製造後、常温で発送します。冷凍便は、好きなタイミングで楽しみたい方や長期保存、年末年始のストックにも便利です。
+        常温便は製造後、常温で発送します。冷凍便は、好きなタイミングで楽しみたい方や長期保存にも便利です。
       </p>
       <p>{frozenDispatchNote}</p>
       <p>{frozenStorageNote}</p>
