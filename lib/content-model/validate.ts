@@ -408,7 +408,12 @@ function validateRecipePopularity(
   if (!hasMetric) errors.push(`${owner}: popularity requires at least one metric`);
 }
 
-function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: string[]) {
+function validateRecipe(
+  recipe: RecipeRecord,
+  productIds: Set<string>,
+  recipeStatuses: Map<string, string>,
+  errors: string[],
+) {
   const owner = `recipe:${recipe.id}`;
 
   if (!recipe.title.trim()) errors.push(`${owner}: missing title`);
@@ -425,6 +430,11 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
     errors.push(`${owner}: recipe requires at least one relatedProductId`);
   }
   validateRelatedProducts(owner, recipe.relatedProductIds, productIds, errors);
+  for (const relatedId of recipe.relatedRecipeIds ?? []) {
+    if (recipeStatuses.get(relatedId) !== 'published') {
+      errors.push(`${owner}: relatedRecipeId "${relatedId}" must reference a published recipe`);
+    }
+  }
 
   validateRecipeImage(owner, recipe.mainImage, errors);
   for (const image of recipe.stepImages ?? []) {
@@ -453,6 +463,20 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
   }
 
   // アレンジで案内する商品はカタログに存在すること。リンク切れの商品ページを作らない。
+  const anchorIds = new Set([
+    'recipe-steps',
+    'product-variations',
+    'method-guide',
+    'cautions',
+    'faq',
+    'arrangements',
+    'brand-note',
+  ]);
+  const addAnchorId = (anchorId: string) => {
+    if (anchorIds.has(anchorId)) errors.push(`${owner}: duplicate anchorId "${anchorId}"`);
+    anchorIds.add(anchorId);
+  };
+  let generalVariationIndex = 0;
   for (const variation of recipe.variations ?? []) {
     if (!variation.title.trim() || !variation.text.trim()) {
       errors.push(`${owner}: variation requires a title and text`);
@@ -460,6 +484,34 @@ function validateRecipe(recipe: RecipeRecord, productIds: Set<string>, errors: s
     if (variation.productId !== undefined && !productIds.has(variation.productId)) {
       errors.push(
         `${owner}: variation "${variation.title}" references unknown product "${variation.productId}"`,
+      );
+    }
+    if (!variation.productId) {
+      generalVariationIndex += 1;
+      addAnchorId(variation.anchorId ?? `variation-${generalVariationIndex}`);
+    } else if (variation.anchorId) {
+      addAnchorId(variation.anchorId);
+    }
+    for (const anchorId of variation.legacyAnchorIds ?? []) {
+      if (anchorId) addAnchorId(anchorId);
+    }
+  }
+
+  for (const arrangement of recipe.arrangementSection?.items ?? []) {
+    addAnchorId(arrangement.anchorId);
+    for (const pairing of arrangement.pairings) {
+      if (!productIds.has(pairing.productId)) {
+        errors.push(
+          `${owner}: arrangement "${arrangement.title}" references unknown product "${pairing.productId}"`,
+        );
+      }
+    }
+    if (
+      arrangement.relatedRecipe &&
+      recipeStatuses.get(arrangement.relatedRecipe.id) !== 'published'
+    ) {
+      errors.push(
+        `${owner}: arrangement relatedRecipe "${arrangement.relatedRecipe.id}" must reference a published recipe`,
       );
     }
   }
@@ -600,8 +652,9 @@ export function validateContentModel(data: ContentModelData): string[] {
     }
   }
 
+  const recipeStatuses = new Map(data.recipes.map((recipe) => [recipe.id, recipe.status]));
   for (const recipe of data.recipes) {
-    validateRecipe(recipe, productIds, errors);
+    validateRecipe(recipe, productIds, recipeStatuses, errors);
   }
 
   for (const channel of data.salesChannels) {
