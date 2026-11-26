@@ -177,7 +177,7 @@ export const recipes: RecipeRecord[] = [
       items: [
         {
           label: 'トースターで焼く',
-          text: 'トースターで焼く、基本の焼き方です。',
+          text: '焼き方ページでご紹介している、基本の焼き方です。',
           anchorId: 'recipe-steps',
         },
         {
