@@ -6,12 +6,15 @@ import { JsonLd } from '@/components/JsonLd';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { StickyPurchaseBar } from '@/components/StickyPurchaseBar';
 import { siteJsonLd } from '@/lib/seo';
+import { resolveGaMeasurementId } from '@/lib/analytics-config';
 import { site } from '@/data/site';
 
-// GA4 measurement IDs are public identifiers. Keep this production value as a
-// safe default so every deployment sends data even when the hosting variable
-// has not yet been configured. It can still be overridden per environment.
-const DEFAULT_GA_MEASUREMENT_ID = 'G-G4QWYR6EH4';
+// GA4は Vercel の Production デプロイだけで読み込む（ローカル・Previewから本番GA4へ送らない）。
+// 判定と既定の測定IDは lib/analytics-config.ts を参照。
+const gaMeasurementId = resolveGaMeasurementId({
+  vercelEnv: process.env.VERCEL_ENV,
+  configuredId: process.env.NEXT_PUBLIC_GA_ID,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.siteUrl),
@@ -53,9 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <head>{!site.isIndexable ? <meta name="robots" content="noindex, nofollow" /> : null}</head>
       <body>
-        <GoogleAnalytics
-          measurementId={process.env.NEXT_PUBLIC_GA_ID || DEFAULT_GA_MEASUREMENT_ID}
-        />
+        <GoogleAnalytics measurementId={gaMeasurementId} />
         <JsonLd data={siteJsonLd()} />
         <SiteHeader />
         {children}

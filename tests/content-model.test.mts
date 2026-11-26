@@ -160,6 +160,46 @@ test('Recipe: an unknown related product ID fails validation', () => {
   assert.match(validateContentModel(candidate).join('\n'), /unknown relatedProductId/);
 });
 
+test('Recipe: arrangement references and all rendered anchors are validated', () => {
+  const unknownProduct = cloneContentModel();
+  unknownProduct.recipes.find(
+    (recipe) => recipe.id === 'isobeyaki',
+  )!.arrangementSection!.items[0].pairings[0].productId = 'missing-product';
+  assert.match(
+    validateContentModel(unknownProduct).join('\n'),
+    /arrangement .* references unknown product "missing-product"/,
+  );
+
+  const unpublishedRecipe = cloneContentModel();
+  unpublishedRecipe.recipes.find(
+    (recipe) => recipe.id === 'isobeyaki',
+  )!.arrangementSection!.items[1].relatedRecipe!.id = 'recipe-sample';
+  assert.match(
+    validateContentModel(unpublishedRecipe).join('\n'),
+    /arrangement relatedRecipe "recipe-sample" must reference a published recipe/,
+  );
+
+  for (const anchorId of ['arrange-butter', 'recipe-steps', 'method-guide', 'arrangements']) {
+    const duplicate = cloneContentModel();
+    duplicate.recipes.find(
+      (recipe) => recipe.id === 'isobeyaki',
+    )!.arrangementSection!.items[0].anchorId = anchorId;
+    assert.match(
+      validateContentModel(duplicate).join('\n'),
+      new RegExp(`duplicate anchorId "${anchorId}"`),
+    );
+  }
+
+  const defaultVariation = cloneContentModel();
+  const recipe = defaultVariation.recipes.find((item) => item.id === 'isobeyaki')!;
+  recipe.variations![0].anchorId = 'variation-2';
+  recipe.variations!.splice(1, 0, { title: '検証用', text: '検証用のアレンジ' });
+  assert.match(
+    validateContentModel(defaultVariation).join('\n'),
+    /duplicate anchorId "variation-2"/,
+  );
+});
+
 test('Recipe: required content fields fail validation when empty', () => {
   const cases: [Partial<RecipeRecord>, RegExp][] = [
     [{ description: '   ' }, /missing description/],
@@ -305,7 +345,16 @@ test('Recipe: mochi-yakikata keeps the toaster method as the only structured-dat
   assert.match(yakikata.steps[1].instruction, /トースター（1000W）で4〜5分/u);
   assert.deepEqual(
     yakikata.variations?.map((variation) => variation.title),
-    ['フライパンで焼く', '電子レンジでやわらかく', '冷凍したお餅の解凍・焼き方'],
+    [
+      '電子レンジで温めてからトースターで焼く',
+      'フライパンで焼く（油あり）',
+      'フライパンで焼く（油なし）',
+      '電子レンジでやわらかく',
+      '冷凍したお餅の解凍・焼き方',
+      'プレーン（白餅）',
+      '三色豆餅',
+      '黒ごま海老餅',
+    ],
   );
   assert.equal(yakikata.cookingTimeMinutes, undefined);
 
@@ -345,7 +394,14 @@ test('Recipe: the thirteen existing recipe records stay valid', () => {
   // 1件だけを載せたモデルでも通ることを見て、他レコードに紛れた見逃しを防ぐ。
   for (const recipe of contentModel.recipes) {
     const isolated = cloneContentModel();
-    isolated.recipes = [recipe];
+    isolated.recipes = [
+      recipe,
+      ...contentModel.recipes.filter(
+        (candidate) =>
+          recipe.relatedRecipeIds?.includes(candidate.id) ||
+          recipe.arrangementSection?.items.some((item) => item.relatedRecipe?.id === candidate.id),
+      ),
+    ];
     assert.deepEqual(validateContentModel(isolated), [], `recipe "${recipe.id}" is invalid`);
   }
 });
@@ -442,6 +498,27 @@ test('Recipe: a duplicate relatedProductId fails validation', () => {
   const candidate = cloneContentModel();
   candidate.recipes.push({ ...recipeFixture(), relatedProductIds: ['plain', 'plain'] });
   assert.match(validateContentModel(candidate).join('\n'), /duplicate relatedProductId "plain"/);
+});
+
+test('YM-012: related recipes must exist and be published, variation anchors must be unique', () => {
+  const unknown = cloneContentModel();
+  unknown.recipes[1].relatedRecipeIds = ['missing-recipe'];
+  assert.match(
+    validateContentModel(unknown).join('\n'),
+    /relatedRecipeId "missing-recipe" must reference a published recipe/,
+  );
+
+  const unpublished = cloneContentModel();
+  unpublished.recipes[1].relatedRecipeIds = ['recipe-sample'];
+  unpublished.recipes.push(recipeFixture());
+  assert.match(
+    validateContentModel(unpublished).join('\n'),
+    /relatedRecipeId "recipe-sample" must reference a published recipe/,
+  );
+
+  const duplicate = cloneContentModel();
+  duplicate.recipes[0].variations![1].anchorId = duplicate.recipes[0].variations![0].anchorId;
+  assert.match(validateContentModel(duplicate).join('\n'), /duplicate anchorId/);
 });
 
 test('SalesChannel: unknown references and duplicate channel IDs fail validation', () => {

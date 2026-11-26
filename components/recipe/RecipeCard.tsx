@@ -1,6 +1,39 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { difficultyLabels, type RecipeListItem } from '@/lib/recipe-page';
+import { TrackedRecipeLink, type RecipeLinkTracking } from './TrackedRecipeLink';
+
+function CardLink({
+  href,
+  tracking,
+  children,
+  className,
+  ariaLabel,
+}: {
+  href: string;
+  tracking?: RecipeLinkTracking;
+  children: ReactNode;
+  className?: string;
+  ariaLabel?: string;
+}) {
+  if (tracking)
+    return (
+      <TrackedRecipeLink
+        href={href}
+        tracking={tracking}
+        className={className}
+        aria-label={ariaLabel}
+      >
+        {children}
+      </TrackedRecipeLink>
+    );
+  return (
+    <Link href={href} className={className} aria-label={ariaLabel}>
+      {children}
+    </Link>
+  );
+}
 
 /**
  * レシピ一覧カード。
@@ -16,11 +49,16 @@ import { difficultyLabels, type RecipeListItem } from '@/lib/recipe-page';
 export function RecipeCard({
   recipe,
   priority = false,
+  variant = 'default',
+  tracking,
 }: {
   recipe: RecipeListItem;
   priority?: boolean;
+  variant?: 'default' | 'compact';
+  tracking?: RecipeLinkTracking;
 }) {
   const href = `/recipes/${recipe.slug}`;
+  const compact = variant === 'compact';
   const meta: string[] = [];
   if (recipe.cookingTimeMinutes !== undefined) meta.push(`目安 約${recipe.cookingTimeMinutes}分`);
   if (recipe.difficulty) meta.push(difficultyLabels[recipe.difficulty]);
@@ -31,7 +69,12 @@ export function RecipeCard({
       className="group flex h-full flex-col border border-sumi/15 bg-base transition-colors hover:border-sumi/35"
     >
       {recipe.mainImage ? (
-        <Link href={href} aria-label={`${recipe.title}のレシピを見る`} className="block">
+        <CardLink
+          href={href}
+          tracking={tracking}
+          ariaLabel={`${recipe.title}のレシピを見る`}
+          className="block"
+        >
           <figure className="relative m-0">
             <div className="relative aspect-[4/3] overflow-hidden bg-[#efe9dc]">
               <Image
@@ -39,7 +82,11 @@ export function RecipeCard({
                 alt={recipe.mainImage.alt || recipe.title}
                 fill
                 priority={priority}
-                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                sizes={
+                  compact
+                    ? '(min-width: 1024px) 22vw, 45vw'
+                    : '(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw'
+                }
                 className="object-cover transition duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               />
             </div>
@@ -49,33 +96,53 @@ export function RecipeCard({
               </figcaption>
             ) : null}
           </figure>
-        </Link>
+        </CardLink>
       ) : null}
 
-      <div className="flex flex-1 flex-col p-5 md:p-6">
+      <div className={compact ? 'flex flex-1 flex-col p-4' : 'flex flex-1 flex-col p-5 md:p-6'}>
         {recipe.productLabels.length > 0 ? (
           <p className="text-xs tracking-brand text-brown/85">{recipe.productLabels.join('・')}</p>
         ) : null}
-        <h3 className="mt-3 font-serifjp text-xl leading-relaxed tracking-[0.1em] md:text-2xl">
-          <Link
+        <h3
+          className={
+            compact
+              ? 'mt-3 font-serifjp text-[15px] leading-7 tracking-[0.1em] [line-break:strict] [word-break:auto-phrase] md:text-lg'
+              : 'mt-3 font-serifjp text-xl leading-relaxed tracking-[0.1em] [line-break:strict] [word-break:auto-phrase] md:text-2xl'
+          }
+        >
+          <CardLink
             href={href}
+            tracking={tracking}
             className="transition hover:text-brown focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi"
           >
             {recipe.title}
-          </Link>
+          </CardLink>
         </h3>
         {meta.length > 0 ? (
           <p className="mt-3 text-xs tracking-[0.08em] text-sumi/60">{meta.join('　')}</p>
         ) : null}
-        <p className="mt-3 line-clamp-3 text-sm leading-7 text-sumi/65">{recipe.description}</p>
+        <p
+          className={
+            compact
+              ? 'mt-3 max-sm:hidden line-clamp-2 text-sm leading-7 text-sumi/65'
+              : 'mt-3 line-clamp-3 text-sm leading-7 text-sumi/65'
+          }
+        >
+          {recipe.description}
+        </p>
         <div className="mt-auto pt-6">
-          <Link
+          <CardLink
             href={href}
-            aria-label={`${recipe.title}のレシピを見る`}
-            className="inline-flex min-h-11 w-full items-center justify-center border border-sumi/20 px-5 text-sm tracking-[0.1em] transition hover:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi sm:w-auto"
+            tracking={tracking}
+            ariaLabel={`${recipe.title}のレシピを見る`}
+            className={
+              compact
+                ? 'inline-flex min-h-11 w-full items-center justify-center border border-sumi/20 px-2 text-xs tracking-[0.1em] transition hover:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi'
+                : 'inline-flex min-h-11 w-full items-center justify-center border border-sumi/20 px-5 text-sm tracking-[0.1em] transition hover:border-sumi focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sumi sm:w-auto'
+            }
           >
             レシピを見る
-          </Link>
+          </CardLink>
         </div>
       </div>
     </article>
